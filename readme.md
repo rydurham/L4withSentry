@@ -1,3 +1,7 @@
+## Laravel 4 with Sentry 2
+
+This is a demo of Sentry 2 integrated with Laravel 4
+
 ## Laravel 4.x
 
 ### A Framework For Web Artisans
