@@ -1,5 +1,5 @@
 #Ignore:
-/app/config/database.php
+\app\config\database.php
 /vendor
 composer.phar
 composer.lock
