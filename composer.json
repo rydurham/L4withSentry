@@ -1,8 +1,7 @@
 {
 	"require": {
 		"laravel/framework": "4.0.*",
-		"cartalyst/sentry": "2.0.*",
-		"twitter/bootstrap": "dev-3.0.0-wip"
+		"cartalyst/sentry": "2.0.*"
 	},
 	"autoload": {
 		"classmap": [
