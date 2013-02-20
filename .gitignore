@@ -1,5 +1,6 @@
 #Ignore:
 /vendor
+/app/config/mail.php
 composer.phar
 composer.lock
 .DS_Store
