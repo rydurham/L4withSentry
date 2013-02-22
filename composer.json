@@ -1,7 +1,8 @@
 {
 	"require": {
 		"laravel/framework": "4.0.*",
-		"cartalyst/sentry": "2.0.*"
+		"cartalyst/sentry": "2.0.*",
+		"sendgrid/sendgrid-php": "dev-master"
 	},
 	"autoload": {
 		"classmap": [
