@@ -109,10 +109,8 @@ return array(
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
-<<<<<<< HEAD
 		'Cartalyst\Sentry\SentryServiceProvider',
-=======
->>>>>>> upstream/develop
+
 
 	),
 
@@ -176,10 +174,7 @@ return array(
 		'URL'             => 'Illuminate\Support\Facades\URL',
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
-<<<<<<< HEAD
 		'Sentry'		  => 'Cartalyst\Sentry\Facades\Laravel\Sentry'
-=======
->>>>>>> upstream/develop
 
 	),
 
