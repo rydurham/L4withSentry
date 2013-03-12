@@ -280,7 +280,7 @@ class UserController extends BaseController {
 			    {
 			    	$user = Sentry::getUser();
 
-			    	if ($user->hash($input['oldPassword']) == $user->getPassword()) 
+			    	if ($user->checkHash($input['oldPassword'], $user->getPassword())) 
 			    	{
 				    	//The oldPassword matches the current password in the DB. Proceed.
 				    	$user->password = $input['newPassword'];
