@@ -64,11 +64,7 @@ return array(
 	|
 	*/
 
-<<<<<<< HEAD
-	'username' => '',
-=======
 	'username' => null,
->>>>>>> upstream/develop
 
 	/*
 	|--------------------------------------------------------------------------
@@ -81,10 +77,6 @@ return array(
 	|
 	*/
 
-<<<<<<< HEAD
-	'password' => '',
-=======
 	'password' => null,
->>>>>>> upstream/develop
 
 );
