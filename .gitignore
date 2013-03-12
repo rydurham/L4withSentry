@@ -2,4 +2,5 @@
 /vendor
 composer.phar
 composer.lock
+/app/config/sendGridConfig.php
 .DS_Store
