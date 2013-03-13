@@ -18,4 +18,5 @@ Route::get('/', function()
 
 Route::controller('user', 'UserController');
 
+Route::resource('groups', 'GroupController');
 

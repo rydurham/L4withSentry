@@ -2,7 +2,6 @@
 
 {{-- Web site Title --}}
 @section('title')
-@parent
 Log In
 @stop
 

@@ -3,7 +3,7 @@
 {{-- Web site Title --}}
 @section('title')
 @parent
-Log In
+Reset Password
 @stop
 
 {{-- Content --}}

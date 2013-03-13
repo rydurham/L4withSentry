@@ -3,16 +3,14 @@
 {{-- Web site Title --}}
 @section('title')
 @parent
-Home
+Groups
 @stop
 
 {{-- Content --}}
 @section('content')
-<div class="span6 well">
+<div class="span10 well">
   @if (Sentry::check())
-    <h2>{{{ Sentry::getUser()->email }}}</h2>
-    <p align="right"><a href="user/changepassword">Change Password</a></p>
-    <p>{{ print_r(Sentry::getUser()) }}</p>
+    <p>You are a member of the following groups:</p>
   @else
     <h2>You are not logged in</h2>
   @endif
