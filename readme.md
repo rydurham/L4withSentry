@@ -1,6 +1,6 @@
 ## Laravel 4 with Sentry 2
 
-This is a demo of Sentry 2 integrated with Laravel 4
+This is a demo of Sentry 2 integrated with Laravel 4.  Keep in mind that this is not yet working, as of 3/19/13.  I have been pulled away to another project - I hope to get back to this soon.
 
  
 
