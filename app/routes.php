@@ -20,3 +20,24 @@ Route::controller('user', 'UserController');
 
 Route::resource('groups', 'GroupController');
 
+
+Route::filter('auth', function()
+{
+	if (!Sentry::check()) return Redirect::to('user/login');
+});
+
+Route::filter('admin_auth', function()
+{
+	if (!Sentry::check())
+	{
+		// if not logged in, redirect to login
+		return Redirect::to('user/login');
+	}
+
+	if (!Sentry::getUser()->hasAccess('admin'))
+	{
+		// has no access
+		return Response::make('Access Forbidden', '403');
+	}
+});
+

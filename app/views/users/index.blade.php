@@ -8,14 +8,35 @@ Home
 
 {{-- Content --}}
 @section('content')
-<div class="span6 well">
+
   @if (Sentry::check())
-    <h2>{{{ Sentry::getUser()->email }}}</h2>
-    <p align="right"><a href="user/changepassword">Change Password</a></p>
-    <p>{{ print_r(Sentry::getUser()) }}</p>
+  	
+    @if($user->hasAccess('admin'))
+		<div class="span10 well">
+			<h2>Current Users:</h2>
+			<table class="table">
+				<thead>
+					<th>User</th>
+				</thead>
+				<tbody>
+					@foreach ($allUsers as $user)
+						<tr>
+							<td>{{ $user->email }}</td>
+						</tr>
+					@endforeach
+				</tbody>
+			</table>
+		</div>
+    @else 
+		<div class="span10 well">
+			<h1>You are not an Administrator</h1>
+		</div>
+    @endif
   @else
-    <h2>You are not logged in</h2>
+    <div class="span6 well">
+    	<h2>You are not logged in</h2>
+    </div>
   @endif
-</div>
+
 
 @stop

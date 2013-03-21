@@ -3,6 +3,15 @@
 class GroupController extends BaseController {
 
 	/**
+	 * Constructor
+	 */
+	public function __construct() 
+	{
+		$this->beforeFilter('admin_auth');
+
+	}
+
+	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return Response
@@ -10,7 +19,37 @@ class GroupController extends BaseController {
 	public function index()
 	{
 		// Index - show the user's group details.
-		return View::make('groups.index');
+		try
+		{
+		    // Find the current user
+		    if ( ! Sentry::check())
+			{
+			    // User is not logged in, or is not activated
+			    Session::flash('error', 'You must be logged in to perform that action.');
+				return Redirect::to('/');
+			}
+			else
+			{
+			    // User is logged in
+			    $user = Sentry::getUser();
+
+			    // Get the user groups
+			    $data['myGroups'] = $user->getGroups();
+
+			    //Get all the available groups.
+			    $data['allGroups'] = Sentry::getGroupProvider()->findAll();
+				
+				
+				return View::make('groups.index', $data);
+			}
+		    
+		}
+		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+		    Session::flash('error', 'User was not found.');
+			return Redirect::to('groups/');
+		}
+		
 	}
 
 	/**
@@ -123,7 +162,20 @@ class GroupController extends BaseController {
 	 */
 	public function edit($id)
 	{
-		//
+		//Pull the selected group
+		try
+		{
+		    // Find the group using the group id
+		    $data['group'] = Sentry::getGroupProvider()->findById($id);
+
+		}
+		catch (Cartalyst\Sentry\Groups\GroupNotFoundException $e)
+		{
+		    Session::flash('error', 'Group does not exist.');
+			return Redirect::to('groups');
+		}
+
+		return View::make('groups.edit', $data);
 	}
 
 	/**
@@ -133,7 +185,67 @@ class GroupController extends BaseController {
 	 */
 	public function update($id)
 	{
-		//
+		// Update the Group.
+		// Start with Data Validation
+		// Gather Sanitized Input
+		
+		$input = array(
+			'newGroup' => Input::get('newGroup')
+			);
+
+		// Set Validation Rules
+		$rules = array (
+			'newGroup' => 'required|min:4'
+			);
+
+		//Run input validation
+		$v = Validator::make($input, $rules);
+
+		if ($v->fails())
+		{
+			// Validation has failed
+			return Redirect::to('groups/'. $id . '/edit')->withErrors($v)->withInput();
+		}
+		else 
+		{
+
+			try
+			{
+			    // Find the group using the group id
+			    $group = Sentry::getGroupProvider()->findById($id);
+
+			    // Update the group details
+			    $group->name = $input['newGroup'];
+			    $group->permissions = array(
+			       'admin' => Input::get('adminPermissions', 0),
+				   'users' => Input::get('userPermissions', 0),
+			    );
+
+			    // Update the group
+			    if ($group->save())
+			    {
+			        // Group information was updated
+			        Session::flash('success', 'Group has been updated.');
+					return Redirect::to('groups');
+			    }
+			    else
+			    {
+			        // Group information was not updated
+			        Session::flash('error', 'There was a problem updating the group.');
+					return Redirect::to('groups/'. $id . '/edit')->withErrors($v)->withInput();
+			    }
+			}
+			catch (Cartalyst\Sentry\Groups\GroupExistsException $e)
+			{
+			    Session::flash('error', 'Group already exists.');
+				return Redirect::to('groups/'. $id . '/edit')->withErrors($v)->withInput();
+			}
+			catch (Cartalyst\Sentry\Groups\GroupNotFoundException $e)
+			{
+			    Session::flash('error', 'Group was not found.');
+				return Redirect::to('groups/'. $id . '/edit')->withErrors($v)->withInput();
+			}
+		}
 	}
 
 	/**
@@ -144,6 +256,30 @@ class GroupController extends BaseController {
 	public function destroy($id)
 	{
 		//
+		try
+		{
+		    // Find the group using the group id
+		    $group = Sentry::getGroupProvider()->findById($id);
+
+		    // Delete the group
+		    if ($group->delete())
+		    {
+		        // Group was successfully deleted
+		        Session::flash('success', 'Group has been deleted.');
+				return Redirect::to('groups/');
+		    }
+		    else
+		    {
+		        // There was a problem deleting the group
+		        Session::flash('error', 'There was a problem deleting that group.');
+				return Redirect::to('groups/');
+		    }
+		}
+		catch (Cartalyst\Sentry\Groups\GroupNotFoundException $e)
+		{
+		    Session::flash('error', 'Group was not found.');
+			return Redirect::to('groups/');
+		}
 	}
 
 }

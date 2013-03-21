@@ -27,7 +27,62 @@ class UserController extends BaseController {
 	public function getIndex()
 	{
 		// Index - show the user details.
-		return View::make('users.index');
+
+		try
+		{
+		   	// Find the current user
+		    if ( Sentry::check())
+			{
+			    // Find the user using the user id
+			    $data['user'] = Sentry::getUser();
+
+			    if ($data['user']->hasAccess('admin')) {
+			    	$data['allUsers'] = Sentry::getUserProvider()->findAll();
+			    } 
+
+			    return View::make('users.index')->with($data);
+			} else {
+				Session::flash('error', 'You are not logged in.');
+				return Redirect::to('/');
+			}
+		}
+		catch (Cartalyst\Sentry\UserNotFoundException $e)
+		{
+		    Session::flash('error', 'There was a problem accessing your account.');
+			return Redirect::to('/');
+		}
+	}
+
+	/**
+	 *  Display this user's details.
+	 */
+	
+	public function getShow($id)
+	{
+		try
+		{
+		   	// Find the current user
+		    Sentry::check();
+		    if ( Sentry::getUser()->getId() == $id)
+			{
+			    // Find the user using the user id
+			    $data['user'] = Sentry::getUser();
+
+			    if ($data['user']->hasAccess('admin')) {
+			    	$data['allUsers'] = Sentry::getUserProvider()->findAll();
+			    } 
+
+			    return View::make('users.show')->with($data);
+			} else {
+				Session::flash('error', 'You don\'t have access to that user.');
+				return Redirect::to('/');
+			}
+		}
+		catch (Cartalyst\Sentry\UserNotFoundException $e)
+		{
+		    Session::flash('error', 'There was a problem accessing your account.');
+			return Redirect::to('/');
+		}
 	}
 
 
@@ -423,7 +478,7 @@ class UserController extends BaseController {
 				$mail = new SendGrid\Mail();
 				$mail->addTo($user->getLogin())->
 			       setFrom('support@mercut.io')->
-			       setSubject('New Password Infortmaion | Laravel4 With Sentry')->
+			       setSubject('New Password Information | Laravel4 With Sentry')->
 			       setHtml($body);
 
 			    if ($this->sendgrid->smtp->send($mail)) {

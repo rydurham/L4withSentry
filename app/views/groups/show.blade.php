@@ -13,6 +13,9 @@ View Group
     <p>Permsissions:
         <br /> 
         {{ var_dump($groupPermissions) }}</p>
+
+    <p>Var dump: <br />
+        {{ var_dump($group) }}</p>
 </div>
 
 @stop

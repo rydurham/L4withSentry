@@ -48,7 +48,7 @@
 							@if (Sentry::check())
 							<li class="navbar-text">{{ Sentry::getUser()->email }}</li>
 							<li class="divider-vertical"></li>
-							<li {{ (Request::is('account') ? 'class="active"' : '') }}><a href="{{ URL::to('user') }}">Account</a></li>
+							<li {{ (Request::is('user/show') ? 'class="active"' : '') }}><a href="/user/show/{{ Sentry::getUser()->id }}">Account</a></li>
 							<li><a href="{{ URL::to('user/logout') }}">Logout</a></li>
 							@else
 							<li {{ (Request::is('user/login') ? 'class="active"' : '') }}><a href="{{ URL::to('user/login') }}">Login</a></li>
