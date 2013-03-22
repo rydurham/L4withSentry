@@ -61,22 +61,23 @@ class UserController extends BaseController {
 	{
 		try
 		{
-		   	// Find the current user
-		    Sentry::check();
-		    if ( Sentry::getUser()->getId() == $id)
+		    //Get the current user's id.
+			Sentry::check();
+			$currentUser = Sentry::getUser();
+
+		   	//Do they have admin access?
+			if ( $currentUser->hasAccess('admin') || $currentUser->getId() === $id)
 			{
-			    // Find the user using the user id
-			    $data['user'] = Sentry::getUser();
-
-			    if ($data['user']->hasAccess('admin')) {
-			    	$data['allUsers'] = Sentry::getUserProvider()->findAll();
-			    } 
-
-			    return View::make('users.show')->with($data);
+				//Either they are an admin, or:
+				//They are not an admin, but they are viewing their own profile.
+				$data['user'] = Sentry::getUserProvider()->findById($id);
+				$data['myGroups'] = $data['user']->getGroups();
+				return View::make('users.show')->with($data);
 			} else {
 				Session::flash('error', 'You don\'t have access to that user.');
 				return Redirect::to('/');
 			}
+
 		}
 		catch (Cartalyst\Sentry\UserNotFoundException $e)
 		{
@@ -282,7 +283,7 @@ class UserController extends BaseController {
 			}
 
 			//Login was succesful.  
-			return Redirect::to('user');
+			return Redirect::to('/');
 		}
 	}
 
@@ -296,95 +297,8 @@ class UserController extends BaseController {
 		return Redirect::to('/');
 	}
 
-	/**
-	 * Reset the password. 
-	 */
-	public function getChangepassword() {
-		// Show the change password
-		return View::make('users.change');
-	}
 
-	public function postChangepassword () {
-		// Gather Sanitized Input
-		$input = array(
-			'oldPassword' => Input::get('oldPassword'),
-			'newPassword' => Input::get('newPassword'),
-			'newPassword_confirmation' => Input::get('newPassword_confirmation')
-			);
-
-		// Set Validation Rules
-		$rules = array (
-			'oldPassword' => 'required|min:6',
-			'newPassword' => 'required|min:6|confirmed',
-			'newPassword_confirmation' => 'required'
-			);
-
-		//Run input validation
-		$v = Validator::make($input, $rules);
-
-		if ($v->fails())
-		{
-			// Validation has failed
-			return Redirect::to('user/changepassword')->withErrors($v)->withInput();
-		}
-		else 
-		{
-			try
-			{
-			    if (Sentry::check()) 
-			    {
-			    	$user = Sentry::getUser();
-
-			    	if ($user->checkHash($input['oldPassword'], $user->getPassword())) 
-			    	{
-				    	//The oldPassword matches the current password in the DB. Proceed.
-				    	$user->password = $input['newPassword'];
-
-				    	if ($user->save())
-					    {
-					        // User saved
-					        Session::flash('success', 'Your password has been changed.');
-							return Redirect::to('user');
-					    }
-					    else
-					    {
-					        // User not saved
-					        Session::flash('error', 'Your password could not be changed.');
-							return Redirect::to('user/changepassword');
-					    }
-					} else {
-						// The oldPassword did not match the password in the database. Abort. 
-						Session::flash('error', 'You did not provide the correct password.');
-						return Redirect::to('user/changepassword');
-					}
-
-			    	
-			    } else {
-			    	// The user is not currently logged in. 
-			    	Session::flash('error', 'You must be logged in.');
-					return Redirect::to('/');
-			    }
-
-			   			    
-			}
-			catch (Cartalyst\Sentry\Users\LoginRequiredException $e)
-			{
-			    Session::flash('error', 'Login field required.');
-				return Redirect::to('user/changepassword');
-			}
-			catch (Cartalyst\Sentry\Users\UserExistsException $e)
-			{
-			    Session::flash('error', 'User already exists.');
-				return Redirect::to('user/changepassword');
-			}
-			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
-			{
-			    Session::flash('error', 'User was not found.');
-				return Redirect::to('user/changepassword');
-			}
-		}
-	}
-
+	
 
 	/**
 	 * Forgot Password / Reset
@@ -522,6 +436,208 @@ class UserController extends BaseController {
 		    echo 'User does not exist';
 		}
 	}
+
+
+	/**
+	 *  Edit / Update User Profile
+	 */
+	
+	public function getEdit($id) {
+		try
+		{
+		    //Get the current user's id.
+			Sentry::check();
+			$currentUser = Sentry::getUser();
+
+		   	//Do they have admin access?
+			if ( $currentUser->hasAccess('admin'))
+			{
+				$data['user'] = Sentry::getUserProvider()->findById($id);
+				$data['userGroups'] = $data['user']->getGroups();
+				return View::make('users.edit')->with($data);
+			} 
+			elseif ($currentUser->getId() === $id)
+			{
+				//They are not an admin, but they are viewing their own profile.
+				$data['user'] = Sentry::getUserProvider()->findById($id);
+				$data['userGroups'] = $data['user']->getGroups();
+				return View::make('users.edit')->with($data);
+			} else {
+				Session::flash('error', 'You don\'t have access to that user.');
+				return Redirect::to('/');
+			}
+
+		}
+		catch (Cartalyst\Sentry\UserNotFoundException $e)
+		{
+		    Session::flash('error', 'There was a problem accessing your account.');
+			return Redirect::to('/');
+		}
+
+
+
+	}
+
+
+	public function postEdit($id) {
+		// Gather Sanitized Input
+		$input = array(
+			'firstName' => Binput::get('firstName'),
+			'lastName' => Binput::get('lastName')
+			);
+
+		// Set Validation Rules
+		$rules = array (
+			'firstName' => 'alpha',
+			'lastName' => 'alpha',
+			);
+
+		//Run input validation
+		$v = Validator::make($input, $rules);
+
+		if ($v->fails())
+		{
+			// Validation has failed
+			return Redirect::to('user/edit/' . $id)->withErrors($v)->withInput();
+		}
+		else 
+		{
+			try
+			{
+				//Get the current user's id.
+				Sentry::check();
+				$currentUser = Sentry::getUser();
+
+			   	//Do they have admin access?
+				if ( $currentUser->hasAccess('admin')  || $currentUser->getId() === $id)
+				{
+					// Either they are an admin, or they are changing their own password. 
+					// Find the user using the user id
+					$user = Sentry::getUserProvider()->findById($id);	
+					
+				    // Update the user details
+				    $user->first_name = $input['firstName'];
+				    $user->last_name = $input['lastName'];
+
+				    // Update the user
+				    if ($user->save())
+				    {
+				        // User information was updated
+				        Session::flash('success', 'Your password has been changed.');
+						return Redirect::to('user/show/'. $id);
+				    }
+				    else
+				    {
+				        // User information was not updated
+				        Session::flash('error', 'Your password could not be changed.');
+						return Redirect::to('user/edit/' . $id);
+				    }
+
+				} else {
+					Session::flash('error', 'You don\'t have access to that user.');
+					return Redirect::to('/');
+				}			   			    
+			}
+			catch (Cartalyst\Sentry\Users\UserExistsException $e)
+			{
+			    Session::flash('error', 'User already exists.');
+				return Redirect::to('user/edit/' . $id);
+			}
+			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+			{
+			    Session::flash('error', 'User was not found.');
+				return Redirect::to('user/edit/' . $id);
+			}
+		}
+	}
+
+	/**
+	 * Process changepassword form. 
+	 * @param  [type] $id [description]
+	 * @return [type]     [description]
+	 */
+	public function postChangepassword($id) {
+		// Gather Sanitized Input
+		$input = array(
+			'oldPassword' => Input::get('oldPassword'),
+			'newPassword' => Input::get('newPassword'),
+			'newPassword_confirmation' => Input::get('newPassword_confirmation')
+			);
+
+		// Set Validation Rules
+		$rules = array (
+			'oldPassword' => 'required|min:6',
+			'newPassword' => 'required|min:6|confirmed',
+			'newPassword_confirmation' => 'required'
+			);
+
+		//Run input validation
+		$v = Validator::make($input, $rules);
+
+		if ($v->fails())
+		{
+			// Validation has failed
+			return Redirect::to('user/edit/' . $id)->withErrors($v)->withInput();
+		}
+		else 
+		{
+			try
+			{
+			    
+				//Get the current user's id.
+				Sentry::check();
+				$currentUser = Sentry::getUser();
+
+			   	//Do they have admin access?
+				if ( $currentUser->hasAccess('admin')  || $currentUser->getId() === $id)
+				{
+					// Either they are an admin, or they are changing their own password. 
+					$user = Sentry::getUserProvider()->findById($id);	
+					if ($user->checkHash($input['oldPassword'], $user->getPassword())) 
+			    	{
+				    	//The oldPassword matches the current password in the DB. Proceed.
+				    	$user->password = $input['newPassword'];
+
+				    	if ($user->save())
+					    {
+					        // User saved
+					        Session::flash('success', 'Your password has been changed.');
+							return Redirect::to('user/show/'. $id);
+					    }
+					    else
+					    {
+					        // User not saved
+					        Session::flash('error', 'Your password could not be changed.');
+							return Redirect::to('user/edit/' . $id);
+					    }
+					} else {
+						// The oldPassword did not match the password in the database. Abort. 
+						Session::flash('error', 'You did not provide the correct password.');
+						return Redirect::to('user/edit/' . $id);
+					}
+				} else {
+					Session::flash('error', 'You don\'t have access to that user.');
+					return Redirect::to('/');
+				}			   			    
+			}
+			catch (Cartalyst\Sentry\Users\LoginRequiredException $e)
+			{
+			    Session::flash('error', 'Login field required.');
+				return Redirect::to('user/edit/' . $id);
+			}
+			catch (Cartalyst\Sentry\Users\UserExistsException $e)
+			{
+			    Session::flash('error', 'User already exists.');
+				return Redirect::to('user/edit/' . $id);
+			}
+			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+			{
+			    Session::flash('error', 'User was not found.');
+				return Redirect::to('user/edit/' . $id);
+			}
+		}
+	}
+
 
 	/**
 	 * Generate password - helper function
