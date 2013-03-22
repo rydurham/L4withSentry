@@ -10,5 +10,21 @@ Hello World
 @section('content')
 
 <h1>Hello World!</h1>
+<div class="well">
+	<p>This is an example of <a href="https://github.com/laravel/laravel/tree/develop">Laravel 4</a> running with <a href="https://github.com/cartalyst/sentry">Sentry</a>. 
+	@if (Sentry::check()) 
+		You are currently logged in.
+	@endif
+	</p>
+</div>
 
+@if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
+	<h4>Admin Options</h4>
+	<div class="well">
+		 <button class="btn btn-info" onClick="location.href='/user'">View Users</button>
+		 <button class="btn btn-info" onClick="location.href='/groups'">View Groups</button>
+	</div>
+@endif 
+ 
+ 
 @stop

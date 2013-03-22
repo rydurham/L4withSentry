@@ -8,19 +8,6 @@ Groups
 
 {{-- Content --}}
 @section('content')
-<div class="span10 well">
-  @if (Sentry::check())
-    <p>You are a member of the following groups:</p>
-    <ul>
-    	@foreach ($myGroups as $group)
-			<li>{{ $group['name'] }}</li>
-		@endforeach
-    </ul>
-  @else
-    <h2>You are not logged in</h2>
-  @endif
-</div>
-
 <div class="span10">
 	<h2>Available Groups</h2>
 	<table class="table">

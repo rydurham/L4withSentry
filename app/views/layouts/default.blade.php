@@ -42,13 +42,17 @@
 					<div class="nav-collapse collapse">
 						<ul class="nav">
 							<li {{ (Request::is('/') ? 'class="active"' : '') }}><a href="{{ URL::to('') }}">Home</a></li>
+							@if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
+								<li {{ (Request::is('user*') ? 'class="active"' : '') }}><a href="{{ URL::to('/user') }}">Users</a></li>
+								<li {{ (Request::is('groups*') ? 'class="active"' : '') }}><a href="{{ URL::to('/groups') }}">Groups</a></li>
+							@endif
 						</ul>
 
 						<ul class="nav pull-right">
 							@if (Sentry::check())
 							<li class="navbar-text">{{ Sentry::getUser()->email }}</li>
 							<li class="divider-vertical"></li>
-							<li {{ (Request::is('user/show') ? 'class="active"' : '') }}><a href="/user/show/{{ Sentry::getUser()->id }}">Account</a></li>
+							<li {{ (Request::is('user/show/' . Sentry::getUser()->id) ? 'class="active"' : '') }}><a href="/user/show/{{ Sentry::getUser()->id }}">Account</a></li>
 							<li><a href="{{ URL::to('user/logout') }}">Logout</a></li>
 							@else
 							<li {{ (Request::is('user/login') ? 'class="active"' : '') }}><a href="{{ URL::to('user/login') }}">Login</a></li>

@@ -12,30 +12,30 @@ Home
   @if (Sentry::check())
   	
     @if($user->hasAccess('admin'))
-		<div class="span10 well">
+		<div class="well">
 			<h2>Current Users:</h2>
 			<table class="table">
 				<thead>
 					<th>User</th>
+					<th>Status</th>
+					<th>Options</th>
 				</thead>
 				<tbody>
 					@foreach ($allUsers as $user)
 						<tr>
-							<td>{{ $user->email }}</td>
+							<td><a href="/user/show/{{ $user->id }}">{{ $user->email }}</a></td>
+							<td>Status</td>
+							<td><button class="btn" onClick="location.href='/user/edit/{{ $user->id}}'">Edit User</button> <button class="btn" onClick="location.href='/#/{{ $user->id}}'">Suspend User</button></td>
 						</tr>
 					@endforeach
 				</tbody>
 			</table>
 		</div>
     @else 
-		<div class="span10 well">
-			<h1>You are not an Administrator</h1>
-		</div>
+		<h4>You are not an Administrator</h4>
     @endif
   @else
-    <div class="span6 well">
-    	<h2>You are not logged in</h2>
-    </div>
+    <h4>You are not logged in</h4>
   @endif
 
 

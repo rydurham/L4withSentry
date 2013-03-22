@@ -8,23 +8,29 @@ Register
 
 {{-- Content --}}
 @section('content')
-<div class="span3 well">
+<div class="well">
 	<legend>Register New Account</legend>
 	<form class="form-signin" action="{{ Request::fullUrl() }}" method="post">
         
         <input type="hidden" name="csrf_token" id="csrf_token" value="{{ Session::getToken() }}" />
         <div class="control-group {{ $errors->has('email') ? 'error' : '' }}">
-        	<div class="controls">
-        		{{{ $errors->first('email') }}}
-        		<input name="email" value="{{ Request::old('email') }}" type="text" class="span3" placeholder="Email address">
-        	</div>
-        	{{{ $errors->first('password') }}}
-	        <input name="password" type="password" class="span3" placeholder="Password">
+        	
+    		<p>
+    			{{{ $errors->first('email') }}}
+    			<input name="email" value="{{ Request::old('email') }}" type="text" class="span3" placeholder="Email address">
+    		</p>
+        	
+        	<p>	
+        		{{{ $errors->first('password') }}}
+	        	<input name="password" type="password" class="span3" placeholder="Password">
+			</p>
 	        
-	        {{{ $errors->first('password_confirmation') }}}
-	        <input name="password_confirmation" type="password" class="span3" placeholder="Password Confirmation">
+	        <p>
+		        {{{ $errors->first('password_confirmation') }}}
+		        <input name="password_confirmation" type="password" class="span3" placeholder="Password Confirmation">
+		    </p>
 	        	
-	        <button class="btn btn-primary" type="submit">Register</button>
+	        <div class="form-actions"><button class="btn btn-primary" type="submit">Register</button></div>
 	    </div>
       </form>
   </div>
