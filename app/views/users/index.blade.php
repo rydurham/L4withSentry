@@ -23,9 +23,9 @@ Home
 				<tbody>
 					@foreach ($allUsers as $user)
 						<tr>
-							<td><a href="/user/show/{{ $user->id }}">{{ $user->email }}</a></td>
+							<td><a href="/users/show/{{ $user->id }}">{{ $user->email }}</a></td>
 							<td>Status</td>
-							<td><button class="btn" onClick="location.href='/user/edit/{{ $user->id}}'">Edit User</button> <button class="btn" onClick="location.href='/#/{{ $user->id}}'">Suspend User</button></td>
+							<td><button class="btn" onClick="location.href='/users/edit/{{ $user->id}}'">Edit User</button> <button class="btn" onClick="location.href='/#/{{ $user->id}}'">Suspend User</button></td>
 						</tr>
 					@endforeach
 				</tbody>

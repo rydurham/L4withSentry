@@ -43,7 +43,7 @@
 						<ul class="nav">
 							<li {{ (Request::is('/') ? 'class="active"' : '') }}><a href="{{ URL::to('') }}">Home</a></li>
 							@if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
-								<li {{ (Request::is('user*') ? 'class="active"' : '') }}><a href="{{ URL::to('/user') }}">Users</a></li>
+								<li {{ (Request::is('users*') ? 'class="active"' : '') }}><a href="{{ URL::to('/users') }}">Users</a></li>
 								<li {{ (Request::is('groups*') ? 'class="active"' : '') }}><a href="{{ URL::to('/groups') }}">Groups</a></li>
 							@endif
 						</ul>
@@ -52,11 +52,11 @@
 							@if (Sentry::check())
 							<li class="navbar-text">{{ Sentry::getUser()->email }}</li>
 							<li class="divider-vertical"></li>
-							<li {{ (Request::is('user/show/' . Sentry::getUser()->id) ? 'class="active"' : '') }}><a href="/user/show/{{ Sentry::getUser()->id }}">Account</a></li>
-							<li><a href="{{ URL::to('user/logout') }}">Logout</a></li>
+							<li {{ (Request::is('users/show/' . Sentry::getUser()->id) ? 'class="active"' : '') }}><a href="/users/show/{{ Sentry::getUser()->id }}">Account</a></li>
+							<li><a href="{{ URL::to('users/logout') }}">Logout</a></li>
 							@else
-							<li {{ (Request::is('user/login') ? 'class="active"' : '') }}><a href="{{ URL::to('user/login') }}">Login</a></li>
-							<li {{ (Request::is('user/register') ? 'class="active"' : '') }}><a href="{{ URL::to('user/register') }}">Register</a></li>
+							<li {{ (Request::is('users/login') ? 'class="active"' : '') }}><a href="{{ URL::to('users/login') }}">Login</a></li>
+							<li {{ (Request::is('users/register') ? 'class="active"' : '') }}><a href="{{ URL::to('users/register') }}">Register</a></li>
 							@endif
 						</ul>
 					</div>

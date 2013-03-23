@@ -124,7 +124,7 @@ class UserController extends BaseController {
 		if ($v->fails())
 		{
 			// Validation has failed
-			return Redirect::to('user/register')->withErrors($v)->withInput();
+			return Redirect::to('users/register')->withErrors($v)->withInput();
 		}
 		else 
 		{
@@ -155,19 +155,19 @@ class UserController extends BaseController {
 			    } else {
 			    	//There was a problem sending the activation email.
 			    	Session::flash('error', 'There was a problem.  Please contact the system administrator.');
-			    	return Redirect::to('user/register')->withErrors($v)->withInput();
+			    	return Redirect::to('users/register')->withErrors($v)->withInput();
 			    }
 
 			}
 			catch (Cartalyst\Sentry\Users\LoginRequiredException $e)
 			{
 			    Session::flash('error', 'Login field required.');
-			    return Redirect::to('user/register')->withErrors($v)->withInput();
+			    return Redirect::to('users/register')->withErrors($v)->withInput();
 			}
 			catch (Cartalyst\Sentry\Users\UserExistsException $e)
 			{
 			    Session::flash('error', 'User already exists.');
-			    return Redirect::to('user/register')->withErrors($v)->withInput();
+			    return Redirect::to('users/register')->withErrors($v)->withInput();
 			}
 
 		}
@@ -186,7 +186,7 @@ class UserController extends BaseController {
 		    if ($user->attemptActivation($activationCode))
 		    {
 		        // User activation passed
-		        Session::flash('success', 'Your account has been activated. <a href="/user/login">Click here</a> to log in.');
+		        Session::flash('success', 'Your account has been activated. <a href="/users/login">Click here</a> to log in.');
 				return Redirect::to('/');
 		    }
 		    else
@@ -242,7 +242,7 @@ class UserController extends BaseController {
 		if ($v->fails())
 		{
 			// Validation has failed
-			return Redirect::to('user/login')->withErrors($v)->withInput();
+			return Redirect::to('users/login')->withErrors($v)->withInput();
 		}
 		else 
 		{
@@ -264,25 +264,25 @@ class UserController extends BaseController {
 			    // by those credentials. Check the error message returned
 			    // for more information.
 			    Session::flash('error', $e->getMessage() );
-				return Redirect::to('user/login')->withErrors($v)->withInput();
+				return Redirect::to('users/login')->withErrors($v)->withInput();
 			}
 			catch (Cartalyst\Sentry\Users\UserNotActivatedException $e)
 			{
 			    echo 'User not activated.';
 			    Session::flash('error', 'You have not yet activated this account.');
-				return Redirect::to('user/login')->withErrors($v)->withInput();
+				return Redirect::to('users/login')->withErrors($v)->withInput();
 			}
 
 			// The following is only required if throttle is enabled
 			catch (Cartalyst\Sentry\Throttling\UserSuspendedException $e)
 			{
 			    Session::flash('error', 'Your account has been suspended.');
-				return Redirect::to('user/login')->withErrors($v)->withInput();
+				return Redirect::to('users/login')->withErrors($v)->withInput();
 			}
 			catch (Cartalyst\Sentry\Throttling\UserBannedException $e)
 			{
 			    Session::flash('error', 'You have been banned.');
-				return Redirect::to('user/login')->withErrors($v)->withInput();
+				return Redirect::to('users/login')->withErrors($v)->withInput();
 			}
 
 			//Login was succesful.  
@@ -328,7 +328,7 @@ class UserController extends BaseController {
 		if ($v->fails())
 		{
 			// Validation has failed
-			return Redirect::to('user/resetpassword')->withErrors($v)->withInput();
+			return Redirect::to('users/resetpassword')->withErrors($v)->withInput();
 		}
 		else 
 		{
@@ -357,7 +357,7 @@ class UserController extends BaseController {
 			    } else {
 			    	//There was a problem sending the activation email.
 			    	Session::flash('error', 'There was a problem.  Please contact the system administrator.');
-			    	return Redirect::to('user/resetpassword')->withErrors($v)->withInput();
+			    	return Redirect::to('users/resetpassword')->withErrors($v)->withInput();
 			    }
 
 			}
@@ -413,7 +413,7 @@ class UserController extends BaseController {
 		    {
 		        // Password reset failed
 		    	Session::flash('error', 'There was a problem.  Please contact the system administrator.');
-			    return Redirect::to('user/resetpassword');
+			    return Redirect::to('users/resetpassword');
 		    }
 		}
 		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
@@ -501,7 +501,7 @@ class UserController extends BaseController {
 		if ($v->fails())
 		{
 			// Validation has failed
-			return Redirect::to('user/edit/' . $id)->withErrors($v)->withInput();
+			return Redirect::to('users/edit/' . $id)->withErrors($v)->withInput();
 		}
 		else 
 		{
@@ -527,13 +527,13 @@ class UserController extends BaseController {
 				    {
 				        // User information was updated
 				        Session::flash('success', 'Your password has been changed.');
-						return Redirect::to('user/show/'. $id);
+						return Redirect::to('users/show/'. $id);
 				    }
 				    else
 				    {
 				        // User information was not updated
 				        Session::flash('error', 'Your password could not be changed.');
-						return Redirect::to('user/edit/' . $id);
+						return Redirect::to('users/edit/' . $id);
 				    }
 
 				} else {
@@ -544,12 +544,12 @@ class UserController extends BaseController {
 			catch (Cartalyst\Sentry\Users\UserExistsException $e)
 			{
 			    Session::flash('error', 'User already exists.');
-				return Redirect::to('user/edit/' . $id);
+				return Redirect::to('users/edit/' . $id);
 			}
 			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
 			{
 			    Session::flash('error', 'User was not found.');
-				return Redirect::to('user/edit/' . $id);
+				return Redirect::to('users/edit/' . $id);
 			}
 		}
 	}
@@ -580,7 +580,7 @@ class UserController extends BaseController {
 		if ($v->fails())
 		{
 			// Validation has failed
-			return Redirect::to('user/edit/' . $id)->withErrors($v)->withInput();
+			return Redirect::to('users/edit/' . $id)->withErrors($v)->withInput();
 		}
 		else 
 		{
@@ -605,18 +605,18 @@ class UserController extends BaseController {
 					    {
 					        // User saved
 					        Session::flash('success', 'Your password has been changed.');
-							return Redirect::to('user/show/'. $id);
+							return Redirect::to('users/show/'. $id);
 					    }
 					    else
 					    {
 					        // User not saved
 					        Session::flash('error', 'Your password could not be changed.');
-							return Redirect::to('user/edit/' . $id);
+							return Redirect::to('users/edit/' . $id);
 					    }
 					} else {
 						// The oldPassword did not match the password in the database. Abort. 
 						Session::flash('error', 'You did not provide the correct password.');
-						return Redirect::to('user/edit/' . $id);
+						return Redirect::to('users/edit/' . $id);
 					}
 				} else {
 					Session::flash('error', 'You don\'t have access to that user.');
@@ -626,17 +626,17 @@ class UserController extends BaseController {
 			catch (Cartalyst\Sentry\Users\LoginRequiredException $e)
 			{
 			    Session::flash('error', 'Login field required.');
-				return Redirect::to('user/edit/' . $id);
+				return Redirect::to('users/edit/' . $id);
 			}
 			catch (Cartalyst\Sentry\Users\UserExistsException $e)
 			{
 			    Session::flash('error', 'User already exists.');
-				return Redirect::to('user/edit/' . $id);
+				return Redirect::to('users/edit/' . $id);
 			}
 			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
 			{
 			    Session::flash('error', 'User was not found.');
-				return Redirect::to('user/edit/' . $id);
+				return Redirect::to('users/edit/' . $id);
 			}
 		}
 	}

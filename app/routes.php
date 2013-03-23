@@ -17,7 +17,7 @@ Route::get('/', function()
 	return View::make('hello');
 });
 
-Route::controller('user', 'UserController');
+Route::controller('users', 'UserController');
 
 Route::resource('groups', 'GroupController');
 

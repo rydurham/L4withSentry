@@ -8,8 +8,8 @@ Groups
 
 {{-- Content --}}
 @section('content')
-<div class="span10">
-	<h2>Available Groups</h2>
+<h4>Available Groups</h4>
+<div class="well">
 	<table class="table">
 		<thead>
 			<th>Name</th>
@@ -24,6 +24,7 @@ Groups
 		@endforeach
 		</tbody>
 	</table> 
+	 <button class="btn btn-info" onClick="location.href='groups/create'">New Group</button>
 </div>
 
 @stop
