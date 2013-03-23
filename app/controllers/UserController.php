@@ -14,6 +14,9 @@ class UserController extends BaseController {
 		// $this->sendgrid = new SendGrid('USERNAME', 'PASSWORD');
 
 		include('../app/config/sendGridConfig.php');
+
+		//Check CSRF token on POST
+		$this->beforeFilter('csrf', array('on' => 'post'));
 		
 	}
 
@@ -66,7 +69,7 @@ class UserController extends BaseController {
 			$currentUser = Sentry::getUser();
 
 		   	//Do they have admin access?
-			if ( $currentUser->hasAccess('admin') || $currentUser->getId() === $id)
+			if ( $currentUser->hasAccess('admin') || $currentUser->getId() == $id)
 			{
 				//Either they are an admin, or:
 				//They are not an admin, but they are viewing their own profile.
@@ -183,7 +186,7 @@ class UserController extends BaseController {
 		    if ($user->attemptActivation($activationCode))
 		    {
 		        // User activation passed
-		        Session::flash('success', 'Your account has been activated.');
+		        Session::flash('success', 'Your account has been activated. <a href="/user/login">Click here</a> to log in.');
 				return Redirect::to('/');
 		    }
 		    else
