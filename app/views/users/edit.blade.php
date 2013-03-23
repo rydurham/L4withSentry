@@ -24,7 +24,7 @@ Profile</h4>
         <div class="control-group {{ ($errors->has('firstName')) ? 'error' : '' }}" for="firstName">
         	<label class="control-label" for="firstName">First Name</label>
     		<div class="controls">
-				<input name="firstName" value="{{ (Request::old('firstName')) ? Request::old("firstName") : $user->first_name }} " type="text" class="input-xlarge" placeholder="First Name">
+				<input name="firstName" value="{{ (Request::old('firstName')) ? Request::old("firstName") : $user->first_name }}" type="text" class="input-xlarge" placeholder="First Name">
     			{{ ($errors->has('firstName') ? $errors->first('firstName') : '') }}
     		</div>
     	</div>

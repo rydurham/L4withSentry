@@ -363,7 +363,7 @@ class UserController extends BaseController {
 			}
 			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
 			{
-			    echo 'User does not exist/';
+			    echo 'User does not exist';
 			}
 		}
 
@@ -459,7 +459,7 @@ class UserController extends BaseController {
 				$data['userGroups'] = $data['user']->getGroups();
 				return View::make('users.edit')->with($data);
 			} 
-			elseif ($currentUser->getId() === $id)
+			elseif ($currentUser->getId() == $id)
 			{
 				//They are not an admin, but they are viewing their own profile.
 				$data['user'] = Sentry::getUserProvider()->findById($id);
@@ -512,7 +512,7 @@ class UserController extends BaseController {
 				$currentUser = Sentry::getUser();
 
 			   	//Do they have admin access?
-				if ( $currentUser->hasAccess('admin')  || $currentUser->getId() === $id)
+				if ( $currentUser->hasAccess('admin')  || $currentUser->getId() == $id)
 				{
 					// Either they are an admin, or they are changing their own password. 
 					// Find the user using the user id
@@ -592,7 +592,7 @@ class UserController extends BaseController {
 				$currentUser = Sentry::getUser();
 
 			   	//Do they have admin access?
-				if ( $currentUser->hasAccess('admin')  || $currentUser->getId() === $id)
+				if ( $currentUser->hasAccess('admin')  || $currentUser->getId() == $id)
 				{
 					// Either they are an admin, or they are changing their own password. 
 					$user = Sentry::getUserProvider()->findById($id);	
