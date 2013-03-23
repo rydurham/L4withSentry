@@ -12,8 +12,8 @@ Home
   @if (Sentry::check())
   	
     @if($user->hasAccess('admin'))
+		<h4>Current Users:</h4>
 		<div class="well">
-			<h2>Current Users:</h2>
 			<table class="table">
 				<thead>
 					<th>User</th>

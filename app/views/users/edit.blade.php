@@ -19,20 +19,20 @@ Edit Profile
 Profile</h4>
 <div class="well">
 	<form class="form-horizontal" action="/user/edit/{{ $user->id }}" method="post">
-        <input type="hidden" name="csrf_token" id="csrf_token" value="{{ Session::getToken() }}" />
+        <input type="hidden" name="_token" id="_token" value="{{ Session::getToken() }}" />
         
         <div class="control-group {{ ($errors->has('firstName')) ? 'error' : '' }}" for="firstName">
-        	<label class="control-label" for="inputEmail">First Name</label>
+        	<label class="control-label" for="firstName">First Name</label>
     		<div class="controls">
-				<input name="firstName" value="{{ (Request::old('firstName')) ? Request::old("firstName") : $user->first_name }} " type="text" class="span3" placeholder="First Name">
+				<input name="firstName" value="{{ (Request::old('firstName')) ? Request::old("firstName") : $user->first_name }} " type="text" class="input-xlarge" placeholder="First Name">
     			{{ ($errors->has('firstName') ? $errors->first('firstName') : '') }}
     		</div>
     	</div>
 
         <div class="control-group {{ $errors->has('lastName') ? 'error' : '' }}" for="lastName">
-        	<label class="control-label" for="inputEmail">Last Name</label>
+        	<label class="control-label" for="lastName">Last Name</label>
     		<div class="controls">
-				<input name="lastName" value="{{ (Request::old('lastName')) ? Request::old("lastName") : $user->last_name }}" type="text" class="span3" placeholder="Last Name">
+				<input name="lastName" value="{{ (Request::old('lastName')) ? Request::old("lastName") : $user->last_name }}" type="text" class="input-xlarge" placeholder="Last Name">
     			{{ ($errors->has('lastName') ?  $errors->first('lastName') : '') }}
     		</div>
     	</div>
@@ -41,34 +41,34 @@ Profile</h4>
 	    	<input class="btn-primary btn" type="submit" value="Submit Changes"> 
 	    	<input class="btn-inverse btn" type="reset" value="Reset">
 	    </div>
-      </form>
+    </form>
 </div>
 
 <h4>Change Password</h4>
 <div class="well">
 	<form class="form-horizontal" action="/user/changepassword/{{ $user->id }}" method="post">
-        <input type="hidden" name="csrf_token" id="csrf_token" value="{{ Session::getToken() }}" />
+        <input type="hidden" name="_token" id="_token" value="{{ Session::getToken() }}" />
         
         <div class="control-group {{ $errors->has('oldPassword') ? 'error' : '' }}" for="oldPassword">
-        	<label class="control-label" for="inputEmail">Old Password</label>
+        	<label class="control-label" for="oldPassword">Old Password</label>
     		<div class="controls">
-				<input name="oldPassword" value="" type="password" class="span3" placeholder="Old Password">
+				<input name="oldPassword" value="" type="password" class="input-xlarge" placeholder="Old Password">
     			{{ ($errors->has('oldPassword') ? $errors->first('oldPassword') : '') }}
     		</div>
     	</div>
 
         <div class="control-group {{ $errors->has('newPassword') ? 'error' : '' }}" for="newPassword">
-        	<label class="control-label" for="inputEmail">New Password</label>
+        	<label class="control-label" for="newPassword">New Password</label>
     		<div class="controls">
-				<input name="newPassword" value="" type="password" class="span3" placeholder="New Password">
+				<input name="newPassword" value="" type="password" class="input-xlarge" placeholder="New Password">
     			{{ ($errors->has('newPassword') ?  $errors->first('newPassword') : '') }}
     		</div>
     	</div>
 
     	<div class="control-group {{ $errors->has('newPassword_confirmation') ? 'error' : '' }}" for="newPassword_confirmation">
-        	<label class="control-label" for="inputEmail">Confirm New Password</label>
+        	<label class="control-label" for="newPassword_confirmation">Confirm New Password</label>
     		<div class="controls">
-				<input name="newPassword_confirmation" value="" type="password" class="span3" placeholder="Old Passord">
+				<input name="newPassword_confirmation" value="" type="password" class="input-xlarge" placeholder="New Password Again">
     			{{ ($errors->has('newPassword_confirmation') ? $errors->first('newPassword_confirmation') : '') }}
     		</div>
     	</div>
