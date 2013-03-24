@@ -25,7 +25,7 @@ Home
 						<tr>
 							<td><a href="/users/show/{{ $user->id }}">{{ $user->email }}</a></td>
 							<td>{{ $userStatus[$user->id] }} </td>
-							<td><button class="btn" onClick="location.href='/users/edit/{{ $user->id}}'">Edit</button> <button class="btn" onClick="location.href='/users/suspend/{{ $user->id}}'">Suspend</button></td>
+							<td><button class="btn" onClick="location.href='/users/edit/{{ $user->id}}'">Edit</button> <button class="btn" onClick="location.href='/users/suspend/{{ $user->id}}'">Suspend</button> <button class="btn action_confirm" href="/users/delete/{{ $user->id}}" data-token="{{ Session::getToken() }}" data-method="post">Delete</button></td>
 						</tr>
 					@endforeach
 				</tbody>

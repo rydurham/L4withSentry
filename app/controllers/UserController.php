@@ -835,6 +835,35 @@ class UserController extends BaseController {
 		}
 	}
 
+
+	public function postDelete($id)
+	{
+		try
+		{
+		    // Find the user using the user id
+		    $user = Sentry::getUserProvider()->findById($id);
+
+		    // Delete the user
+		    if ($user->delete())
+		    {
+		        // User was successfully deleted
+		        Session::flash('success', 'That user has been deleted.');
+				return Redirect::to('/users');
+		    }
+		    else
+		    {
+		        // There was a problem deleting the user
+		        Session::flash('error', 'There was a problem deleting that user.');
+				return Redirect::to('/users');
+		    }
+		}
+		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+		    Session::flash('error', 'There was a problem accessing that user\s account.');
+			return Redirect::to('/users');
+		}
+	}
+
 	/**
 	 * Generate password - helper function
 	 * From http://www.phpscribble.com/i4xzZu/Generate-random-passwords-of-given-length-and-strength
