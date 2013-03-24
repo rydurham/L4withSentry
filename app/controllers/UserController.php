@@ -9,12 +9,6 @@ class UserController extends BaseController {
 	 */
 	public function __construct()
 	{
-		// This file contains my own private sendGrid key.  
-		// You can put your own sendGrid details here, as such:
-		// $this->sendgrid = new SendGrid('USERNAME', 'PASSWORD');
-
-		include('../app/config/sendGridConfig.php');
-
 		//Check CSRF token on POST
 		$this->beforeFilter('csrf', array('on' => 'post'));
 		
@@ -173,25 +167,15 @@ class UserController extends BaseController {
 				$data['email'] = $input['email'];
 				$data['userId'] = $user->getId();
 
-				//Prepare Activation Email
-				$body = View::make('emails.auth.welcome')->with($data)->render();
-
 				//send email with link to activate.
-				$mail = new SendGrid\Mail();
-				$mail->addTo($input['email'])->
-			       setFrom('support@mercut.io')->
-			       setSubject('Welcome to Laravel4 With Sentry')->
-			       setHtml($body);
+				Mail::send('emails.auth.welcome', $data, function($m) use($data)
+				{
+				    $m->to($data['email'])->subject('Welcome to Laravel4 With Sentry');
+				});
 
-			    if ($this->sendgrid->smtp->send($mail)) {
-			    	//success!
-			    	Session::flash('success', 'Your account has been created. Check your email for the confirmation link.');
-			    	return Redirect::to('/');
-			    } else {
-			    	//There was a problem sending the activation email.
-			    	Session::flash('error', 'There was a problem.  Please contact the system administrator.');
-			    	return Redirect::to('users/register')->withErrors($v)->withInput();
-			    }
+				//success!
+		    	Session::flash('success', 'Your account has been created. Check your email for the confirmation link.');
+		    	return Redirect::to('/');
 
 			}
 			catch (Cartalyst\Sentry\Users\LoginRequiredException $e)
@@ -384,28 +368,16 @@ class UserController extends BaseController {
 			    $user      = Sentry::getUserProvider()->findByLogin($input['email']);
 			    $data['resetCode'] = $user->getResetPasswordCode();
 			    $data['userId'] = $user->getId();
+			    $data['email'] = $input['email'];
 
 			    // Email the reset code to the user
+				Mail::send('emails.auth.reset', $data, function($m) use($data)
+				{
+				    $m->to($data['email'])->subject('Password Reset Confirmation | Laravel4 With Sentry');
+				});
 
-			    //Prepare Reset Message Body
-				$body = View::make('emails.auth.reset')->with($data)->render();
-
-				//send email with link to activate.
-				$mail = new SendGrid\Mail();
-				$mail->addTo($input['email'])->
-			       setFrom('support@mercut.io')->
-			       setSubject('Password Reset Confirmation | Laravel4 With Sentry')->
-			       setHtml($body);
-
-			    if ($this->sendgrid->smtp->send($mail)) {
-			    	//success!
-			    	Session::flash('success', 'Check your email for password reset information.');
-			    	return Redirect::to('/');
-			    } else {
-			    	//There was a problem sending the activation email.
-			    	Session::flash('error', 'There was a problem.  Please contact the system administrator.');
-			    	return Redirect::to('users/resetpassword')->withErrors($v)->withInput();
-			    }
+				Session::flash('success', 'Check your email for password reset information.');
+			    return Redirect::to('/');
 
 			}
 			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
@@ -436,24 +408,15 @@ class UserController extends BaseController {
 
 			    //Prepare New Password body
 			    $data['newPassword'] = $newPassword;
-				$body = View::make('emails.auth.newpassword')->with($data)->render();
+			    $data['email'] = $user->getLogin();
 
-				//send email with link to activate.
-				$mail = new SendGrid\Mail();
-				$mail->addTo($user->getLogin())->
-			       setFrom('support@mercut.io')->
-			       setSubject('New Password Information | Laravel4 With Sentry')->
-			       setHtml($body);
+			    Mail::send('emails.auth.newpassword', $data, function($m) use($data)
+				{
+				    $m->to($data['email'])->subject('New Password Information | Laravel4 With Sentry');
+				});
 
-			    if ($this->sendgrid->smtp->send($mail)) {
-			    	//success!
-			    	Session::flash('success', 'Your password has been changed. Check your email for the new password.');
-			    	return Redirect::to('/');
-			    } else {
-			    	//There was a problem sending the activation email.
-			    	Session::flash('error', 'There was a problem.  Please contact the system administrator.');
-			    	return Redirect::to('/')->withErrors($v)->withInput();
-			    }
+				Session::flash('success', 'Your password has been changed. Check your email for the new password.');
+			    return Redirect::to('/');
 		        
 		    }
 		    else

@@ -12,7 +12,7 @@ return array(
 	|
 	*/
 
-	'host' => 'smtp.sendgrid.net',
+	'host' => 'smtp.postmarkapp.com',
 
 	/*
 	|--------------------------------------------------------------------------
