@@ -11,7 +11,7 @@
 
 		<link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
 		<link href="{{ asset('css/bootstrap-responsive.css') }}" rel="stylesheet">
-
+		<link href="{{ asset('css/bootstrapSwitch.css') }}" rel="stylesheet"><!-- Bootstrap switch from https://github.com/nostalgiaz/bootstrap-switch.git -->
 		<style>
 		@section('styles')
 			body {
@@ -84,5 +84,7 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script src="{{ asset('js/bootstrap.min.js') }}"></script>
 		<script src="{{ asset('js/restfulizer.js') }}"></script> <!-- Thanks to Zizaco for this script:  http://zizaco.net  -->
+		<script src="{{ asset('js/bootstrapSwitch.js') }}"></script> <!-- Bootstrap switch from https://github.com/nostalgiaz/bootstrap-switch.git -->
+
 	</body>
 </html>
