@@ -83,7 +83,7 @@ Profile</h4>
 @if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
 <h4>User Group Memberships</h4>
 <div class="well">
-    <form class="form-horizontal" action="/users/UpdateMemberships/{{ $user->id }}" method="post">
+    <form class="form-horizontal" action="/users/updatememberships/{{ $user->id }}" method="post">
         <input type="hidden" name="_token" id="_token" value="{{ Session::getToken() }}" />
 
         <table class="table">

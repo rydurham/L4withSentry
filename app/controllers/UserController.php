@@ -106,9 +106,9 @@ class UserController extends BaseController {
 	
 		// Gather Sanitized Input
 		$input = array(
-			'email' => Input::get('email'),
-			'password' => Input::get('password'),
-			'password_confirmation' => Input::get('password_confirmation')
+			'email' => Binput::get('email'),
+			'password' => Binput::get('password'),
+			'password_confirmation' => Binput::get('password_confirmation')
 			);
 
 		// Set Validation Rules
@@ -225,9 +225,9 @@ class UserController extends BaseController {
 	{
 		// Gather Sanitized Input
 		$input = array(
-			'email' => Input::get('email'),
-			'password' => Input::get('password'),
-			'rememberMe' => Input::get('rememberMe')
+			'email' => Binput::get('email'),
+			'password' => Binput::get('password'),
+			'rememberMe' => Binput::get('rememberMe')
 			);
 
 		// Set Validation Rules
@@ -314,7 +314,7 @@ class UserController extends BaseController {
 	public function postResetpassword () {
 		// Gather Sanitized Input
 		$input = array(
-			'email' => Input::get('email')
+			'email' => Binput::get('email')
 			);
 
 		// Set Validation Rules
@@ -457,6 +457,7 @@ class UserController extends BaseController {
 			{
 				$data['user'] = Sentry::getUserProvider()->findById($id);
 				$data['userGroups'] = $data['user']->getGroups();
+				$data['allGroups'] = Sentry::getGroupProvider()->findAll();
 				return View::make('users.edit')->with($data);
 			} 
 			elseif ($currentUser->getId() == $id)
@@ -559,12 +560,13 @@ class UserController extends BaseController {
 	 * @param  [type] $id [description]
 	 * @return [type]     [description]
 	 */
-	public function postChangepassword($id) {
+	public function postChangepassword($id) 
+	{
 		// Gather Sanitized Input
 		$input = array(
-			'oldPassword' => Input::get('oldPassword'),
-			'newPassword' => Input::get('newPassword'),
-			'newPassword_confirmation' => Input::get('newPassword_confirmation')
+			'oldPassword' => Binput::get('oldPassword'),
+			'newPassword' => Binput::get('newPassword'),
+			'newPassword_confirmation' => Binput::get('newPassword_confirmation')
 			);
 
 		// Set Validation Rules
@@ -638,6 +640,75 @@ class UserController extends BaseController {
 			    Session::flash('error', 'User was not found.');
 				return Redirect::to('users/edit/' . $id);
 			}
+		}
+	}
+
+	/**
+	 * Process changes to user's group memberships
+	 * @param  int 		$id The affected user's id
+	 * @return [type]     [description]
+	 */
+	public function postUpdatememberships($id)
+	{
+		try 
+		{
+			//Get the current user's id.
+			Sentry::check();
+			$currentUser = Sentry::getUser();
+
+		   	//Do they have admin access?
+			if ( $currentUser->hasAccess('admin'))
+			{
+				$user = Sentry::getUserProvider()->findById($id);
+				$allGroups = Sentry::getGroupProvider()->findAll();
+				$permissions = Input::get('permissions');
+				
+				$statusMessage = '';
+				foreach ($allGroups as $group) {
+					
+					if (isset($permissions[$group->id])) 
+					{
+						//The user should be added to this group
+						if ($user->addGroup($group))
+					    {
+					        $statusMessage .= "Added to " . $group->name . "<br />";
+					    }
+					    else
+					    {
+					        $statusMessage .= "Could not be added to " . $group->name . "<br />";
+					    }
+					} else {
+						// The user should be removed from this group
+						if ($user->removeGroup($group))
+					    {
+					        $statusMessage .= "Removed from " . $group->name . "<br />";
+					    }
+					    else
+					    {
+					        $statusMessage .= "Could not be removed from " . $group->name . "<br />";
+					    }
+					}
+					
+				}
+				Session::flash('info', $statusMessage);
+				return Redirect::to('users/show/'. $id);
+			} 
+			else 
+			{
+				Session::flash('error', 'You don\'t have access to that user.');
+				return Redirect::to('/');
+			}
+	
+		}
+		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+		    Session::flash('error', 'User was not found.');
+			return Redirect::to('users/edit/' . $id);
+		}
+		catch (Cartalyst\Sentry\Groups\GroupNotFoundException $e)
+		{
+		    Session::flash('error', 'Trying to access unidentified Groups.');
+			return Redirect::to('users/edit/' . $id);
 		}
 	}
 
