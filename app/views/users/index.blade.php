@@ -24,8 +24,8 @@ Home
 					@foreach ($allUsers as $user)
 						<tr>
 							<td><a href="/users/show/{{ $user->id }}">{{ $user->email }}</a></td>
-							<td>Status</td>
-							<td><button class="btn" onClick="location.href='/users/edit/{{ $user->id}}'">Edit User</button> <button class="btn" onClick="location.href='/#/{{ $user->id}}'">Suspend User</button></td>
+							<td>{{ $userStatus[$user->id] }} </td>
+							<td><button class="btn" onClick="location.href='/users/edit/{{ $user->id}}'">Edit</button> <button class="btn" onClick="location.href='/users/suspend/{{ $user->id}}'">Suspend</button></td>
 						</tr>
 					@endforeach
 				</tbody>

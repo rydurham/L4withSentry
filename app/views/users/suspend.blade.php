@@ -1,0 +1,30 @@
+@extends('layouts.default')
+
+{{-- Web site Title --}}
+@section('title')
+@parent
+Suspend User
+@stop
+
+{{-- Content --}}
+@section('content')
+<h4>Suspend {{ $user->email }}</h4>
+<div class="well">
+	<form class="form-horizontal" action="{{ Request::fullUrl() }}" method="post">   
+    	<input type="hidden" name="_token" id="_token" value="{{ Session::getToken() }}" />
+    	
+		<div class="control-group {{ ($errors->has('suspendTime')) ? 'error' : '' }}" for="suspendTime">
+            <label class="control-label" for="suspendTime">Duration</label>
+            <div class="controls">
+                <input name="suspendTime" id="suspendTime" value="{{ Request::old('suspendTime') }}" type="text" class="input-xlarge" placeholder="Minutes">
+                {{ ($errors->has('suspendTime') ? $errors->first('suspendTime') : '') }}
+            </div>
+        </div>
+
+    	<div class="form-actions">
+    		<button class="btn btn-primary" type="submit">Suspend User</button>
+    	</div>
+  </form>
+</div>
+
+@stop

@@ -18,9 +18,13 @@ class UserController extends BaseController {
 		//Check CSRF token on POST
 		$this->beforeFilter('csrf', array('on' => 'post'));
 		
+		//Enable the throttler.  [I am not sure about this...]
+		// Get the Throttle Provider
+		$throttleProvider = Sentry::getThrottleProvider();
+
+		// Enable the Throttling Feature
+		$throttleProvider->enable();
 	}
-
-
 
 	/**
 	 * Display a listing of the resource.
@@ -41,6 +45,37 @@ class UserController extends BaseController {
 
 			    if ($data['user']->hasAccess('admin')) {
 			    	$data['allUsers'] = Sentry::getUserProvider()->findAll();
+
+			    	//Assemble an array of each user's status
+			    	$data['userStatus'] = array();
+			    	foreach ($data['allUsers'] as $user) {
+			    		if ($user->isActivated()) 
+			    		{
+			    			$data['userStatus'][$user->id] = "Active";
+			    		} 
+			    		else 
+			    		{
+			    			$data['userStatus'][$user->id] = "Not Active";
+			    		}
+
+			    		//Pull Suspension & Ban info for this user
+			    		$throttle = Sentry::getThrottleProvider()->findByUserId($user->id);
+
+			    		//Check for suspension
+			    		if($throttle->isSuspended())
+					    {
+					        // User is Suspended
+					        $data['userStatus'][$user->id] = "Suspended";
+					    }
+
+			    		//Check for ban
+					    if($throttle->isBanned())
+					    {
+					        // User is Banned
+					        $data['userStatus'][$user->id] = "Banned";
+					    }
+
+			    	}
 			    } 
 
 			    return View::make('users.index')->with($data);
@@ -186,6 +221,11 @@ class UserController extends BaseController {
 		    if ($user->attemptActivation($activationCode))
 		    {
 		        // User activation passed
+		        
+		    	//Add this person to the user group. 
+		    	$userGroup = Sentry::getGroupProvider()->findById(1);
+		    	$user->addGroup($userGroup);
+
 		        Session::flash('success', 'Your account has been activated. <a href="/users/login">Click here</a> to log in.');
 				return Redirect::to('/');
 		    }
@@ -248,6 +288,11 @@ class UserController extends BaseController {
 		{
 			try
 			{
+			    //Check for suspension or banned status
+				$user = Sentry::getUserProvider()->findByLogin($input['email']);
+				$throttle = Sentry::getThrottleProvider()->findByUserId($user->id);
+			    $throttle->check();
+
 			    // Set login credentials
 			    $credentials = array(
 			        'email'    => $input['email'],
@@ -256,6 +301,7 @@ class UserController extends BaseController {
 
 			    // Try to authenticate the user
 			    $user = Sentry::authenticate($credentials, $input['rememberMe']);
+
 			}
 			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
 			{
@@ -276,7 +322,8 @@ class UserController extends BaseController {
 			// The following is only required if throttle is enabled
 			catch (Cartalyst\Sentry\Throttling\UserSuspendedException $e)
 			{
-			    Session::flash('error', 'Your account has been suspended.');
+			    $time = $throttle->getSuspensionTime();
+			    Session::flash('error', "Your account has been suspended for $time minutes.");
 				return Redirect::to('users/login')->withErrors($v)->withInput();
 			}
 			catch (Cartalyst\Sentry\Throttling\UserBannedException $e)
@@ -445,7 +492,8 @@ class UserController extends BaseController {
 	 *  Edit / Update User Profile
 	 */
 	
-	public function getEdit($id) {
+	public function getEdit($id) 
+	{
 		try
 		{
 		    //Get the current user's id.
@@ -477,9 +525,6 @@ class UserController extends BaseController {
 		    Session::flash('error', 'There was a problem accessing your account.');
 			return Redirect::to('/');
 		}
-
-
-
 	}
 
 
@@ -688,7 +733,7 @@ class UserController extends BaseController {
 					        $statusMessage .= "Could not be removed from " . $group->name . "<br />";
 					    }
 					}
-					
+
 				}
 				Session::flash('info', $statusMessage);
 				return Redirect::to('users/show/'. $id);
@@ -712,6 +757,83 @@ class UserController extends BaseController {
 		}
 	}
 
+
+	/**
+	 * Prepare the "Ban User" form
+	 * @param  int $id The user id
+	 * @return View     The "Ban Form" view
+	 */
+	public function getSuspend($id)
+	{
+		try
+		{
+		    //Get the current user's id.
+			Sentry::check();
+			$currentUser = Sentry::getUser();
+
+		   	//Do they have admin access?
+			if ( $currentUser->hasAccess('admin'))
+			{
+				$data['user'] = Sentry::getUserProvider()->findById($id);
+				return View::make('users.suspend')->with($data);
+			} else {
+				Session::flash('error', 'You are not allowed to do that.');
+				return Redirect::to('/');
+			}
+
+		}
+		catch (Cartalyst\Sentry\UserNotFoundException $e)
+		{
+		    Session::flash('error', 'There was a problem accessing that user\s account.');
+			return Redirect::to('/users');
+		}
+	}
+
+	public function postSuspend($id)
+	{
+		// Gather Sanitized Input
+		$input = array(
+			'suspendTime' => Input::get('suspendTime')
+			);
+
+		// Set Validation Rules
+		$rules = array (
+			'suspendTime' => 'required|numeric'
+			);
+
+		//Run input validation
+		$v = Validator::make($input, $rules);
+
+		if ($v->fails())
+		{
+			// Validation has failed
+			return Redirect::to('users/suspend/' . $id)->withErrors($v)->withInput();
+		}
+		else 
+		{
+			try
+			{
+				//Prep for suspension
+				$throttle = Sentry::getThrottleProvider()->findByUserId($id);
+
+				//Set suspension time
+				$throttle->setSuspensionTime($input['suspendTime']);
+
+				// Suspend the user
+    			$throttle->suspend();
+
+    			//Done.  Return to users page.
+    			Session::flash('success', "User has been suspended for " . $input['suspendTime'] . " minutes.");
+				return Redirect::to('users');
+
+			}
+			catch (Cartalyst\Sentry\UserNotFoundException $e)
+			{
+			    Session::flash('error', 'There was a problem accessing that user\s account.');
+				return Redirect::to('/users');
+			}
+		}
+	}
 
 	/**
 	 * Generate password - helper function
