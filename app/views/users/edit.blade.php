@@ -18,7 +18,7 @@ Edit Profile
 
 Profile</h4>
 <div class="well">
-	<form class="form-horizontal" action="/user/edit/{{ $user->id }}" method="post">
+	<form class="form-horizontal" action="/users/edit/{{ $user->id }}" method="post">
         <input type="hidden" name="_token" id="_token" value="{{ Session::getToken() }}" />
         
         <div class="control-group {{ ($errors->has('firstName')) ? 'error' : '' }}" for="firstName">
@@ -46,7 +46,7 @@ Profile</h4>
 
 <h4>Change Password</h4>
 <div class="well">
-	<form class="form-horizontal" action="/user/changepassword/{{ $user->id }}" method="post">
+	<form class="form-horizontal" action="/users/changepassword/{{ $user->id }}" method="post">
         <input type="hidden" name="_token" id="_token" value="{{ Session::getToken() }}" />
         
         <div class="control-group {{ $errors->has('oldPassword') ? 'error' : '' }}" for="oldPassword">
@@ -83,7 +83,31 @@ Profile</h4>
 @if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
 <h4>User Group Memberships</h4>
 <div class="well">
+    <form class="form-horizontal" action="/users/UpdateMemberships/{{ $user->id }}" method="post">
+        <input type="hidden" name="_token" id="_token" value="{{ Session::getToken() }}" />
 
+        <table class="table">
+            <thead>
+                <th>Group</th>
+                <th>Membership Status</th>
+            </thead>
+            <tbody>
+                @foreach ($allGroups as $group)
+                    <tr>
+                        <td>{{ $group->name }}</td>
+                        <td>
+                            <div class="switch" data-on-label="In" data-on='info' data-off-label="Out">
+                                <input name="permissions[{{ $group->id }}]" type="checkbox" {{ ( $user->inGroup($group)) ? 'checked' : '' }} >
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <div class="form-actions">
+            <input class="btn-primary btn" type="submit" value="Update Memberships">
+        </div> 
+    </form>
 </div>
 @endif    
 
