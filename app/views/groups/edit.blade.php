@@ -8,21 +8,35 @@ Edit Group
 
 {{-- Content --}}
 @section('content')
-<div class="span3 well">
-	<legend>Edit Group</legend>
-	<form class="form-reset" action="/groups/{{ $group['id'] }}" method="POST">   
-    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ Session::getToken() }}" />
-    <input type="hidden" name="_method" value="PUT">
-    {{{ $errors->first('newGroup') }}}
-    <input name="newGroup" type="text" class="span3" placeholder="New Group Name" value={{ $group['name'] }}>
-    <p>Permissions<p>
-    	<label class="checkbox">
-            <input type="checkbox" value="1" name="adminPermissions" @if ( isset($group['permissions']['admin']) ) checked @endif > Admin
-        </label>
-    	<label class="checkbox">
-            <input type="checkbox" value="1" name="userPermissions"  @if ( isset($group['permissions']['user']) ) checked @endif> User
-        </label>
-    <button class="btn btn-primary" type="submit">Save Changes</button>
+<h4>Edit Group</h4>
+<div class="well">
+	<form class="form-horizontal" action="/groups/{{ $group['id'] }}" method="POST">   
+        <input type="hidden" name="csrf_token" id="csrf_token" value="{{ Session::getToken() }}" />
+        <input type="hidden" name="_method" value="PUT">
+    
+        <div class="control-group {{ ($errors->has('name')) ? 'error' : '' }}" for="name">
+            <label class="control-label" for="name">Name</label>
+            <div class="controls">
+                <input name="name" value="{{ (Request::old('name')) ? Request::old('name') : $group->name }}" type="text" class="input-xlarge" placeholder="Name">
+                {{ ($errors->has('name') ? $errors->first('name') : '') }}
+            </div>
+        </div>
+
+        <div class="control-group" for="permissions">
+            <label class="control-label" for="permissions">Permissions</label>
+            <div class="controls">
+                <label class="checkbox inline">
+                    <input type="checkbox" value="1" name="adminPermissions" @if ( isset($group['permissions']['admin']) ) checked @endif> Admin
+                </label>
+                <label class="checkbox inline">
+                    <input type="checkbox" value="1" name="userPermissions" @if ( isset($group['permissions']['users']) ) checked @endif> User
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Save Changes</button>
+        </div>
   </form>
 </div>
 

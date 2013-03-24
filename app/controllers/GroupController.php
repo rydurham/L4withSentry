@@ -190,12 +190,12 @@ class GroupController extends BaseController {
 		// Gather Sanitized Input
 		
 		$input = array(
-			'newGroup' => Input::get('newGroup')
+			'name' => Input::get('name')
 			);
 
 		// Set Validation Rules
 		$rules = array (
-			'newGroup' => 'required|min:4'
+			'name' => 'required|min:4'
 			);
 
 		//Run input validation
@@ -215,7 +215,7 @@ class GroupController extends BaseController {
 			    $group = Sentry::getGroupProvider()->findById($id);
 
 			    // Update the group details
-			    $group->name = $input['newGroup'];
+			    $group->name = $input['name'];
 			    $group->permissions = array(
 			       'admin' => Input::get('adminPermissions', 0),
 				   'users' => Input::get('userPermissions', 0),
@@ -255,7 +255,7 @@ class GroupController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+		
 		try
 		{
 		    // Find the group using the group id

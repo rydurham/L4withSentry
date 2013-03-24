@@ -80,6 +80,11 @@ Profile</h4>
       </form>
   </div>
 
+@if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
+<h4>User Group Memberships</h4>
+<div class="well">
 
+</div>
+@endif    
 
 @stop

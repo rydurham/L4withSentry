@@ -8,21 +8,35 @@ Create Group
 
 {{-- Content --}}
 @section('content')
-<div class="span3 well">
-	<legend>New Group</legend>
-	<form class="form-reset" action="/groups" method="post">   
-    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ Session::getToken() }}" />
-    {{{ $errors->first('newGroup') }}}
-    <input name="newGroup" type="text" class="span3" placeholder="New Group Name">
-    <p>Permissions<p>
-    	<label class="checkbox">
-            <input type="checkbox" value="1" name="adminPermissions"> Admin
-        </label>
-    	<label class="checkbox">
-            <input type="checkbox" value="1" name="userPermissions"> User
-        </label>
-    <button class="btn btn-primary" type="submit">Create New Group</button>
-  </form>
+<h4>New Group</h4>
+<div class="well">
+	<form class="form-horizontal" action="/groups" method="post">   
+        <input type="hidden" name="_token" id="_token" value="{{ Session::getToken() }}" />
+    
+        <div class="control-group {{ ($errors->has('newGroup')) ? 'error' : '' }}" for="newGroup">
+            <label class="control-label" for="newGroup">New Group</label>
+            <div class="controls">
+                <input name="newGroup" value="{{ Request::old("newGroup") }}" type="text" class="input-xlarge" placeholder="New Group">
+                {{ ($errors->has('newGroup') ? $errors->first('newGroup') : '') }}
+            </div>
+        </div>
+
+        <div class="control-group" for="permissions">
+            <label class="control-label" for="permissions">Permissions</label>
+            <div class="controls">
+                <label class="checkbox inline">
+                    <input type="checkbox" value="1" name="adminPermissions"> Admin
+                </label>
+                <label class="checkbox inline">
+                    <input type="checkbox" value="1" name="userPermissions"> User
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <input class="btn btn-primary" type="submit" value="Create New Group"> 
+        </div>
+    </form>
 </div>
 
 @stop
