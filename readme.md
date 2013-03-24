@@ -34,8 +34,8 @@ __Users__
 
 * Please let me know if you have any problems.  
 * Sentry 2 is still in active development - I will strive to keep this project updated as they move towards a stable release. 
-* There are several Sentry 2 features that I have not included here (mainly User specific Permissions and Banning).  I will implement these eventually.
+* There are several Sentry 2 features that I have not included here (mainly User Specific Permissions and Banning).  I will add these eventually.
 * The GroupController is restful and the UserController is not; only because I wanted to experiment with both methods.
-* I have been a bit sloppy with how I handle "Admin" access checking in the UserController - I hope to clean this up eventually.
+* I have been a bit sloppy with how I handle "Admin" access checking in the UserController - I hope to clean this up soon.
 * There are currently no tests here, beyond the tests provided with Sentry 2 and Laravel 4.  I am not yet hip enough to TDD to add these in a meaningful way.
 * Currently all mail is being sent inline - eventually I will switch this over to use the new Queue feature in Laravel 4.
