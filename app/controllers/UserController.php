@@ -293,7 +293,7 @@ class UserController extends BaseController {
 			    // not match. Therefore a user technically doesn't exist
 			    // by those credentials. Check the error message returned
 			    // for more information.
-			    Session::flash('error', $e->getMessage() );
+			    Session::flash('error', 'Invalid username or password.' );
 				return Redirect::to('users/login')->withErrors($v)->withInput();
 			}
 			catch (Cartalyst\Sentry\Users\UserNotActivatedException $e)
