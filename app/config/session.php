@@ -11,7 +11,7 @@ return array(
 	| requests. By default we will use the light-weight cookie driver but
 	| you may specify any of the other wonderful drivers provided here.
 	|
-	| Supported: "cookie", file", "database", "apc",
+	| Supported: "cookie", "file", "database", "apc",
 	|            "memcached", "redis", "array"
 	|
 	*/
@@ -42,7 +42,7 @@ return array(
 	|
 	*/
 
-	'path' => __DIR__.'/../storage/sessions',
+	'files' => __DIR__.'/../storage/sessions',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -121,5 +121,18 @@ return array(
 	*/
 
 	'domain' => null,
+
+	/*
+	|--------------------------------------------------------------------------
+	| Session Payload Cookie Name
+	|--------------------------------------------------------------------------
+	|
+	| When using the "cookie" session driver, you may configure the name of
+	| the cookie used as the session "payload". This cookie actually has
+	| the encrypted session data stored within it for the application.
+	|
+	*/
+
+	'payload' => 'laravel_payload',
 
 );
