@@ -39,3 +39,5 @@ __Users__
 * I have been a bit sloppy with how I handle "Admin" access checking in the UserController - I hope to clean this up soon.
 * There are currently no tests here, beyond the tests provided with Sentry 2 and Laravel 4.  I am not yet hip enough to TDD to add these in a meaningful way.
 * Currently all mail is being sent inline - eventually I will switch this over to use the new Queue feature in Laravel 4.
+=======
+The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
