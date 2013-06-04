@@ -21,7 +21,7 @@ Home
 		    	<p><strong>Last Name:</strong> {{ $user->last_name }} </p>
 			@endif
 		    <p><strong>Email:</strong> {{ $user->email }}</p>
-		    <button class="btn btn-info" onClick="location.href='/users/edit/{{ $user->id}}'">Edit Profile</button>
+		    <button class="btn btn-info" onClick="location.href='{{ URL::to('users/edit') }}/{{ $user->id}}'">Edit Profile</button>
 		</div>
 		<div class="span4">
 			<p><em>Account created: {{ $user->created_at }}</em></p>
