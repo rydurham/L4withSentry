@@ -35,13 +35,22 @@ App::after(function($request, $response)
 
 Route::filter('auth', function()
 {
-	if (Auth::guest()) return Redirect::route('login');
+	if (!Sentry::check()) return Redirect::to('users/login');
 });
 
-
-Route::filter('auth.basic', function()
+Route::filter('admin_auth', function()
 {
-	return Auth::basic();
+	if (!Sentry::check())
+	{
+		// if not logged in, redirect to login
+		return Redirect::to('users/login');
+	}
+
+	if (!Sentry::getUser()->hasAccess('admin'))
+	{
+		// has no access
+		return Response::make('Access Forbidden', '403');
+	}
 });
 
 /*
@@ -73,6 +82,10 @@ Route::filter('guest', function()
 
 Route::filter('csrf', function()
 {
+	// var_dump($_SESSION);
+ //            var_dump($_POST);
+ //            die();
+
 	if (Session::token() != Input::get('_token'))
 	{
 		throw new Illuminate\Session\TokenMismatchException;
