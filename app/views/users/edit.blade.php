@@ -18,8 +18,8 @@ Edit Profile
 
 Profile</h4>
 <div class="well">
-	<form class="form-horizontal" action="/users/edit/{{ $user->id }}" method="post">
-        <input type="hidden" name="_token" id="_token" value="{{ Session::getToken() }}" />
+	<form class="form-horizontal" action="{{ URL::to('users/edit') }}/{{ $user->id }}" method="post">
+        {{ Form::token() }}
         
         <div class="control-group {{ ($errors->has('firstName')) ? 'error' : '' }}" for="firstName">
         	<label class="control-label" for="firstName">First Name</label>
@@ -46,8 +46,8 @@ Profile</h4>
 
 <h4>Change Password</h4>
 <div class="well">
-	<form class="form-horizontal" action="/users/changepassword/{{ $user->id }}" method="post">
-        <input type="hidden" name="_token" id="_token" value="{{ Session::getToken() }}" />
+	<form class="form-horizontal" action="{{ URL::to('users/changepassword') }}/{{ $user->id }}" method="post">
+        {{ Form::token() }}
         
         <div class="control-group {{ $errors->has('oldPassword') ? 'error' : '' }}" for="oldPassword">
         	<label class="control-label" for="oldPassword">Old Password</label>
@@ -83,8 +83,8 @@ Profile</h4>
 @if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
 <h4>User Group Memberships</h4>
 <div class="well">
-    <form class="form-horizontal" action="/users/updatememberships/{{ $user->id }}" method="post">
-        <input type="hidden" name="_token" id="_token" value="{{ Session::getToken() }}" />
+    <form class="form-horizontal" action="{{ URL::to('users/updatememberships') }}/{{ $user->id }}" method="post">
+        {{ Form::token() }}
 
         <table class="table">
             <thead>

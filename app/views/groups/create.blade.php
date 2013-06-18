@@ -10,8 +10,8 @@ Create Group
 @section('content')
 <h4>New Group</h4>
 <div class="well">
-	<form class="form-horizontal" action="/groups" method="post">   
-        <input type="hidden" name="_token" id="_token" value="{{ Session::getToken() }}" />
+	<form class="form-horizontal" action="{{ URL::to('groups') }}" method="post">   
+        {{ Form::token() }}
     
         <div class="control-group {{ ($errors->has('newGroup')) ? 'error' : '' }}" for="newGroup">
             <label class="control-label" for="newGroup">New Group</label>

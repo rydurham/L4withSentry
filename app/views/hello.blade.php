@@ -21,8 +21,8 @@ Hello World
 @if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
 	<h4>Admin Options</h4>
 	<div class="well">
-		 <button class="btn btn-info" onClick="location.href='/users'">View Users</button>
-		 <button class="btn btn-info" onClick="location.href='/groups'">View Groups</button>
+		 <button class="btn btn-info" onClick="location.href='{{ URL::to('users') }}'">View Users</button>
+		 <button class="btn btn-info" onClick="location.href='{{ URL::to('groups') }}'">View Groups</button>
 	</div>
 @endif 
  

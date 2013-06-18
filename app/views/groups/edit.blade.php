@@ -10,8 +10,8 @@ Edit Group
 @section('content')
 <h4>Edit Group</h4>
 <div class="well">
-	<form class="form-horizontal" action="/groups/{{ $group['id'] }}" method="POST">   
-        <input type="hidden" name="csrf_token" id="csrf_token" value="{{ Session::getToken() }}" />
+	<form class="form-horizontal" action="{{ URL::to('groups') }}/{{ $group['id'] }}" method="POST">   
+        {{ Form::token() }}
         <input type="hidden" name="_method" value="PUT">
     
         <div class="control-group {{ ($errors->has('name')) ? 'error' : '' }}" for="name">

@@ -10,8 +10,8 @@ Reset Password
 @section('content')
 <h4>Reset Password</h4>
 <div class="well">
-	<form class="form-horizontal" action="{{ Request::fullUrl() }}" method="post">   
-    	<input type="hidden" name="_token" id="_token" value="{{ Session::getToken() }}" />
+	<form class="form-horizontal" action="{{ URL::to('users/resetpassword') }}" method="post">   
+    	{{ Form::token() }}
     	
 		<div class="control-group {{ ($errors->has('email')) ? 'error' : '' }}" for="email">
             <label class="control-label" for="email">E-mail</label>
