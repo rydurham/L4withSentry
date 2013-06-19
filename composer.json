@@ -1,7 +1,8 @@
 {
 	"require": {
 		"laravel/framework": "4.0.*@dev",
-		"cartalyst/sentry": "2.0.*"
+		"cartalyst/sentry": "2.0.*",
+		"rtablada/package-installer": "dev-master"
 	},
 	"autoload": {
 		"classmap": [
