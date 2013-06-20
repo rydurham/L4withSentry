@@ -6991,3 +6991,14 @@ table {
 .table_center {
   text-align: center;
 }
+
+/* line 30, ../../app/assets/sass/_custom.scss */
+.row {
+  margin-bottom: 20px;
+}
+
+/* line 34, ../../app/assets/sass/_custom.scss */
+.well {
+  background-color: #ccc;
+  padding: 10px;
+}

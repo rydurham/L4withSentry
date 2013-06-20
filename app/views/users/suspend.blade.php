@@ -8,22 +8,22 @@ Suspend User
 
 {{-- Content --}}
 @section('content')
-<h4>Suspend {{ $user->email }}</h4>
-<div class="well">
-	<form class="form-horizontal" action="{{ URL::to('users/suspend') }}/{{ $user->id }}" method="post">   
-    	{{ Form::token() }}
-    	
-		<div class="control-group {{ ($errors->has('suspendTime')) ? 'error' : '' }}" for="suspendTime">
-            <label class="control-label" for="suspendTime">Duration</label>
-            <div class="controls">
-                <input name="suspendTime" id="suspendTime" value="{{ Request::old('suspendTime') }}" type="text" class="input-xlarge" placeholder="Minutes">
-                {{ ($errors->has('suspendTime') ? $errors->first('suspendTime') : '') }}
-            </div>
-        </div>
 
-    	<div class="form-actions">
-    		<button class="btn btn-primary" type="submit">Suspend User</button>
-    	</div>
+<div class="row">
+
+
+	<form action="{{ URL::to('users/suspend') }}/{{ $user->id }}" method="post">   
+    	{{ Form::token() }}
+
+        <ul class="centered six columns">
+            <h4>Suspend {{ $user->email }}</h4>
+            
+            <li class="field {{ ($errors->has('suspendTime')) ? 'danger' : '' }}"><input type="text" name='suspendTime' placeholder="Minutes" class="text input" value="{{ Request::old('suspendTime') }}"></li>
+                {{ $errors->first('suspendTime',  '<p class="form_error">:message</p>') }}
+
+            <div class="medium primary btn"><input type="submit" value="Suspend User" /></div>
+        </ul>
+    	
   </form>
 </div>
 
