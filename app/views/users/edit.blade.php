@@ -8,105 +8,66 @@ Edit Profile
 
 {{-- Content --}}
 @section('content')
-
-<h4>Edit 
-@if ($user->email == Sentry::getUser()->email)
-	Your
-@else 
-	{{ $user->email }}'s 
-@endif 
-
-Profile</h4>
-<div class="well">
-	<form class="form-horizontal" action="{{ URL::to('users/edit') }}/{{ $user->id }}" method="post">
+<div class="row">
+    <form action="{{ URL::to('users/edit') }}/{{ $user->id }}" method="post">
         {{ Form::token() }}
+       
+        <ul class="centered six columns">
+        <h4>Edit 
+        @if ($user->email == Sentry::getUser()->email)
+            Your
+        @else 
+            {{ $user->email }}'s 
+        @endif 
+        Profile</h4>
         
-        <div class="control-group {{ ($errors->has('firstName')) ? 'error' : '' }}" for="firstName">
-        	<label class="control-label" for="firstName">First Name</label>
-    		<div class="controls">
-				<input name="firstName" value="{{ (Request::old('firstName')) ? Request::old("firstName") : $user->first_name }}" type="text" class="input-xlarge" placeholder="First Name">
-    			{{ ($errors->has('firstName') ? $errors->first('firstName') : '') }}
-    		</div>
-    	</div>
-
-        <div class="control-group {{ $errors->has('lastName') ? 'error' : '' }}" for="lastName">
-        	<label class="control-label" for="lastName">Last Name</label>
-    		<div class="controls">
-				<input name="lastName" value="{{ (Request::old('lastName')) ? Request::old("lastName") : $user->last_name }}" type="text" class="input-xlarge" placeholder="Last Name">
-    			{{ ($errors->has('lastName') ?  $errors->first('lastName') : '') }}
-    		</div>
-    	</div>
-
-    	<div class="form-actions">
-	    	<input class="btn-primary btn" type="submit" value="Submit Changes"> 
-	    	<input class="btn-inverse btn" type="reset" value="Reset">
-	    </div>
+            <li class="field {{ ($errors->has('firstName')) ? 'danger' : '' }}"><input type="text" name='firstName' placeholder="First Name" class="text input" value="{{ Request::old('firstName') }}"></li>
+            {{ $errors->first('firstName',  '<p class="form_error">:message</p>') }}
+            <li class="field {{ ($errors->has('lastName')) ? 'danger' : '' }}"><input type="text" name='lastName' placeholder="Last Name" class="text input" value="{{ Request::old('lastName') }}"></li>
+            {{ $errors->first('lastName',  '<p class="form_error">:message</p>') }}
+            <div class="small primary btn"><input type="submit" value="Submit Changes"></div>
+            <div class="small default btn"><input type="reset" value="Reset"></div>            
+        </ul>
+        
     </form>
 </div>
 
-<h4>Change Password</h4>
-<div class="well">
-	<form class="form-horizontal" action="{{ URL::to('users/changepassword') }}/{{ $user->id }}" method="post">
+<div class="row">
+	<form action="{{ URL::to('users/changepassword') }}/{{ $user->id }}" method="post">
         {{ Form::token() }}
-        
-        <div class="control-group {{ $errors->has('oldPassword') ? 'error' : '' }}" for="oldPassword">
-        	<label class="control-label" for="oldPassword">Old Password</label>
-    		<div class="controls">
-				<input name="oldPassword" value="" type="password" class="input-xlarge" placeholder="Old Password">
-    			{{ ($errors->has('oldPassword') ? $errors->first('oldPassword') : '') }}
-    		</div>
-    	</div>
 
-        <div class="control-group {{ $errors->has('newPassword') ? 'error' : '' }}" for="newPassword">
-        	<label class="control-label" for="newPassword">New Password</label>
-    		<div class="controls">
-				<input name="newPassword" value="" type="password" class="input-xlarge" placeholder="New Password">
-    			{{ ($errors->has('newPassword') ?  $errors->first('newPassword') : '') }}
-    		</div>
-    	</div>
-
-    	<div class="control-group {{ $errors->has('newPassword_confirmation') ? 'error' : '' }}" for="newPassword_confirmation">
-        	<label class="control-label" for="newPassword_confirmation">Confirm New Password</label>
-    		<div class="controls">
-				<input name="newPassword_confirmation" value="" type="password" class="input-xlarge" placeholder="New Password Again">
-    			{{ ($errors->has('newPassword_confirmation') ? $errors->first('newPassword_confirmation') : '') }}
-    		</div>
-    	</div>
-	        	
-	    <div class="form-actions">
-	    	<input class="btn-primary btn" type="submit" value="Change Password"> 
-	    	<input class="btn-inverse btn" type="reset" value="Reset">
-	    </div>
+        <ul class="centered six columns">
+            <h4>Change Password</h4>
+            <li class="field {{ $errors->has('oldPassword') ? 'danger' : '' }}"><input type="password" name="oldPassword" placeholder="Old Password" class="password input"></li>
+                {{ $errors->first('oldPassword',  '<p class="form_error">:message</p>') }}
+            <li class="field {{ $errors->has('newPassword') ? 'danger' : '' }}"><input type="password" name="newPassword" placeholder="New Password" class="password input"></li>
+                {{ $errors->first('newPassword',  '<p class="form_error">:message</p>') }}
+            <li class="field {{ $errors->has('newPassword_confirmation') ? 'danger' : '' }}"><input type="password" name="newPassword_confirmation" placeholder="Confirm New Password" class="password input"></li>
+                {{ $errors->first('newPassword_confirmation',  '<p class="form_error">:message</p>') }}
+            <div class="small primary btn"><input type="submit" value="Change Password"></div>
+            <div class="small default btn"><input type="reset" value="Reset"></div>        
+        </ul>
       </form>
   </div>
 
 @if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
-<h4>User Group Memberships</h4>
-<div class="well">
-    <form class="form-horizontal" action="{{ URL::to('users/updatememberships') }}/{{ $user->id }}" method="post">
-        {{ Form::token() }}
 
-        <table class="table">
-            <thead>
-                <th>Group</th>
-                <th>Membership Status</th>
-            </thead>
-            <tbody>
-                @foreach ($allGroups as $group)
-                    <tr>
-                        <td>{{ $group->name }}</td>
-                        <td>
-                            <div class="switch" data-on-label="In" data-on='info' data-off-label="Out">
-                                <input name="permissions[{{ $group->id }}]" type="checkbox" {{ ( $user->inGroup($group)) ? 'checked' : '' }} >
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <div class="form-actions">
-            <input class="btn-primary btn" type="submit" value="Update Memberships">
-        </div> 
+<div class="row">
+    <form action="{{ URL::to('users/updatememberships') }}/{{ $user->id }}" method="post">
+        {{ Form::token() }}
+    
+        <ul class="centered six columns">
+            <h4>Group Memberships</h4>
+            @foreach ($allGroups as $group)
+                <li class="field">
+                    <label for="permissions[{{ $group->id }}]" class="checkbox {{ ( $user->inGroup($group)) ? 'checked' : '' }}">
+                      <input type="checkbox"  name="permissions[{{ $group->id }}]" {{ ( $user->inGroup($group)) ? 'checked="checked"' : '' }}>
+                      <span></span> {{ $group->name }}
+                    </label>
+                </li>
+            @endforeach
+            <div class="small primary btn"><input type="submit" value="Update Memberships"></div>
+        </ul>
     </form>
 </div>
 @endif    

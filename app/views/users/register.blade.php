@@ -8,39 +8,25 @@ Register
 
 {{-- Content --}}
 @section('content')
-<h4>Register New Account</h4>
-<div class="well">
-	<form class="form-horizontal" action="{{ URL::to('users/register') }}" method="post">
+
+<div class="row">
+	<form action="{{ URL::to('users/register') }}" method="post">
         {{ Form::token() }}
         
-        <div class="control-group {{ ($errors->has('email')) ? 'error' : '' }}" for="email">
-            <label class="control-label" for="email">E-mail</label>
-            <div class="controls">
-                <input name="email" id="email" value="{{ Request::old('email') }}" type="text" class="input-xlarge" placeholder="E-mail">
-                {{ ($errors->has('email') ? $errors->first('email') : '') }}
-            </div>
-        </div>	
+        <ul class="centered six columns">
+        <h4>Register New Account</h4>
 
-		<div class="control-group {{ $errors->has('password') ? 'error' : '' }}" for="password">
-        	<label class="control-label" for="password">New Password</label>
-    		<div class="controls">
-				<input name="password" value="" type="password" class="input-xlarge" placeholder="New Password">
-    			{{ ($errors->has('password') ?  $errors->first('password') : '') }}
-    		</div>
-    	</div>
+        <li class="field {{ ($errors->has('email')) ? 'danger' : '' }}"><input type="text" name='email' placeholder="E-mail" class="text input" value="{{ Request::old('email') }}"></li>
+            {{ $errors->first('email',  '<p class="form_error">:message</p>') }}
+        <li class="field {{ $errors->has('password') ? 'danger' : '' }}"><input type="password" name="password" placeholder="Password" class="password input"></li>
+            {{ $errors->first('password',  '<p class="form_error">:message</p>') }}
+        <li class="field {{ $errors->has('password_confirmation') ? 'danger' : '' }}"><input type="password" name="password_confirmation" placeholder="Confirm Password" class="password input"></li>
+            {{ $errors->first('password_confirmation',  '<p class="form_error">:message</p>') }}
 
-    	<div class="control-group {{ $errors->has('password_confirmation') ? 'error' : '' }}" for="password_confirmation">
-        	<label class="control-label" for="password_confirmation">Confirm New Password</label>
-    		<div class="controls">
-				<input name="password_confirmation" value="" type="password" class="input-xlarge" placeholder="New Password Again">
-    			{{ ($errors->has('password_confirmation') ? $errors->first('password_confirmation') : '') }}
-    		</div>
-    	</div>
+        <div class="medium primary btn"><input type="submit" value="Register"></div>
+        <div class="medium default btn"><input type="reset" value="Reset"></div> 
+        </ul>
 
-		<div class="form-actions">
-	    	<input class="btn-primary btn" type="submit" value="Register"> 
-	    	<input class="btn " type="reset" value="Reset">
-	    </div>	
 	</form>
 </div>
 

@@ -3,17 +3,17 @@
 {{-- Web site Title --}}
 @section('title')
 @parent
-Home
+User Index
 @stop
 
 {{-- Content --}}
 @section('content')
-
+<div class="row">
   @if (Sentry::check())
   	
     @if($user->hasAccess('admin'))
+		<div class="twelve columns">
 		<h4>Current Users:</h4>
-		<div class="well">
 			<table class="table">
 				<thead>
 					<th>User</th>
@@ -24,8 +24,12 @@ Home
 					@foreach ($allUsers as $user)
 						<tr>
 							<td><a href="{{ URL::to('users/show') }}/{{ $user->id }}">{{ $user->email }}</a></td>
-							<td>{{ $userStatus[$user->id] }} </td>
-							<td><button class="btn" onClick="location.href='{{ URL::to('users/edit') }}/{{ $user->id}}'">Edit</button> <button class="btn" onClick="location.href='{{ URL::to('users/suspend') }}/{{ $user->id}}'">Suspend</button> <button class="btn action_confirm" href="{{ URL::to('users/delete') }}/{{ $user->id}}" data-token="{{ Session::getToken() }}" data-method="post">Delete</button></td>
+							<td class="table_center">{{ $userStatus[$user->id] }} </td>
+							<td class="table_center">
+								<div class="medium primary btn"><a href="{{ URL::to('users/edit') }}/{{ $user->id}}">Edit</a></div>
+								<div class="medium primary btn"><a href="{{ URL::to('users/suspend') }}/{{ $user->id}}">Suspend</a></div>
+								<div class="medium primary btn"><a href="{{ URL::to('users/delete') }}/{{ $user->id}}" class="action_confirm" data-token="{{ Session::getToken() }}" data-method="post">Delete</a></div>
+							</td>
 						</tr>
 					@endforeach
 				</tbody>
@@ -37,6 +41,6 @@ Home
   @else
     <h4>You are not logged in</h4>
   @endif
-
+</div>
 
 @stop

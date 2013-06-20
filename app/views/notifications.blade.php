@@ -1,39 +1,49 @@
 @if (count($errors->all()) > 0)
-<div class="alert alert-error alert-block">
-	<button type="button" class="close" data-dismiss="alert">&times;</button>
-	<h4>Error</h4>
-	Please check the form below for errors
+<div class="row">
+	<div class="centered six columns">
+		<li class="danger alert">
+			Please check the form below for errors
+		</li>
+	</div>
 </div>
 @endif
 
 @if ($message = Session::get('success'))
-<div class="alert alert-success alert-block">
-	<button type="button" class="close" data-dismiss="alert">&times;</button>
-	<h4>Success</h4>
-	{{ $message }}
+<div class="row">
+	<div class="centered six columns">
+	<li class="success alert">
+		{{ $message }}
+	</li>
+	</div>
 </div>
 @endif
 
 @if ($message = Session::get('error'))
-<div class="alert alert-error alert-block">
-	<button type="button" class="close" data-dismiss="alert">&times;</button>
-	<h4>Error</h4>
-	{{ $message }}
+<div class="row">
+	<div class="centered six columns">
+	<li class="danger alert">
+		{{ $message }}
+	</li>
+	</div>
 </div>
 @endif
 
 @if ($message = Session::get('warning'))
-<div class="alert alert-warning alert-block">
-	<button type="button" class="close" data-dismiss="alert">&times;</button>
-	<h4>Warning</h4>
-	{{ $message }}
+<div class="row">
+	<div class="centered six columns">
+	<li class="warning alert">
+		{{ $message }}
+	</li>
+	</div>
 </div>
 @endif
 
 @if ($message = Session::get('info'))
-<div class="alert alert-info alert-block">
-	<button type="button" class="close" data-dismiss="alert">&times;</button>
-	<h4>Info</h4>
-	{{ $message }}
+<div class="row">
+	<div class="centered six columns">
+	<li class="info alert">
+		{{ $message }}
+	</li>
+	</div>
 </div>
 @endif

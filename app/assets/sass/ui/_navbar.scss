@@ -80,7 +80,6 @@
     display: table;
     vertical-align: middle;
     margin: 0;
-    float: none;
 
     // Navbar Navigation List Mobile Specific Styles
     @include respond(all-phones) {

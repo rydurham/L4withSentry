@@ -167,6 +167,8 @@ class UserController extends BaseController {
 				$data['email'] = $input['email'];
 				$data['userId'] = $user->getId();
 
+
+
 				//send email with link to activate.
 				Mail::send('emails.auth.welcome', $data, function($m) use($data)
 				{
@@ -535,7 +537,7 @@ class UserController extends BaseController {
 				    if ($user->save())
 				    {
 				        // User information was updated
-				        Session::flash('success', 'Your password has been changed.');
+				        Session::flash('success', 'Your profile has been updated.');
 						return Redirect::to('users/show/'. $id);
 				    }
 				    else

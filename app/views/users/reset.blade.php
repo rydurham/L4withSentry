@@ -8,23 +8,21 @@ Reset Password
 
 {{-- Content --}}
 @section('content')
-<h4>Reset Password</h4>
-<div class="well">
-	<form class="form-horizontal" action="{{ URL::to('users/resetpassword') }}" method="post">   
-    	{{ Form::token() }}
-    	
-		<div class="control-group {{ ($errors->has('email')) ? 'error' : '' }}" for="email">
-            <label class="control-label" for="email">E-mail</label>
-            <div class="controls">
-                <input name="email" id="email" value="{{ Request::old('email') }}" type="text" class="input-xlarge" placeholder="E-mail">
-                {{ ($errors->has('email') ? $errors->first('email') : '') }}
-            </div>
-        </div>
 
-    	<div class="form-actions">
-    		<button class="btn btn-primary" type="submit">Reset Password</button>
-    	</div>
-  </form>
+<div class="row">
+	<form action="{{ URL::to('users/resetpassword') }}" method="post">   
+    	{{ Form::token() }}
+
+        <ul class="centered six columns">
+        <h4>Reset Password</h4>
+
+         <li class="field {{ ($errors->has('email')) ? 'danger' : '' }}"><input type="text" name='email' placeholder="E-mail" class="text input" value="{{ Request::old('email') }}"></li>
+            {{ $errors->first('email',  '<p class="form_error">:message</p>') }}
+
+        <div class="medium primary btn"><input type="submit" value="Reset Password"></div>
+
+        </ul>
+    </form>
 </div>
 
 @stop

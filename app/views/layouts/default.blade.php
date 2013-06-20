@@ -9,16 +9,11 @@
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
-		<link href="{{ asset('css/bootstrap-responsive.css') }}" rel="stylesheet">
-		<link href="{{ asset('css/bootstrapSwitch.css') }}" rel="stylesheet"><!-- Bootstrap switch from https://github.com/nostalgiaz/bootstrap-switch.git -->
-		<style>
-		@section('styles')
-			body {
-				padding-top: 60px;
-			}
-		@show
-		</style>
+		<link href="{{ asset('css/gumby.css') }}" rel="stylesheet">
+		<link href="{{ asset('css/style.css') }}" rel="stylesheet">
+
+		<!-- Modernizr -->
+		<script src="{{ asset('js/libs/modernizr-2.6.2.min.js') }}"></script>
 
 		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>
@@ -29,45 +24,42 @@
 	</head>
 
 	<body>
-		<!-- Navbar -->
-		<div class="navbar navbar-inverse navbar-fixed-top">
-			<div class="navbar-inner">
-				<div class="container">
-					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</a>
+	
+<!-- Navbar -->
+<nav id="navbar-main-nav" class="navbar">
+    <div class="row">
 
-					<div class="nav-collapse collapse">
-						<ul class="nav">
-							<li {{ (Request::is('/') ? 'class="active"' : '') }}><a href="{{ URL::to('') }}">Home</a></li>
-							@if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
-								<li {{ (Request::is('users*') ? 'class="active"' : '') }}><a href="{{ URL::to('/users') }}">Users</a></li>
-								<li {{ (Request::is('groups*') ? 'class="active"' : '') }}><a href="{{ URL::to('/groups') }}">Groups</a></li>
-							@endif
-						</ul>
+      <a href="#" gumby-trigger="#nav1 &gt; .row &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+     	<h1 class="four columns logo">
+	      <a href="/">
+	        <img gumby-retina="" src="http://gumbyframework.com/img/gumby_mainlogo.png">
+	      </a>
+	    </h1>
+		@if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
+			<ul class="two columns">
+				<li {{ (Request::is('users*') ? 'class="active"' : '') }}><a href="{{ URL::to('/users') }}">Users</a></li>
+				<li {{ (Request::is('groups*') ? 'class="active"' : '') }}><a href="{{ URL::to('/groups') }}">Groups</a></li>
+			</ul>
+		@endif
 
-						<ul class="nav pull-right">
-							@if (Sentry::check())
-							<li class="navbar-text">{{ Sentry::getUser()->email }}</li>
-							<li class="divider-vertical"></li>
-							<li {{ (Request::is('users/show/' . Sentry::getUser()->id) ? 'class="active"' : '') }}><a href="/users/show/{{ Sentry::getUser()->id }}">Account</a></li>
-							<li><a href="{{ URL::to('users/logout') }}">Logout</a></li>
-							@else
-							<li {{ (Request::is('users/login') ? 'class="active"' : '') }}><a href="{{ URL::to('users/login') }}">Login</a></li>
-							<li {{ (Request::is('users/register') ? 'class="active"' : '') }}><a href="{{ URL::to('users/register') }}">Register</a></li>
-							@endif
-						</ul>
-					</div>
-					<!-- ./ nav-collapse -->
-				</div>
-			</div>
-		</div>
-		<!-- ./ navbar -->
+		@if (Sentry::check())
+			<ul id="main-nav" class="three columns pull_right">
+				<li {{ (Request::is('users/show/' . Sentry::getUser()->id) ? 'class="active"' : '') }}><a href="/users/show/{{ Sentry::getUser()->id }}">{{ Sentry::getUser()->email }}</a></li>
+				<li><a href="{{ URL::to('users/logout') }}">Logout</a></li>
+			</ul>
+
+		@else
+			<ul id="main-nav" class="three columns pull_right">
+				<li {{ (Request::is('users/login') ? 'class="active"' : '') }}><a href="{{ URL::to('users/login') }}">Login</a></li>
+				<li {{ (Request::is('users/register') ? 'class="active"' : '') }}><a href="{{ URL::to('users/register') }}">Register</a></li>
+			</ul>
+		@endif
+    </div>
+  </nav>
+
 
 		<!-- Container -->
-		<div class="container">
+
 			<!-- Notifications -->
 			@include('notifications')
 			<!-- ./ notifications -->
@@ -75,16 +67,16 @@
 			<!-- Content -->
 			@yield('content')
 			<!-- ./ content -->
-		</div>
+
 
 		<!-- ./ container -->
 
 		<!-- Javascripts
 		================================================== -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-		<script src="{{ asset('js/bootstrap.min.js') }}"></script>
+		<script src="{{ asset('js/libs/gumby.min.js') }}"></script>
 		<script src="{{ asset('js/restfulizer.js') }}"></script> <!-- Thanks to Zizaco for this script:  http://zizaco.net  -->
-		<script src="{{ asset('js/bootstrapSwitch.js') }}"></script> <!-- Bootstrap switch from https://github.com/nostalgiaz/bootstrap-switch.git -->
+		
 
 	</body>
 </html>
