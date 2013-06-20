@@ -21,7 +21,7 @@ Log In
                 {{ $errors->first('password',  '<p class="form_error">:message</p>') }}
                 <li class="field">
                     <label for="rememberMe" class="checkbox">
-                      <input type="checkbox" id="rememberMe" name="rememberMe">
+                      <input type="checkbox" id="rememberMe" name="rememberMe" value="1">
                       <span></span> Remember Me
                     </label>
                 </li>

@@ -22,11 +22,11 @@ Create Group
             <h5>Permissions: </h5>
             <li class="field">
                 <label for="adminPermissions" class="checkbox">
-                  <input type="checkbox" id="adminPermissions" name="adminPermissions">
+                  <input type="checkbox" id="adminPermissions" name="adminPermissions" value="1">
                   <span></span> Admin
                 </label>
                 <label for="userPermissions" class="checkbox">
-                  <input type="checkbox" id="userPermissions" name="userPermissions">
+                  <input type="checkbox" id="userPermissions" name="userPermissions" value="1">
                   <span></span> User
                 </label>
             </li>
