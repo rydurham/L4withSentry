@@ -8,14 +8,23 @@ View Group
 
 {{-- Content --}}
 @section('content')
-<div class="span10 well">
-	<h1>{{ $group['name'] }} </h1>
-    <p>Permsissions:
-        <br /> 
-        {{ var_dump($groupPermissions) }}</p>
+<div class="row">
+	<div class="twelve columns">
+		<h4>{{ $group['name'] }} Group Details</h4>
+	    <h5>Permsissions</h5>
+	    <div class="well">
+	        {{ var_dump($groupPermissions) }}
+	    </div>
+	</div>
+</div>
+<div class="row">
+	<div class="twelve columns">
 
-    <p>Var dump: <br />
-        {{ var_dump($group) }}</p>
+	    <h5>Group Object</h5>
+	    <div class="well">
+	        {{ var_dump($group) }}
+	    </div>
+	</div>
 </div>
 
 @stop

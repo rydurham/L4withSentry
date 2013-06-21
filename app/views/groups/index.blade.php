@@ -21,16 +21,16 @@ Groups
 			<tbody>
 			@foreach ($allGroups as $group)
 				<tr>
-					<td>{{ $group->name }}</td>
+					<td><a href="{{ URL::to('groups') }}/{{ $group->id }}">{{ $group->name }}</a></td>
 					<td class="table_center">{{ (isset($group['permissions']['admin'])) ? '<i class="icon-check"></i> Admin' : ''}} {{ (isset($group['permissions']['users'])) ? '<i class="icon-check"></i> Users' : ''}}</td>
 					<td class="table_center">
 						<div class="medium primary btn"><a href="{{ URL::to('groups') }}/{{ $group->id }}/edit/">Edit</a></div>
-					 	<div class="medium primary btn {{ ($group->id == 2) ? 'disabled' : '' }}"><a href="{{ URL::to('groups') }}/{{ $group->id }}/{{ $group->id}}" class="action_confirm {{ ($group->id == 2) ? 'disabled' : '' }}" data-token="{{ Session::getToken() }}" data-method="delete">Delete</a></div>
+					 	<div class="medium primary btn {{ ($group->id == 2) ? 'disabled' : '' }}"><a href="{{ URL::to('groups') }}/{{ $group->id}}" class="action_confirm {{ ($group->id == 2) ? 'disabled' : '' }}" data-token="{{ Session::getToken() }}" data-method="delete">Delete</a></div>
 				</tr>	
 			@endforeach
 			</tbody>
 		</table> 
-	 <button class="btn btn-info" onClick="location.href='{{ URL::to('groups/create') }}'">New Group</button>
+	 <div class="medium primary btn"><a href="{{ URL::to('groups/create') }}">New Group</a></div>
 </div>
 <!--  
 	The delete button uses Resftulizer.js to restfully submit with "Delete".  The "action_confirm" class triggers an optional confirm dialog.
