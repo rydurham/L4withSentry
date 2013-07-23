@@ -37,7 +37,7 @@ class UserController extends BaseController {
 			    // Find the user using the user id
 			    $data['user'] = Sentry::getUser();
 
-			    if (Sentry::check() && $data['user']->hasAccess('admin')) {
+			    if ( $data['user']->hasAccess('admin')) {
 			    	$data['allUsers'] = Sentry::getUserProvider()->findAll();
 
 			    	//Assemble an array of each user's status
@@ -98,7 +98,7 @@ class UserController extends BaseController {
 			$currentUser = Sentry::getUser();
 
 		   	//Do they have admin access?
-			if ( Sentry::check() && $currentUser->hasAccess('admin') || $currentUser->getId() == $id)
+			if ( $currentUser->hasAccess('admin') || $currentUser->getId() == $id)
 			{
 				//Either they are an admin, or:
 				//They are not an admin, but they are viewing their own profile.
@@ -166,8 +166,6 @@ class UserController extends BaseController {
 				$data['activationCode'] = $user->GetActivationCode();
 				$data['email'] = $input['email'];
 				$data['userId'] = $user->getId();
-
-
 
 				//send email with link to activate.
 				Mail::send('emails.auth.welcome', $data, function($m) use($data)
@@ -466,7 +464,7 @@ class UserController extends BaseController {
 			$currentUser = Sentry::getUser();
 
 		   	//Do they have admin access?
-			if ( Sentry::check() && $currentUser->hasAccess('admin'))
+			if ( $currentUser->hasAccess('admin'))
 			{
 				$data['user'] = Sentry::getUserProvider()->findById($id);
 				$data['userGroups'] = $data['user']->getGroups();
@@ -523,7 +521,7 @@ class UserController extends BaseController {
 				$currentUser = Sentry::getUser();
 
 			   	//Do they have admin access?
-				if ( Sentry::check() && $currentUser->hasAccess('admin')  || $currentUser->getId() == $id)
+				if ( $currentUser->hasAccess('admin')  || $currentUser->getId() == $id)
 				{
 					// Either they are an admin, or they are changing their own password. 
 					// Find the user using the user id
@@ -537,7 +535,7 @@ class UserController extends BaseController {
 				    if ($user->save())
 				    {
 				        // User information was updated
-				        Session::flash('success', 'Your profile has been updated.');
+				        Session::flash('success', 'Your password has been changed.');
 						return Redirect::to('users/show/'. $id);
 				    }
 				    else
@@ -604,7 +602,7 @@ class UserController extends BaseController {
 				$currentUser = Sentry::getUser();
 
 			   	//Do they have admin access?
-				if ( Sentry::check() && $currentUser->hasAccess('admin')  || $currentUser->getId() == $id)
+				if ( $currentUser->hasAccess('admin')  || $currentUser->getId() == $id)
 				{
 					// Either they are an admin, or they are changing their own password. 
 					$user = Sentry::getUserProvider()->findById($id);	
@@ -667,7 +665,7 @@ class UserController extends BaseController {
 			$currentUser = Sentry::getUser();
 
 		   	//Do they have admin access?
-			if ( Sentry::check() && $currentUser->hasAccess('admin'))
+			if ( $currentUser->hasAccess('admin'))
 			{
 				$user = Sentry::getUserProvider()->findById($id);
 				$allGroups = Sentry::getGroupProvider()->findAll();
@@ -737,7 +735,7 @@ class UserController extends BaseController {
 			$currentUser = Sentry::getUser();
 
 		   	//Do they have admin access?
-			if ( Sentry::check() && $currentUser->hasAccess('admin'))
+			if ( $currentUser->hasAccess('admin'))
 			{
 				$data['user'] = Sentry::getUserProvider()->findById($id);
 				return View::make('users.suspend')->with($data);
