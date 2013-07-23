@@ -5,15 +5,16 @@ This is a demo of [Sentry 2](https://github.com/cartalyst/sentry) integrated wit
 
 ### Instructions
 
-After you have cloned this repo to your development environment, use your CLI to run
+After you have cloned this repo to your development environment, [install & run composer](http://niallobrien.me/2013/03/installing-and-updating-laravel-4/): 
 
-	php composer.phar update 
+	curl -sS https://getcomposer.org/installer | php
+	php composer.phar install
 
-Then run the Sentry Migrations: 
+Next, run the Sentry 2 Migrations: 
 
 	php artisan migrate --package=cartalyst/sentry
 
-Next use the seeds provided in this repo to set up the initial user accounts: 
+Use the seeds provided in this repo to set up the initial user accounts: 
 
 	php artisan db:seed
 
