@@ -535,13 +535,13 @@ class UserController extends BaseController {
 				    if ($user->save())
 				    {
 				        // User information was updated
-				        Session::flash('success', 'Your password has been changed.');
+				        Session::flash('success', 'Profile updated.');
 						return Redirect::to('users/show/'. $id);
 				    }
 				    else
 				    {
 				        // User information was not updated
-				        Session::flash('error', 'Your password could not be changed.');
+				        Session::flash('error', 'Profile could not be updated.');
 						return Redirect::to('users/edit/' . $id);
 				    }
 
