@@ -1,6 +1,6 @@
 ## Laravel 4 with Sentry 2 and Gumby
 
-This is a demo of [Sentry 2](https://github.com/cartalyst/sentry) integrated with [Laravel 4](https://github.com/laravel/laravel/tree/develop) and [Bootstrap](http://twitter.github.com/bootstrap/index.html).
+This is a demo of [Sentry 2](https://github.com/cartalyst/sentry) integrated with [Laravel 4](https://github.com/laravel/laravel/tree/develop) and [The Gumby Framework](http://gumbyframework.com/).
 
 
 ### Instructions
