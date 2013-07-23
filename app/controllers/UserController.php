@@ -135,9 +135,9 @@ class UserController extends BaseController {
 	
 		// Gather Sanitized Input
 		$input = array(
-			'email' => Binput::get('email'),
-			'password' => Binput::get('password'),
-			'password_confirmation' => Binput::get('password_confirmation')
+			'email' => Input::get('email'),
+			'password' => Input::get('password'),
+			'password_confirmation' => Input::get('password_confirmation')
 			);
 
 		// Set Validation Rules
@@ -251,9 +251,9 @@ class UserController extends BaseController {
 	{
 		// Gather Sanitized Input
 		$input = array(
-			'email' => Binput::get('email'),
-			'password' => Binput::get('password'),
-			'rememberMe' => Binput::get('rememberMe')
+			'email' => Input::get('email'),
+			'password' => Input::get('password'),
+			'rememberMe' => Input::get('rememberMe')
 			);
 
 		// Set Validation Rules
@@ -347,7 +347,7 @@ class UserController extends BaseController {
 	public function postResetpassword () {
 		// Gather Sanitized Input
 		$input = array(
-			'email' => Binput::get('email')
+			'email' => Input::get('email')
 			);
 
 		// Set Validation Rules
@@ -496,8 +496,8 @@ class UserController extends BaseController {
 	public function postEdit($id) {
 		// Gather Sanitized Input
 		$input = array(
-			'firstName' => Binput::get('firstName'),
-			'lastName' => Binput::get('lastName')
+			'firstName' => Input::get('firstName'),
+			'lastName' => Input::get('lastName')
 			);
 
 		// Set Validation Rules
@@ -574,9 +574,9 @@ class UserController extends BaseController {
 	{
 		// Gather Sanitized Input
 		$input = array(
-			'oldPassword' => Binput::get('oldPassword'),
-			'newPassword' => Binput::get('newPassword'),
-			'newPassword_confirmation' => Binput::get('newPassword_confirmation')
+			'oldPassword' => Input::get('oldPassword'),
+			'newPassword' => Input::get('newPassword'),
+			'newPassword_confirmation' => Input::get('newPassword_confirmation')
 			);
 
 		// Set Validation Rules
