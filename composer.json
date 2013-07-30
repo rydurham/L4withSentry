@@ -11,7 +11,6 @@
 			"app/database/migrations",
 			"app/database/seeds",
 			"app/tests/TestCase.php",
-			"app/libraries"
 		]
 	},
 	"scripts": {
