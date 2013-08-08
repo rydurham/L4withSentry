@@ -38,7 +38,7 @@ Log In
     
         <div class="form-actions">
             <input class="btn btn-primary" type="submit" value="Log In"> 
-            <a href="/users/resetpassword" class="btn btn-link">Forgot Password?</a>
+            <a href="{{ URL::to('users/resetpassword') }}" class="btn btn-link">Forgot Password?</a>
         </div>
   </form>
 </div>
