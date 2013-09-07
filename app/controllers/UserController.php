@@ -299,7 +299,7 @@ class UserController extends BaseController {
 			catch (Cartalyst\Sentry\Users\UserNotActivatedException $e)
 			{
 			    echo 'User not activated.';
-			    Session::flash('error', 'You have not yet activated this account.');
+			     Session::flash('error', 'You have not yet activated this account. <a href="/users/resend">Resend actiavtion?</a>');
 				return Redirect::to('users/login')->withErrors($v)->withInput();
 			}
 
@@ -320,6 +320,91 @@ class UserController extends BaseController {
 			return Redirect::to('/');
 		}
 	}
+
+	/**
+	 * Show the 'Resend Activation' Form
+	 * @return View
+	 */
+	public function getResend()
+	{
+		//Show the Resend Activation Form
+		return View::make('users.resend');
+	}
+
+	/**
+	 * Process Resend Activation Request
+	 * @return View
+	 */
+	public function postResend()
+	{
+
+		// Gather Sanitized Input
+		$input = array(
+			'email' => Input::get('email')
+			);
+
+		// Set Validation Rules
+		$rules = array (
+			'email' => 'required|min:4|max:32|email'
+			);
+
+		//Run input validation
+		$v = Validator::make($input, $rules);
+
+		if ($v->fails())
+		{
+			// Validation has failed
+			return Redirect::to('users/resend')->withErrors($v)->withInput();
+		}
+		else 
+		{
+
+			try {
+				//Attempt to find the user. 
+				$user = Sentry::getUserProvider()->findByLogin(Input::get('email'));
+
+
+				if (!$user->isActivated())
+				{
+					//Get the activation code & prep data for email
+					$data['activationCode'] = $user->GetActivationCode();
+					$data['email'] = $input['email'];
+					$data['userId'] = $user->getId();
+
+					//send email with link to activate.
+					Mail::send('emails.auth.welcome', $data, function($m) use ($data)
+					{
+					    $m->to($data['email'])->subject('Activate your account');
+					});
+
+					//success!
+			    	Session::flash('success', 'Check your email for the confirmation link.');
+			    	return Redirect::to('/');
+				}
+				else 
+				{
+					Session::flash('error', 'That account has already been activated.');
+			    	return Redirect::to('/');
+				}
+
+			}
+			catch (Cartalyst\Sentry\Users\LoginRequiredException $e)
+			{
+			    Session::flash('error', 'Login field required.');
+			    return Redirect::to('users/resend')->withErrors($v)->withInput();
+			}
+			catch (Cartalyst\Sentry\Users\UserExistsException $e)
+			{
+			    Session::flash('error', 'User already exists.');
+			    return Redirect::to('users/resend')->withErrors($v)->withInput();
+			}
+
+
+		}
+
+
+	}
+
 
 	/**
 	 * Logout

@@ -8,9 +8,9 @@ Reset Password
 
 {{-- Content --}}
 @section('content')
-<h4>Reset Password</h4>
+<h4>Resend Activation</h4>
 <div class="well">
-	<form class="form-horizontal" action="{{ URL::to('users/resetpassword') }}" method="post">   
+	<form class="form-horizontal" action="{{ URL::to('users/resend') }}" method="post">   
     	{{ Form::token() }}
     	
 		<div class="control-group {{ ($errors->has('email') ? 'error' : '') }}" for="email">
@@ -22,7 +22,7 @@ Reset Password
         </div>
 
     	<div class="form-actions">
-    		<button class="btn btn-primary" type="submit">Reset Password</button>
+    		<button class="btn btn-primary" type="submit">Resend Activation</button>
     	</div>
   </form>
 </div>
