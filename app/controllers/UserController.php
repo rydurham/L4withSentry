@@ -321,6 +321,75 @@ class UserController extends BaseController {
 		}
 	}
 
+
+	/**
+	 * Logout
+	 */
+	
+	public function getLogout() 
+	{
+		Sentry::logout();
+		return Redirect::to('/');
+	}
+
+
+	
+
+	/**
+	 * Forgot Password / Reset
+	 */
+	public function getResetpassword() {
+		// Show the change password
+		return View::make('users.reset');
+	}
+
+	public function postResetpassword () {
+		// Gather Sanitized Input
+		$input = array(
+			'email' => Input::get('email')
+			);
+
+		// Set Validation Rules
+		$rules = array (
+			'email' => 'required|min:4|max:32|email'
+			);
+
+		//Run input validation
+		$v = Validator::make($input, $rules);
+
+		if ($v->fails())
+		{
+			// Validation has failed
+			return Redirect::to('users/resetpassword')->withErrors($v)->withInput();
+		}
+		else 
+		{
+			try
+			{
+			    $user      = Sentry::getUserProvider()->findByLogin($input['email']);
+			    $data['resetCode'] = $user->getResetPasswordCode();
+			    $data['userId'] = $user->getId();
+			    $data['email'] = $input['email'];
+
+			    // Email the reset code to the user
+				Mail::send('emails.auth.reset', $data, function($m) use($data)
+				{
+				    $m->to($data['email'])->subject('Password Reset Confirmation | Laravel4 With Sentry');
+				});
+
+				Session::flash('success', 'Check your email for password reset information.');
+			    return Redirect::to('/');
+
+			}
+			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+			{
+			    echo 'User does not exist';
+			}
+		}
+
+	}
+
+
 	/**
 	 * Show the 'Resend Activation' Form
 	 * @return View
@@ -402,74 +471,6 @@ class UserController extends BaseController {
 
 		}
 
-
-	}
-
-
-	/**
-	 * Logout
-	 */
-	
-	public function getLogout() 
-	{
-		Sentry::logout();
-		return Redirect::to('/');
-	}
-
-
-	
-
-	/**
-	 * Forgot Password / Reset
-	 */
-	public function getResetpassword() {
-		// Show the change password
-		return View::make('users.reset');
-	}
-
-	public function postResetpassword () {
-		// Gather Sanitized Input
-		$input = array(
-			'email' => Input::get('email')
-			);
-
-		// Set Validation Rules
-		$rules = array (
-			'email' => 'required|min:4|max:32|email'
-			);
-
-		//Run input validation
-		$v = Validator::make($input, $rules);
-
-		if ($v->fails())
-		{
-			// Validation has failed
-			return Redirect::to('users/resetpassword')->withErrors($v)->withInput();
-		}
-		else 
-		{
-			try
-			{
-			    $user      = Sentry::getUserProvider()->findByLogin($input['email']);
-			    $data['resetCode'] = $user->getResetPasswordCode();
-			    $data['userId'] = $user->getId();
-			    $data['email'] = $input['email'];
-
-			    // Email the reset code to the user
-				Mail::send('emails.auth.reset', $data, function($m) use($data)
-				{
-				    $m->to($data['email'])->subject('Password Reset Confirmation | Laravel4 With Sentry');
-				});
-
-				Session::flash('success', 'Check your email for password reset information.');
-			    return Redirect::to('/');
-
-			}
-			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
-			{
-			    echo 'User does not exist';
-			}
-		}
 
 	}
 
