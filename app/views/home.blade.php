@@ -11,7 +11,7 @@ Hello World
 
 <h1>Hello World!</h1>
 <div class="well">
-	<p>This is an example of <a href="https://github.com/laravel/laravel/tree/develop">Laravel 4</a> running with <a href="https://github.com/cartalyst/sentry">Sentry</a>. 
+	<p>This is an example of <a href="https://github.com/laravel/laravel/tree/develop">Laravel 4</a> running with <a href="https://github.com/cartalyst/sentry">Sentry 2.0</a> and <a href="http://getbootstrap.com/">Bootstrap 3.0</a>. 
 	@if (Sentry::check()) 
 		You are currently logged in.
 	@endif
