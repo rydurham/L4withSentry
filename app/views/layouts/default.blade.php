@@ -58,9 +58,9 @@
 				<li class="navbar-text">{{ Sentry::getUser()->email }}</li>
 				<li class="divider-vertical"></li>
 				<li {{ (Request::is('users/show/' . Sentry::getUser()->id) ? 'class="active"' : '') }}><a href="/users/show/{{ Sentry::getUser()->id }}">Account</a></li>
-				<li><a href="{{ URL::to('users/logout') }}">Logout</a></li>
+				<li><a href="{{ URL::to('logout') }}">Logout</a></li>
 				@else
-				<li {{ (Request::is('users/login') ? 'class="active"' : '') }}><a href="{{ URL::to('users/login') }}">Login</a></li>
+				<li {{ (Request::is('login') ? 'class="active"' : '') }}><a href="{{ URL::to('login') }}">Login</a></li>
 				<li {{ (Request::is('users/register') ? 'class="active"' : '') }}><a href="{{ URL::to('users/register') }}">Register</a></li>
 				@endif
 	          </ul>
@@ -72,11 +72,13 @@
 		<!-- Container -->
 		<div class="container">
 			<!-- Notifications -->
-			@include('notifications')
+			@include('layouts/notifications')
 			<!-- ./ notifications -->
 
 			<!-- Content -->
-			@yield('content')
+			<div class="container">
+				@yield('content')
+			</div>
 			<!-- ./ content -->
 		</div>
 

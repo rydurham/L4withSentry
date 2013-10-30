@@ -9,13 +9,16 @@ Hello World
 {{-- Content --}}
 @section('content')
 
-<h1>Hello World!</h1>
-<div class="well">
-	<p>This is an example of <a href="https://github.com/laravel/laravel/tree/develop">Laravel 4</a> running with <a href="https://github.com/cartalyst/sentry">Sentry 2.0</a> and <a href="http://getbootstrap.com/">Bootstrap 3.0</a>. 
-	@if (Sentry::check()) 
-		You are currently logged in.
+<div class="jumbotron">
+  <div class="container">
+    <h1>Hello, world!</h1>
+    <p>This is an example of <a href="https://github.com/laravel/laravel/tree/develop">Laravel 4</a> running with <a href="https://github.com/cartalyst/sentry">Sentry 2.0</a> and <a href="http://getbootstrap.com/">Bootstrap 3.0</a>.</p>
+
+    @if (Sentry::check()) 
+		<span class="glyphicon glyphicon-flag"></span> You are currently logged in.
 	@endif
-	</p>
+
+  </div>
 </div>
 
 @if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
