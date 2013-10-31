@@ -12,14 +12,34 @@
 */
 
 
+Route::get('login', 'SessionController@create');
+
+
+// Route::get('logout', 'SessionController@destroy');
+// Route::resource('users', 'UserController');
+
+
+Route::resource('sessions', 'SessionController', array('only' => array('create', 'store', 'destroy')));
+
+// oute::resource('groups', 'GroupController');
+
 Route::get('/', function()
 {
 	return View::make('home');
 });
 
-Route::controller('users', 'UserController');
 
-Route::resource('groups', 'GroupController');
+Route::get('/home', function()
+{
+	return View::make('home');
+});
+
+// App::missing(function($exception)
+// {
+//     App::abort(404, 'Page not found');
+//     //return Response::view('errors.missing', array(), 404);
+// });
+
 
 
 

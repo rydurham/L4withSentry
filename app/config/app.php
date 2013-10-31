@@ -113,6 +113,8 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Cartalyst\Sentry\SentryServiceProvider',
+		'Authority\Repo\RepoServiceProvider',
+		'Authority\Service\Form\FormServiceProvider',
 		'Way\Generators\GeneratorsServiceProvider',
 
 	),

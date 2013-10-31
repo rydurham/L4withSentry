@@ -15,7 +15,10 @@
 			"app/database/seeds",
 			"app/tests/TestCase.php",
 			"app/libraries"
-		]
+		],
+		"psr-0": {
+			"Authority": "app/"
+		}
 	},
 	"scripts": {
 		"post-update-cmd": "php artisan optimize"
