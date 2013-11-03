@@ -1,5 +1,6 @@
 <?php namespace Authority\Repo\User;
 
+use Mail;
 use Cartalyst\Sentry\Sentry;
 use Authority\Repo\RepoAbstract;
 
@@ -18,7 +19,7 @@ class SentryUser extends RepoAbstract implements UserInterface {
 		$this->throttleProvider = $this->sentry->getThrottleProvider();
 
 		// Enable the Throttling Feature
-		$throttleProvider->enable();
+		$this->throttleProvider->enable();
 	}
 
 	/**
@@ -80,7 +81,19 @@ class SentryUser extends RepoAbstract implements UserInterface {
 	 */
 	public function destroy($id)
 	{
+		try
+		{
+		    // Find the user using the user id
+		    $user = $this->sentry->findUserById(1);
 
+		    // Delete the user
+		    $user->delete();
+		}
+		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+		    return false;
+		}
+		return true;
 	}
 
 	/**
@@ -91,7 +104,15 @@ class SentryUser extends RepoAbstract implements UserInterface {
 	 */
 	public function byId($id)
 	{
-
+		try
+		{
+		    $user = $this->sentry->findUserById($id);
+		}
+		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+		    return false;
+		}
+		return $user;
 	}
 
 	/**
@@ -101,6 +122,6 @@ class SentryUser extends RepoAbstract implements UserInterface {
 	 */
 	public function all()
 	{
-
+		return $this->sentry->findAllUsers();
 	}
 }
