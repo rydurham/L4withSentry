@@ -72,4 +72,4 @@ require __DIR__.'/../filters.php';
 | Prep Sentry for dependency Injection
 |--------------------------------------------------------------------------
 */
-//$app['Cartalyst\Sentry\Sentry'] = $app['sentry'];
+$app['Cartalyst\Sentry\Sentry'] = $app['sentry'];
