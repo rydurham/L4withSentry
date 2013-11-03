@@ -17,7 +17,7 @@ class SentrySession extends RepoAbstract implements SessionInterface {
 		$this->throttleProvider = $this->sentry->getThrottleProvider();
 
 		// Enable the Throttling Feature
-		$throttleProvider->enable();
+		$this->throttleProvider->enable();
 	}
 
 	/**
