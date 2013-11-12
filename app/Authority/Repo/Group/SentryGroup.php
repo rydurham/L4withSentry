@@ -22,9 +22,23 @@ class SentryGroup extends RepoAbstract implements GroupInterface {
 	 */
 	public function store($data)
 	{
+		// Logic for missing checkbox values
+		if (!array_key_exists('adminPermissions', $data)) $data['adminPermissions'] = 0;
+		if (!array_key_exists('userPermissions', $data)) $data['userPermissions'] = 0;
+
 		$result = array();
 		try {
-			
+			    // Create the group
+			    $group = $this->sentry->createGroup(array(
+			        'name'        => $data['name'],
+			        'permissions' => array(
+			            'admin' => $data['adminPermissions'],
+			            'users' => $data['userPermissions'],
+			        ),
+			    ));
+
+			   	$result['success'] = true;
+	    		$result['message'] = 'Group Created.'; 
 		}
 		catch (\Cartalyst\Sentry\Users\LoginRequiredException $e)
 		{
@@ -48,10 +62,14 @@ class SentryGroup extends RepoAbstract implements GroupInterface {
 	 */
 	public function update($data)
 	{
+		// Logic for missing checkbox values
+		if (!array_key_exists('adminPermissions', $data)) $data['adminPermissions'] = 0;
+		if (!array_key_exists('userPermissions', $data)) $data['userPermissions'] = 0;
+
 		try
 		{
 			// Find the group using the group id
-		    $group = Sentry::findGroupById($data['id']);
+		    $group = $this->sentry->findGroupById($data['id']);
 
 		    // Update the group details
 		    $group->name = $data['name'];

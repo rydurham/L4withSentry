@@ -8,35 +8,31 @@ Create Group
 
 {{-- Content --}}
 @section('content')
-<h4>New Group</h4>
-<div class="well">
-	<form class="form-horizontal" action="{{ URL::to('groups') }}" method="post">   
-        {{ Form::token() }}
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+	{{ Form::open(array('action' => 'GroupController@store')) }}
+        <h2>Create New Group</h2>
     
-        <div class="control-group {{ ($errors->has('newGroup')) ? 'error' : '' }}" for="newGroup">
-            <label class="control-label" for="newGroup">New Group</label>
-            <div class="controls">
-                <input name="newGroup" value="{{ Request::old("newGroup") }}" type="text" class="input-xlarge" placeholder="New Group">
-                {{ ($errors->has('newGroup') ? $errors->first('newGroup') : '') }}
-            </div>
+        <div class="form-group">
+            {{ Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'Name')) }}
+            {{ ($errors->has('name') ? $errors->first('name') : '') }}
         </div>
 
-        <div class="control-group" for="permissions">
-            <label class="control-label" for="permissions">Permissions</label>
-            <div class="controls">
-                <label class="checkbox inline">
-                    <input type="checkbox" value="1" name="adminPermissions"> Admin
-                </label>
-                <label class="checkbox inline">
-                    <input type="checkbox" value="1" name="userPermissions"> User
-                </label>
-            </div>
+        {{ Form::label('Permissions') }}
+        <div class="form-group">
+            <label class="checkbox-inline">
+                {{ Form::checkbox('adminPermissions', 1) }} Admin
+            </label>
+            <label class="checkbox-inline">
+                {{ Form::checkbox('userPermissions', 1) }} User
+            </label>
+
         </div>
-        
-        <div class="form-actions">
-            <input class="btn btn-primary" type="submit" value="Create New Group"> 
-        </div>
-    </form>
+
+        {{ Form::submit('Create New Group', array('class' => 'btn btn-primary')) }}
+
+    {{ Form::close() }}
+    </div>
 </div>
 
 @stop
