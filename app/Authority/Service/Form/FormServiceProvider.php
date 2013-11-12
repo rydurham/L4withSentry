@@ -5,6 +5,8 @@ use Authority\Service\Form\Login\LoginForm;
 use Authority\Service\Form\Login\LoginFormLaravelValidator;
 use Authority\Service\Form\Register\RegisterForm;
 use Authority\Service\Form\Register\RegisterFormLaravelValidator;
+use Authority\Service\Form\Group\GroupForm;
+use Authority\Service\Form\Group\GroupFormLaravelValidator;
 
 class FormServiceProvider extends ServiceProvider {
 
@@ -32,6 +34,15 @@ class FormServiceProvider extends ServiceProvider {
             return new RegisterForm(
                 new RegisterFormLaravelValidator( $app['validator'] ),
                 $app->make('Authority\Repo\User\UserInterface')
+            );
+        });
+
+        // Bind the Group Form
+        $app->bind('Authority\Service\Form\Group\GroupForm', function($app)
+        {
+            return new GroupForm(
+                new GroupFormLaravelValidator( $app['validator'] ),
+                $app->make('Authority\Repo\Group\GroupInterface')
             );
         });
 
