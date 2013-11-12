@@ -25,8 +25,8 @@ Register
             </div>
 
             <div class="form-group">
-                <input name="password" type="password" class="form-control" placeholder="Password">
-                {{ ($errors->has('password') ?  $errors->first('password') : '') }}
+                <input name="password_confirmation" type="password" class="form-control" placeholder="Confirm Password">
+                {{ ($errors->has('password_confirmation') ?  $errors->first('password_confirmation') : '') }}
             </div>
             
             <button class="btn btn-primary" type="submit">Register</button>

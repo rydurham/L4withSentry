@@ -65,12 +65,12 @@ class SentryUser extends RepoAbstract implements UserInterface {
 	/**
 	 * Update the specified resource in storage.
 	 *
-	 * @param  int  $id
+	 * @param  array $data
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($data)
 	{
-
+		
 	}
 
 	/**
@@ -84,12 +84,12 @@ class SentryUser extends RepoAbstract implements UserInterface {
 		try
 		{
 		    // Find the user using the user id
-		    $user = $this->sentry->findUserById(1);
+		    $user = $this->sentry->findUserById($id);
 
 		    // Delete the user
 		    $user->delete();
 		}
-		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
 		    return false;
 		}
@@ -108,7 +108,7 @@ class SentryUser extends RepoAbstract implements UserInterface {
 		{
 		    $user = $this->sentry->findUserById($id);
 		}
-		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
 		    return false;
 		}
@@ -122,6 +122,36 @@ class SentryUser extends RepoAbstract implements UserInterface {
 	 */
 	public function all()
 	{
-		return $this->sentry->findAllUsers();
+		$users = $this->sentry->findAllUsers();
+
+		foreach ($users as $user) {
+			if ($user->isActivated()) 
+    		{
+    			$user->status = "Active";
+    		} 
+    		else 
+    		{
+    			$user->status = "Not Active";
+    		}
+
+    		//Pull Suspension & Ban info for this user
+    		$throttle = $this->throttleProvider->findByUserId($user->id);
+
+    		//Check for suspension
+    		if($throttle->isSuspended())
+		    {
+		        // User is Suspended
+		        $user->status = "Suspended";
+		    }
+
+    		//Check for ban
+		    if($throttle->isBanned())
+		    {
+		        // User is Banned
+		        $user->status = "Banned";
+		    }
+		}
+
+		return $users;
 	}
 }

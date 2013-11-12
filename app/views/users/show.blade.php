@@ -8,12 +8,10 @@ Home
 
 {{-- Content --}}
 @section('content')
-
-  @if (Sentry::check())
 	<h4>Account Profile</h4>
 	
   	<div class="well clearfix">
-	    <div class="span7">
+	    <div class="col-md-8">
 		    @if ($user->first_name)
 		    	<p><strong>First Name:</strong> {{ $user->first_name }} </p>
 			@endif
@@ -21,19 +19,20 @@ Home
 		    	<p><strong>Last Name:</strong> {{ $user->last_name }} </p>
 			@endif
 		    <p><strong>Email:</strong> {{ $user->email }}</p>
-		    <button class="btn btn-info" onClick="location.href='{{ URL::to('users/edit') }}/{{ $user->id}}'">Edit Profile</button>
+		    
 		</div>
-		<div class="span4">
+		<div class=".col-md-4">
 			<p><em>Account created: {{ $user->created_at }}</em></p>
 			<p><em>Last Updated: {{ $user->updated_at }}</em></p>
 		</div>
 	</div>
 
 	<h4>Group Memberships:</h4>
+	<?php $userGroups = $user->getGroups(); ?>
 	<div class="well">
 	    <ul>
-	    	@if (count($myGroups) >= 1)
-		    	@foreach ($myGroups as $group)
+	    	@if (count($userGroups) >= 1)
+		    	@foreach ($userGroups as $group)
 					<li>{{ $group['name'] }}</li>
 				@endforeach
 			@else 
@@ -41,12 +40,13 @@ Home
 			@endif
 	    </ul>
 	</div>
+	<button class="btn btn-primary" onClick="location.href='{{ action('UserController@edit', array($user->id)) }}'">Edit Profile</button>
+
+	<hr />
 
 	<h4>User Object</h4>
 	<div>
 		<p>{{ var_dump($user) }}</p>
 	</div>
-  @endif
-
 
 @stop

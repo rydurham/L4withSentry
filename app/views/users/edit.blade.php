@@ -18,66 +18,67 @@ Edit Profile
 
 Profile</h4>
 <div class="well">
-	<form class="form-horizontal" action="{{ URL::to('users/edit') }}/{{ $user->id }}" method="post">
-        {{ Form::token() }}
+	{{ Form::open(array(
+        'action' => array('UserController@update', $user->id), 
+        'class' => 'form-horizontal', 
+        'role' => 'form'
+        )) }}
         
-        <div class="control-group {{ ($errors->has('firstName')) ? 'error' : '' }}" for="firstName">
-        	<label class="control-label" for="firstName">First Name</label>
-    		<div class="controls">
-				<input name="firstName" value="{{ (Request::old('firstName')) ? Request::old("firstName") : $user->first_name }}" type="text" class="input-xlarge" placeholder="First Name">
-    			{{ ($errors->has('firstName') ? $errors->first('firstName') : '') }}
-    		</div>
+        <div class="form-group {{ ($errors->has('firstName')) ? 'has-warning' : '' }}" for="firstName">
+            {{ Form::label('edit_firstName', 'First Name', array('class' => 'col-sm-2 control-label')) }}
+            <div class="col-sm-10">
+              {{ Form::text('firstName', $user->firstName, array('class' => 'form-control', 'placeholder' => 'First Name', 'id' => 'edit_firstName'))}}
+            </div>
+            {{ ($errors->has('firstName') ? $errors->first('firstName') : '') }}    			
     	</div>
 
-        <div class="control-group {{ $errors->has('lastName') ? 'error' : '' }}" for="lastName">
-        	<label class="control-label" for="lastName">Last Name</label>
-    		<div class="controls">
-				<input name="lastName" value="{{ (Request::old('lastName')) ? Request::old("lastName") : $user->last_name }}" type="text" class="input-xlarge" placeholder="Last Name">
-    			{{ ($errors->has('lastName') ?  $errors->first('lastName') : '') }}
-    		</div>
-    	</div>
 
-    	<div class="form-actions">
-	    	<input class="btn-primary btn" type="submit" value="Submit Changes"> 
-	    	<input class="btn-inverse btn" type="reset" value="Reset">
-	    </div>
-    </form>
+        <div class="form-group {{ ($errors->has('lastName')) ? 'has-warning' : '' }}" for="lastName">
+            {{ Form::label('edit_lastName', 'Last Name', array('class' => 'col-sm-2 control-label')) }}
+            <div class="col-sm-10">
+              {{ Form::text('lastName', $user->lastName, array('class' => 'form-control', 'placeholder' => 'Last Name', 'id' => 'edit_lastName'))}}
+            </div>
+            {{ ($errors->has('lastName') ? $errors->first('lastName') : '') }}                
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                {{ Form::submit('Submit Changes', array('class' => 'btn btn-primary'))}}
+            </div>
+      </div>
+    {{ Form::close()}}
 </div>
 
 <h4>Change Password</h4>
 <div class="well">
-	<form class="form-horizontal" action="{{ URL::to('users/changepassword') }}/{{ $user->id }}" method="post">
-        {{ Form::token() }}
+    {{ Form::open(array(
+        'action' => array('UserController@update', $user->id), 
+        'class' => 'form-inline', 
+        'role' => 'form'
+        )) }}
         
-        <div class="control-group {{ $errors->has('oldPassword') ? 'error' : '' }}" for="oldPassword">
-        	<label class="control-label" for="oldPassword">Old Password</label>
-    		<div class="controls">
-				<input name="oldPassword" value="" type="password" class="input-xlarge" placeholder="Old Password">
-    			{{ ($errors->has('oldPassword') ? $errors->first('oldPassword') : '') }}
-    		</div>
+        <div class="form-group {{ $errors->has('oldPassword') ? 'has-warning' : '' }}">
+        	{{ Form::label('oldPassword', 'Old Password', array('class' => 'sr-only')) }}
+			{{ Form::password('oldPassword', array('class' => 'form-control', 'placeholder' => 'Old Password')) }}
     	</div>
 
-        <div class="control-group {{ $errors->has('newPassword') ? 'error' : '' }}" for="newPassword">
-        	<label class="control-label" for="newPassword">New Password</label>
-    		<div class="controls">
-				<input name="newPassword" value="" type="password" class="input-xlarge" placeholder="New Password">
-    			{{ ($errors->has('newPassword') ?  $errors->first('newPassword') : '') }}
-    		</div>
+        <div class="form-group {{ $errors->has('newPassword') ? 'has-warning' : '' }}">
+        	{{ Form::label('newPassword', 'New Password', array('class' => 'sr-only')) }}
+            {{ Form::password('newPassword', array('class' => 'form-control', 'placeholder' => 'New Password')) }}
     	</div>
 
-    	<div class="control-group {{ $errors->has('newPassword_confirmation') ? 'error' : '' }}" for="newPassword_confirmation">
-        	<label class="control-label" for="newPassword_confirmation">Confirm New Password</label>
-    		<div class="controls">
-				<input name="newPassword_confirmation" value="" type="password" class="input-xlarge" placeholder="New Password Again">
-    			{{ ($errors->has('newPassword_confirmation') ? $errors->first('newPassword_confirmation') : '') }}
-    		</div>
+    	<div class="form-group {{ $errors->has('newPassword_confirmation') ? 'has-warning' : '' }}">
+        	{{ Form::label('newPassword_confirmation', 'Confirm New Password', array('class' => 'sr-only')) }}
+            {{ Form::password('newPassword_confirmation', array('class' => 'form-control', 'placeholder' => 'Confirm New Password')) }}
     	</div>
+
+        {{ Form::submit('Change Password', array('class' => 'btn btn-primary'))}}
 	        	
-	    <div class="form-actions">
-	    	<input class="btn-primary btn" type="submit" value="Change Password"> 
-	    	<input class="btn-inverse btn" type="reset" value="Reset">
-	    </div>
-      </form>
+      {{ ($errors->has('oldPassword') ? $errors->first('oldPassword') : '') }}
+      {{ ($errors->has('newPassword') ?  $errors->first('newPassword') : '') }}
+      {{ ($errors->has('newPassword_confirmation') ? $errors->first('newPassword_confirmation') : '') }}
+
+      {{ Form::close() }}
   </div>
 
 @if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
@@ -92,7 +93,7 @@ Profile</h4>
                 <th>Membership Status</th>
             </thead>
             <tbody>
-                @foreach ($allGroups as $group)
+                @foreach ($user->getGroups() as $group)
                     <tr>
                         <td>{{ $group->name }}</td>
                         <td>

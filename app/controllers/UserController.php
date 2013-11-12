@@ -31,38 +31,70 @@ class UserController extends BaseController {
 	 */
 	public function index()
 	{
-        return View::make('users.index');
+        $users = $this->user->all();
+        //Assemble an array of each user's status
+    	$data['userStatus'] = array();
+    	foreach ($users as $user) {
+    		if ($user->isActivated()) 
+    		{
+    			$data['userStatus'][$user->id] = "Active";
+    		} 
+    		else 
+    		{
+    			$data['userStatus'][$user->id] = "Not Active";
+    		}
+
+    		//Pull Suspension & Ban info for this user
+    		$throttle = Sentry::getThrottleProvider()->findByUserId($user->id);
+
+    		//Check for suspension
+    		if($throttle->isSuspended())
+		    {
+		        // User is Suspended
+		        $data['userStatus'][$user->id] = "Suspended";
+		    }
+
+    		//Check for ban
+		    if($throttle->isBanned())
+		    {
+		        // User is Banned
+		        $data['userStatus'][$user->id] = "Banned";
+		    }
+
+    	}
+
+        return View::make('users.index')->with('users', $users);
 	}
 
 	/**
-	 * Show the form for creating a new resource.
+	 * Show the form for creating a new user.
 	 *
 	 * @return Response
 	 */
 	public function create()
 	{
-        dd('test');
         return View::make('users.create');
 	}
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Store a newly created user.
 	 *
 	 * @return Response
 	 */
 	public function store()
 	{
 		// Form Processing
-        $result = $this->RegisterForm->save( Input::all() );
+        $result = $this->registerForm->save( Input::all() );
 
         if( $result['success'] )
         {
             // Success!
+            Session::flash('success', $result['message']);
             return Redirect::to('/');
 
         } else {
             Session::flash('error', $result['message']);
-            return Redirect::to('login')
+            return Redirect::action('UserController@create')
                 ->withInput()
                 ->withErrors( $this->registerForm->errors() );
         }
@@ -76,7 +108,8 @@ class UserController extends BaseController {
 	 */
 	public function show($id)
 	{
-        return View::make('users.show');
+        $user = $this->user->byId($id);
+        return View::make('users.show')->with('user', $user);
 	}
 
 	/**
@@ -87,7 +120,8 @@ class UserController extends BaseController {
 	 */
 	public function edit($id)
 	{
-        return View::make('users.edit');
+        $user = $this->user->byId($id);
+        return View::make('users.edit')->with('user', $user);
 	}
 
 	/**
@@ -136,36 +170,7 @@ class UserController extends BaseController {
 	// 		    if ($data['user']->hasAccess('admin')) {
 	// 		    	$data['allUsers'] = Sentry::getUserProvider()->findAll();
 
-	// 		    	//Assemble an array of each user's status
-	// 		    	$data['userStatus'] = array();
-	// 		    	foreach ($data['allUsers'] as $user) {
-	// 		    		if ($user->isActivated()) 
-	// 		    		{
-	// 		    			$data['userStatus'][$user->id] = "Active";
-	// 		    		} 
-	// 		    		else 
-	// 		    		{
-	// 		    			$data['userStatus'][$user->id] = "Not Active";
-	// 		    		}
-
-	// 		    		//Pull Suspension & Ban info for this user
-	// 		    		$throttle = Sentry::getThrottleProvider()->findByUserId($user->id);
-
-	// 		    		//Check for suspension
-	// 		    		if($throttle->isSuspended())
-	// 				    {
-	// 				        // User is Suspended
-	// 				        $data['userStatus'][$user->id] = "Suspended";
-	// 				    }
-
-	// 		    		//Check for ban
-	// 				    if($throttle->isBanned())
-	// 				    {
-	// 				        // User is Banned
-	// 				        $data['userStatus'][$user->id] = "Banned";
-	// 				    }
-
-	// 		    	}
+	// 		    	
 	// 		    } 
 
 	// 		    return View::make('users.index')->with($data);
