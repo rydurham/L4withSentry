@@ -13,26 +13,18 @@
 
 
 Route::get('login', 'SessionController@create');
-
-
-// Route::get('logout', 'SessionController@destroy');
-// Route::resource('users', 'UserController');
-
+Route::get('logout', 'SessionController@destroy');
+Route::get('register', 'UserController@create');
 
 Route::resource('sessions', 'SessionController', array('only' => array('create', 'store', 'destroy')));
-
-// oute::resource('groups', 'GroupController');
+Route::resource('users', 'UserController');
+Route::resource('groups', 'GroupController');
 
 Route::get('/', function()
 {
 	return View::make('home');
 });
 
-
-Route::get('/home', function()
-{
-	return View::make('home');
-});
 
 // App::missing(function($exception)
 // {

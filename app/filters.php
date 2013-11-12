@@ -35,7 +35,7 @@ App::after(function($request, $response)
 
 Route::filter('auth', function()
 {
-	if (!Sentry::check()) return Redirect::to('users/login');
+	if (!Sentry::check()) return Redirect::to('login');
 });
 
 Route::filter('admin_auth', function()
@@ -43,7 +43,7 @@ Route::filter('admin_auth', function()
 	if (!Sentry::check())
 	{
 		// if not logged in, redirect to login
-		return Redirect::to('users/login');
+		return Redirect::to('login');
 	}
 
 	if (!Sentry::getUser()->hasAccess('admin'))
