@@ -1,8 +1,8 @@
-<?php namespace Authority\Service\Form\Login;
+<?php namespace Authority\Service\Form\Group;
 
 use Authority\Service\Validation\AbstractLaravelValidator;
 
-class LoginFormLaravelValidator extends AbstractLaravelValidator {
+class GroupFormLaravelValidator extends AbstractLaravelValidator {
 	
 	/**
 	 * Validation rules

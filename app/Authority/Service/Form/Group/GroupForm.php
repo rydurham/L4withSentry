@@ -1,7 +1,7 @@
 <?php namespace Authority\Service\Form\Group;
 
 use Authority\Service\Validation\ValidableInterface;
-use Authority\Repo\Session\SessionInterface;
+use Authority\Repo\Group\GroupInterface;
 
 class GroupForm {
 
@@ -15,26 +15,25 @@ class GroupForm {
 	/**
 	 * Validator
 	 *
-	 * @var \Cesario\Service\Form\ValidableInterface 
+	 * @var \Authority\Service\Form\ValidableInterface 
 	 */
 	protected $validator;
 
 	/**
-	 * Session Repository
+	 * Group Repository
 	 *
-	 * @var \Cesario\Repo\Session\SessionInterface 
+	 * @var \Authority\Repo\Group\GroupInterface 
 	 */
-	protected $session;
+	protected $group;
 
-	public function __construct(ValidableInterface $validator, SessionInterface $session)
+	public function __construct(ValidableInterface $validator, GroupInterface $group)
 	{
 		$this->validator = $validator;
-		$this->session = $session;
-
+		$this->group = $group;
 	}
 
 	/**
-     * Create a new session
+     * Create a new group
      *
      * @return integer
      */
@@ -45,7 +44,22 @@ class GroupForm {
             return false;
         }
 
-        return $this->session->store($input);
+        return $this->group->store($input);
+    }
+
+    /**
+     * Update new group
+     *
+     * @return integer
+     */
+    public function update(array $input)
+    {
+        if( ! $this->valid($input) )
+        {
+            return false;
+        }
+
+        return $this->group->update($input);
     }
 
 	/**
