@@ -21,9 +21,10 @@ Home
 		    <p><strong>Email:</strong> {{ $user->email }}</p>
 		    
 		</div>
-		<div class=".col-md-4">
+		<div class="col-md-4">
 			<p><em>Account created: {{ $user->created_at }}</em></p>
 			<p><em>Last Updated: {{ $user->updated_at }}</em></p>
+			<button class="btn btn-primary" onClick="location.href='{{ action('UserController@edit', array($user->id)) }}'">Edit Profile</button>
 		</div>
 	</div>
 
@@ -40,8 +41,7 @@ Home
 			@endif
 	    </ul>
 	</div>
-	<button class="btn btn-primary" onClick="location.href='{{ action('UserController@edit', array($user->id)) }}'">Edit Profile</button>
-
+	
 	<hr />
 
 	<h4>User Object</h4>
