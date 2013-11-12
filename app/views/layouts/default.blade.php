@@ -10,10 +10,12 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<!-- Bootstrap 3.0: Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+		<!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"> -->
+		<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
 
 		<!-- Optional theme -->
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+		<!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css"> -->
+		<link rel="stylesheet" href="{{ asset('css/bootstrap-theme.min.css') }}">
 
 		<style>
 		@section('styles')
@@ -55,9 +57,7 @@
 	          </ul>
 	          <ul class="nav navbar-nav navbar-right">
 	            @if (Sentry::check())
-				<li class="navbar-text">{{ Sentry::getUser()->email }}</li>
-				<li class="divider-vertical"></li>
-				<li {{ (Request::is('users/show/' . Sentry::getUser()->id) ? 'class="active"' : '') }}><a href="/users/show/{{ Sentry::getUser()->id }}">Account</a></li>
+				<li {{ (Request::is('users/show/' . Sentry::getUser()->id) ? 'class="active"' : '') }}><a href="/users/show/{{ Sentry::getUser()->id }}">{{ Sentry::getUser()->email }}</a></li>
 				<li><a href="{{ URL::to('logout') }}">Logout</a></li>
 				@else
 				<li {{ (Request::is('login') ? 'class="active"' : '') }}><a href="{{ URL::to('login') }}">Login</a></li>
@@ -76,9 +76,7 @@
 			<!-- ./ notifications -->
 
 			<!-- Content -->
-			<div class="container">
-				@yield('content')
-			</div>
+			@yield('content')
 			<!-- ./ content -->
 		</div>
 
@@ -86,9 +84,9 @@
 
 		<!-- Javascripts
 		================================================== -->
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-		<script src="{{ asset('js/restfulizer.js') }}"></script> <!-- Thanks to Zizaco for this script:  http://zizaco.net  -->
-		<!-- Bootstrap 3.0:  Latest compiled and minified JavaScript -->
-		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+		<script src="{{ asset('js/jquery-2.0.2.min.js') }}"></script>
+		<script src="{{ asset('js/bootstrap.min.js') }}"></script>
+		<script src="{{ asset('js/restfulizer.js') }}"></script> 
+		<!-- Thanks to Zizaco for the Restfulizer script.  http://zizaco.net  -->
 	</body>
 </html>
