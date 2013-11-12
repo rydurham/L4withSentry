@@ -1,20 +1,26 @@
 <?php
 
 use Authority\Repo\User\UserInterface;
+use Authority\Repo\Group\GroupInterface;
 use Authority\Service\Form\Register\RegisterForm;
+use Authority\Service\Form\User\UserForm;
 
 class UserController extends BaseController {
 
 	protected $user;
+	protected $group;
 	protected $registerForm;
+	protected $userForm;
 
 	/**
 	 * Instantiate a new UserController
 	 */
-	public function __construct(UserInterface $user, RegisterForm $registerForm)
+	public function __construct(UserInterface $user, GroupInterface $group, RegisterForm $registerForm, UserForm $userForm)
 	{
 		$this->user = $user;
+		$this->group = $group;
 		$this->registerForm = $registerForm;
+		$this->userForm = $userForm;
 
 		//Check CSRF token on POST
 		$this->beforeFilter('csrf', array('on' => 'post'));
@@ -91,7 +97,14 @@ class UserController extends BaseController {
 	public function edit($id)
 	{
         $user = $this->user->byId($id);
-        return View::make('users.edit')->with('user', $user);
+        $currentGroups = $user->getGroups()->toArray();
+        $userGroups = array();
+        foreach ($currentGroups as $group) {
+        	array_push($userGroups, $group['name']);
+        }
+        $allGroups = $this->group->all();
+
+        return View::make('users.edit')->with('user', $user)->with('userGroups', $userGroups)->with('allGroups', $allGroups);
 	}
 
 	/**
@@ -102,7 +115,21 @@ class UserController extends BaseController {
 	 */
 	public function update($id)
 	{
-		//
+		// Form Processing
+        $result = $this->userForm->update( Input::all() );
+
+        if( $result['success'] )
+        {
+            // Success!
+            Session::flash('success', $result['message']);
+            return Redirect::to('users');
+
+        } else {
+            Session::flash('error', $result['message']);
+            return Redirect::action('UserController@edit', array($id))
+                ->withInput()
+                ->withErrors( $this->userForm->errors() );
+        }
 	}
 
 	/**

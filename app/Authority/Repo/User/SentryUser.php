@@ -70,7 +70,55 @@ class SentryUser extends RepoAbstract implements UserInterface {
 	 */
 	public function update($data)
 	{
-		
+		try
+		{
+		    // Find the user using the user id
+		    $user = $this->sentry->findUserById($data['id']);
+
+		    // Update the user details
+		    $user->first_name = $data['firstName'];
+		    $user->last_name = $data['lastName'];
+
+		    // Update group memberships
+		    $allGroups = $this->sentry->getGroupProvider()->findAll();
+		    foreach ($allGroups as $group)
+		    {
+		    	if (isset($data['groups'][$group->id])) 
+                {
+                    //The user should be added to this group
+                    $user->addGroup($group);
+                } else {
+                    // The user should be removed from this group
+                    $user->removeGroup($group);
+                }
+		    }
+
+		    // Update the user
+		    if ($user->save())
+		    {
+		        // User information was updated
+		        $result['success'] = true;
+	    		$result['message'] = 'Profile updated';
+		    }
+		    else
+		    {
+		        // User information was not updated
+		        $result['success'] = false;
+	    		$result['message'] = 'Unable to update profile';
+		    }
+		}
+		catch (Cartalyst\Sentry\Users\UserExistsException $e)
+		{
+		    $result['success'] = false;
+	    	$result['message'] = 'User already exists.';
+		}
+		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+		    $result['success'] = false;
+	    	$result['message'] = 'User not found';
+		}
+
+		return $result;
 	}
 
 	/**

@@ -20,6 +20,7 @@ Profile</h4>
 <div class="well">
 	{{ Form::open(array(
         'action' => array('UserController@update', $user->id), 
+        'method' => 'put',
         'class' => 'form-horizontal', 
         'role' => 'form'
         )) }}
@@ -27,7 +28,7 @@ Profile</h4>
         <div class="form-group {{ ($errors->has('firstName')) ? 'has-warning' : '' }}" for="firstName">
             {{ Form::label('edit_firstName', 'First Name', array('class' => 'col-sm-2 control-label')) }}
             <div class="col-sm-10">
-              {{ Form::text('firstName', $user->firstName, array('class' => 'form-control', 'placeholder' => 'First Name', 'id' => 'edit_firstName'))}}
+              {{ Form::text('firstName', $user->first_name, array('class' => 'form-control', 'placeholder' => 'First Name', 'id' => 'edit_firstName'))}}
             </div>
             {{ ($errors->has('firstName') ? $errors->first('firstName') : '') }}    			
     	</div>
@@ -36,13 +37,28 @@ Profile</h4>
         <div class="form-group {{ ($errors->has('lastName')) ? 'has-warning' : '' }}" for="lastName">
             {{ Form::label('edit_lastName', 'Last Name', array('class' => 'col-sm-2 control-label')) }}
             <div class="col-sm-10">
-              {{ Form::text('lastName', $user->lastName, array('class' => 'form-control', 'placeholder' => 'Last Name', 'id' => 'edit_lastName'))}}
+              {{ Form::text('lastName', $user->last_name, array('class' => 'form-control', 'placeholder' => 'Last Name', 'id' => 'edit_lastName'))}}
             </div>
             {{ ($errors->has('lastName') ? $errors->first('lastName') : '') }}                
         </div>
 
+        @if (Sentry::getUser()->hasAccess('admin'))
+        <div class="form-group">
+            {{ Form::label('edit_memberships', 'Group Memberships', array('class' => 'col-sm-2 control-label'))}}
+            <div class="col-sm-10">
+                @foreach ($allGroups as $group)
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="groups['{{ $group->id }}']" value='1' 
+                        {{ (in_array($group->name, $userGroups) ? 'checked="checked"' : '') }} > {{ $group->name }}
+                    </label>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
+                {{ Form::hidden('id', $user->id) }}
                 {{ Form::submit('Submit Changes', array('class' => 'btn btn-primary'))}}
             </div>
       </div>
@@ -81,35 +97,6 @@ Profile</h4>
       {{ Form::close() }}
   </div>
 
-@if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
-<h4>User Group Memberships</h4>
-<div class="well">
-    <form class="form-horizontal" action="{{ URL::to('users/updatememberships') }}/{{ $user->id }}" method="post">
-        {{ Form::token() }}
 
-        <table class="table">
-            <thead>
-                <th>Group</th>
-                <th>Membership Status</th>
-            </thead>
-            <tbody>
-                @foreach ($user->getGroups() as $group)
-                    <tr>
-                        <td>{{ $group->name }}</td>
-                        <td>
-                            <div class="switch" data-on-label="In" data-on='info' data-off-label="Out">
-                                <input name="permissions[{{ $group->id }}]" type="checkbox" {{ ( $user->inGroup($group)) ? 'checked' : '' }} >
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <div class="form-actions">
-            <input class="btn-primary btn" type="submit" value="Update Memberships">
-        </div> 
-    </form>
-</div>
-@endif    
-
+{{ $errors }}
 @stop
