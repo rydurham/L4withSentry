@@ -32,37 +32,7 @@ class UserController extends BaseController {
 	public function index()
 	{
         $users = $this->user->all();
-        //Assemble an array of each user's status
-    	$data['userStatus'] = array();
-    	foreach ($users as $user) {
-    		if ($user->isActivated()) 
-    		{
-    			$data['userStatus'][$user->id] = "Active";
-    		} 
-    		else 
-    		{
-    			$data['userStatus'][$user->id] = "Not Active";
-    		}
-
-    		//Pull Suspension & Ban info for this user
-    		$throttle = Sentry::getThrottleProvider()->findByUserId($user->id);
-
-    		//Check for suspension
-    		if($throttle->isSuspended())
-		    {
-		        // User is Suspended
-		        $data['userStatus'][$user->id] = "Suspended";
-		    }
-
-    		//Check for ban
-		    if($throttle->isBanned())
-		    {
-		        // User is Banned
-		        $data['userStatus'][$user->id] = "Banned";
-		    }
-
-    	}
-
+      
         return View::make('users.index')->with('users', $users);
 	}
 
