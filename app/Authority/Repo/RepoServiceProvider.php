@@ -3,6 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use Authority\Repo\Session\SentrySession;
 use Authority\Repo\User\SentryUser;
+use Authority\Repo\Group\SentryGroup;
 use Cartalyst\Sentry\Sentry;
 
 class RepoServiceProvider extends ServiceProvider {
@@ -27,6 +28,14 @@ class RepoServiceProvider extends ServiceProvider {
         {
             return new SentryUser(
             	$app['sentry']
+            );
+        });
+
+        // Bind the Group Repository
+        $app->bind('Authority\Repo\Group\GroupInterface', function($app)
+        {
+            return new SentryGroup(
+                $app['sentry']
             );
         });
 	}
