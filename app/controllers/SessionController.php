@@ -14,9 +14,9 @@ class SessionController extends BaseController {
 	/**
 	 * Constructor
 	 */
-	public function __construct(LoginForm $loginForm)
+	public function __construct(SessionInterface $session, LoginForm $loginForm)
 	{
-		// $this->session = $session;
+		$this->session = $session;
 		$this->loginForm = $loginForm;
 	}
 
