@@ -2,7 +2,7 @@
 
 This is a demo of [Sentry 2](https://github.com/cartalyst/sentry) integrated with [Laravel 4](https://github.com/laravel/laravel/tree/develop) and [Bootstrap 3.0](http://getbootstrap.com).
 
-Version 2.0 has been completely revamped using 
+Version 2.0 has been completely revamped using strategies suggested in *Laravel: From Apprentics to Artisan* by Taylor Otwell and *Implementing Laravel* by Chris Fidao and the Laracast videos.   Version 1.0 still exists in its original version. 
 
 
 ### Instructions
@@ -26,10 +26,11 @@ __Users__
 * admin@admin.com *Password: sentryadmin*
 
 ### Links
-* (Sentry 2.0 Documentation)[https://cartalyst.com/manual/sentry]
-* (Laravel 4 Documentation)[http://laravel.com/docs]
-* (Laravel: From Apprentice To Artisan)[https://leanpub.com/laravel] by Taylor Otwell
-* (Implementing Laravel)[https://leanpub.com/implementinglaravel] by Chris Fidao
+* [Sentry 2.0 Documentation](https://cartalyst.com/manual/sentry)
+* [Laravel 4 Documentation](http://laravel.com/docs)
+* [Laravel: From Apprentice To Artisan](https://leanpub.com/laravel) by Taylor Otwell
+* [Implementing Laravel](https://leanpub.com/implementinglaravel) by Chris Fidao
+* [Laracasts](http://laracasts.com)
 
 ### Notes
 
