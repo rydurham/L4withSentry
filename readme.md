@@ -1,23 +1,18 @@
-## Laravel 4 with Sentry 2
+## Laravel 4 with Sentry 2 - Version 2.0
 
-This is a demo of [Sentry 2](https://github.com/cartalyst/sentry) integrated with [Laravel 4](https://github.com/laravel/laravel/tree/develop) and [Bootstrap](http://twitter.github.com/bootstrap/index.html).
+This is a demo of [Sentry 2](https://github.com/cartalyst/sentry) integrated with [Laravel 4](https://github.com/laravel/laravel/tree/develop) and [Bootstrap 3.0](http://getbootstrap.com).
+
+Version 2.0 has been completely revamped using 
 
 
 ### Instructions
 
-After you have cloned this repo to your development environment, use your CLI to run
-
-	php composer.phar update 
-
-Then run the Sentry Migrations: 
-
-	php artisan migrate --package=cartalyst/sentry
-
-Next use the seeds provided in this repo to set up the initial user accounts: 
-
-	php artisan db:seed
-
-Edit the /app/config/mail.php to work for your dev environment and then you should be good to go. 
+1. Clone this repo
+2. Run ```php composer.phar update```
+3. Set up your datbase configuration in ```app/config/database.php```
+4. Edit ```app/config/mail.php``` to work with your mail setup.
+5. Run the migrations: ```php artisan migrate```
+6. Seed the Database: ```php artisan db:seed```
 
 ### Seeds
 The seeds in this repo will create two groups and two user accounts.
@@ -30,14 +25,16 @@ __Users__
 * user@user.com  *Password: sentryuser*
 * admin@admin.com *Password: sentryadmin*
 
+### Links
+* (Sentry 2.0 Documentation)[https://cartalyst.com/manual/sentry]
+* (Laravel 4 Documentation)[http://laravel.com/docs]
+* (Laravel: From Apprentice To Artisan)[https://leanpub.com/laravel] by Taylor Otwell
+* (Implementing Laravel)[https://leanpub.com/implementinglaravel] by Chris Fidao
+
 ### Notes
 
-* Please let me know if you have any problems.  
-* Sentry 2 is still in active development - I will strive to keep this project updated as they move towards a stable release. 
-* There are several Sentry 2 features that I have not included here (mainly User Specific Permissions and Banning).  I will add these eventually.
-* The GroupController is restful and the UserController is not; only because I wanted to experiment with both methods.
-* I have been a bit sloppy with how I handle "Admin" access checking in the UserController - I hope to clean this up soon.
+* There are several Sentry 2 features that I have not included here (mainly User Specific Permissions and Banning).
 * There are currently no tests here, beyond the tests provided with Sentry 2 and Laravel 4.  I am not yet hip enough to TDD to add these in a meaningful way.
-* Currently all mail is being sent inline - eventually I will switch this over to use the new Queue feature in Laravel 4.
+
 =======
 The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
