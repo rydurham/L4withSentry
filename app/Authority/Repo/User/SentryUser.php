@@ -164,7 +164,8 @@ class SentryUser extends RepoAbstract implements UserInterface {
 		    {
 		        // User activation passed
 		        $result['success'] = true;
-	    		$result['message'] = 'Activation complete.';
+		        $url = route('login');
+	    		$result['message'] = "Activation complete. <a href='$url'>You may now login</a>";
 		    }
 		    else
 		    {

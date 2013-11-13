@@ -61,7 +61,8 @@ class SentrySession extends RepoAbstract implements SessionInterface {
 			catch (\Cartalyst\Sentry\Users\UserNotActivatedException $e)
 			{
 			    $result['success'] = false;
-			    $result['message'] = 'You have not yet activated this account.';
+			    $url = route('resendActivationForm');
+			    $result['message'] = "You have not yet activated this account. <a href='$url' class='alert-link'>Resend Activation Email?</a>";
 			}
 
 			// The following is only required if throttle is enabled
