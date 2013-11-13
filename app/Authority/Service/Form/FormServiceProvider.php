@@ -9,6 +9,8 @@ use Authority\Service\Form\Group\GroupForm;
 use Authority\Service\Form\Group\GroupFormLaravelValidator;
 use Authority\Service\Form\User\UserForm;
 use Authority\Service\Form\User\UserFormLaravelValidator;
+use Authority\Service\Form\ResendActivation\ResendActivationForm;
+use Authority\Service\Form\ResendActivation\ResendActivationFormLaravelValidator;
 
 class FormServiceProvider extends ServiceProvider {
 
@@ -53,6 +55,15 @@ class FormServiceProvider extends ServiceProvider {
         {
             return new UserForm(
                 new UserFormLaravelValidator( $app['validator'] ),
+                $app->make('Authority\Repo\User\UserInterface')
+            );
+        });
+
+        // Bind the Resedn Activation Form
+        $app->bind('Authority\Service\Form\ResendActivation\ResendActivationForm', function($app)
+        {
+            return new ResendActivationForm(
+                new ResendActivationFormLaravelValidator( $app['validator'] ),
                 $app->make('Authority\Repo\User\UserInterface')
             );
         });

@@ -70,6 +70,7 @@ class SentryUser extends RepoAbstract implements UserInterface {
 	 */
 	public function update($data)
 	{
+		$result = array();
 		try
 		{
 		    // Find the user using the user id
@@ -142,6 +143,96 @@ class SentryUser extends RepoAbstract implements UserInterface {
 		    return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Attempt activation for the specified user
+	 * @param  int $id   
+	 * @param  string $code 
+	 * @return bool       
+	 */
+	public function activate($id, $code)
+	{
+		$result = array();
+		try
+		{
+		    // Find the user using the user id
+		    $user = $this->sentry->findUserById($id);
+
+		    // Attempt to activate the user
+		    if ($user->attemptActivation($code))
+		    {
+		        // User activation passed
+		        $result['success'] = true;
+	    		$result['message'] = 'Activation complete.';
+		    }
+		    else
+		    {
+		        // User activation failed
+		        $result['success'] = false;
+	    		$result['message'] = 'Activation could not be completed.';
+		    }
+		}
+		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+		    $result['success'] = false;
+	    	$result['message'] = 'User was not found.';
+		}
+		catch (\Cartalyst\Sentry\Users\UserAlreadyActivatedException $e)
+		{
+		    $result['success'] = false;
+	    	$result['message'] = 'User is already activated.';
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Resend the activation email to the specified email address
+	 * @param  Array $data
+	 * @return Response
+	 */
+	public function resend($data)
+	{
+		$result = array();
+		try {
+            //Attempt to find the user. 
+            $user = $this->sentry->getUserProvider()->findByLogin($data['email']);
+
+            if (!$user->isActivated())
+            {
+                //Get the activation code & prep data for email
+                $data['activationCode'] = $user->GetActivationCode();
+                $data['userId'] = $user->getId();
+
+                //send email with link to activate.
+                Mail::send('emails.auth.welcome', $data, function($m) use ($data)
+                {
+                    $m->to($data['email'])->subject('Activate your account');
+                });
+
+                //success!
+            	$result['success'] = true;
+	    		$result['message'] = 'Check your email for the confirmation link.';
+            }
+            else 
+            {
+                $result['success'] = false;
+	    		$result['message'] = 'That account has already been activated.';
+            }
+
+	    }
+	    catch (\Cartalyst\Sentry\Users\LoginRequiredException $e)
+	    {
+	        $result['success'] = false;
+	    	$result['message'] = 'Login field required.';
+	    }
+	    catch (\Cartalyst\Sentry\Users\UserExistsException $e)
+	    {
+	        $result['success'] = false;
+	    	$result['message'] = 'User already exists.';
+	    }
+	    return $result;
 	}
 
 	/**

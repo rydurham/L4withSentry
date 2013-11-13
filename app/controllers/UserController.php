@@ -4,6 +4,7 @@ use Authority\Repo\User\UserInterface;
 use Authority\Repo\Group\GroupInterface;
 use Authority\Service\Form\Register\RegisterForm;
 use Authority\Service\Form\User\UserForm;
+use Authority\Service\Form\ResendActivation\ResendActivationForm;
 
 class UserController extends BaseController {
 
@@ -11,22 +12,29 @@ class UserController extends BaseController {
 	protected $group;
 	protected $registerForm;
 	protected $userForm;
+	protected $resendActivationForm;
 
 	/**
 	 * Instantiate a new UserController
 	 */
-	public function __construct(UserInterface $user, GroupInterface $group, RegisterForm $registerForm, UserForm $userForm)
+	public function __construct(
+		UserInterface $user, 
+		GroupInterface $group, 
+		RegisterForm $registerForm, 
+		UserForm $userForm,
+		ResendActivationForm $resendActivationForm)
 	{
 		$this->user = $user;
 		$this->group = $group;
 		$this->registerForm = $registerForm;
 		$this->userForm = $userForm;
+		$this->resendActivationForm = $resendActivationForm;
 
 		//Check CSRF token on POST
 		$this->beforeFilter('csrf', array('on' => 'post'));
 
 		// Set up Auth Filters
-		 $this->beforeFilter('auth', array('except' => array('create', 'store')));
+		 $this->beforeFilter('auth', array('except' => array('create', 'store', 'activate', 'resend')));
 	}
 
 
@@ -149,6 +157,53 @@ class UserController extends BaseController {
         {
         	Session::flash('error', 'Unable to Delete User');
             return Redirect::to('/users');
+        }
+	}
+
+	/**
+	 * Activate a new user
+	 * @param  int $id   
+	 * @param  string $code 
+	 * @return Response
+	 */
+	public function activate($id, $code)
+	{
+
+		$result = $this->user->activate($id, $code);
+
+        if( $result['success'] )
+        {
+            // Success!
+            Session::flash('success', $result['message']);
+            return Redirect::to('/');
+
+        } else {
+            Session::flash('error', $result['message']);
+            return Redirect::to('/');
+        }
+	}
+
+	/**
+	 * Process resend activation request
+	 * @return Response
+	 */
+	public function resend()
+	{
+		// Form Processing
+        $result = $this->resendActivationForm->resend( Input::all() );
+
+        if( $result['success'] )
+        {
+            // Success!
+            Session::flash('success', $result['message']);
+            return Redirect::to('/');
+        } 
+        else 
+        {
+            Session::flash('error', $result['message']);
+            return Redirect::route('profile')
+                ->withInput()
+                ->withErrors( $this->resendActivationForm->errors() );
         }
 	}
 

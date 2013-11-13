@@ -12,12 +12,22 @@
 */
 
 
+// Session Routes
 Route::get('login', 'SessionController@create');
 Route::get('logout', 'SessionController@destroy');
-Route::get('register', 'UserController@create');
-
 Route::resource('sessions', 'SessionController', array('only' => array('create', 'store', 'destroy')));
+
+// User Routes
+Route::get('register', 'UserController@create');
+Route::get('users/{id}/activate/{code}', 'UserController@activate')->where('id', '[0-9]+');
+Route::get('resend', array('as' => 'resendActivationForm', function()
+{
+	return View::make('users.resend');
+}));
+Route::post('resend', 'UserController@resend');
 Route::resource('users', 'UserController');
+
+// Group Routes
 Route::resource('groups', 'GroupController');
 
 Route::get('/', function()
