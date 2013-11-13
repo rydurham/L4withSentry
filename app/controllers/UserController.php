@@ -140,84 +140,18 @@ class UserController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+		if ($this->user->destroy($id))
+		{
+			Session::flash('success', 'User Deleted');
+            return Redirect::to('/users');
+        }
+        else 
+        {
+        	Session::flash('error', 'Unable to Delete User');
+            return Redirect::to('/users');
+        }
 	}
 
-
-
-// ======================================================================================================
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	// public function index()
-	// {
-	// 	// Index - show the user details.
-
-	// 	try
-	// 	{
-	// 	   	// Find the current user
-	// 	    if ( Sentry::check())
-	// 		{
-	// 		    // Find the user using the user id
-	// 		    $data['user'] = Sentry::getUser();
-
-	// 		    if ($data['user']->hasAccess('admin')) {
-	// 		    	$data['allUsers'] = Sentry::getUserProvider()->findAll();
-
-	// 		    	
-	// 		    } 
-
-	// 		    return View::make('users.index')->with($data);
-	// 		} else {
-	// 			Session::flash('error', 'You are not logged in.');
-	// 			return Redirect::to('/');
-	// 		}
-	// 	}
-	// 	catch (Cartalyst\Sentry\UserNotFoundException $e)
-	// 	{
-	// 	    Session::flash('error', 'There was a problem accessing your account.');
-	// 		return Redirect::to('/');
-	// 	}
-	// }
-
-	/**
-	 *  Display this user's details.
-	 */
-	
-	// public function show($id)
-	// {
-	// 	try
-	// 	{
-	// 	    //Get the current user's id.
-	// 		Sentry::check();
-	// 		$currentUser = Sentry::getUser();
-
-	// 	   	//Do they have admin access?
-	// 		if ( $currentUser->hasAccess('admin') || $currentUser->getId() == $id)
-	// 		{
-	// 			//Either they are an admin, or:
-	// 			//They are not an admin, but they are viewing their own profile.
-	// 			$data['user'] = Sentry::getUserProvider()->findById($id);
-	// 			$data['myGroups'] = $data['user']->getGroups();
-	// 			return View::make('users.show')->with($data);
-	// 		} else {
-	// 			Session::flash('error', 'You don\'t have access to that user.');
-	// 			return Redirect::to('/');
-	// 		}
-
-	// 	}
-	// 	catch (Cartalyst\Sentry\UserNotFoundException $e)
-	// 	{
-	// 	    Session::flash('error', 'There was a problem accessing your account.');
-	// 		return Redirect::to('/');
-	// 	}
-	// }
-
-
-	
-	}
+}
 
 	

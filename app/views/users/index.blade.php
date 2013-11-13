@@ -26,7 +26,7 @@ Home
 						<td>
 							<button class="btn btn-default" type="button" onClick="location.href='{{ action('UserController@edit', array($user->id)) }}'">Edit</button> 
 							<button class="btn btn-default" type="button" onClick="location.href='{{ URL::to('users/suspend') }}/{{ $user->id}}'">Suspend</button> 
-							<button class="btn btn-default action_confirm" href="{{ URL::to('users/delete') }}/{{ $user->id}}" data-token="{{ Session::getToken() }}" data-method="post">Delete</button></td>
+							<button class="btn btn-default action_confirm" href="{{ action('UserController@destroy', array($user->id)) }}" data-token="{{ Session::getToken() }}" data-method="delete">Delete</button></td>
 					</tr>
 				@endforeach
 			</tbody>
