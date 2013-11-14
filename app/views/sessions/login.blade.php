@@ -27,7 +27,7 @@ Log In
                 <input type="checkbox" value="rememberMe"> Remember me
             </label>
             <button class="btn btn-primary" type="submit">Sign in</button>
-            <button class="btn btn-link" type="">Forgot Password</button>
+            <a class="btn btn-link" href="{{ route('forgotPasswordForm') }}">Forgot Password</a>
         {{ Form::close() }}
     </div>
 </div>

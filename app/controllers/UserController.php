@@ -5,6 +5,7 @@ use Authority\Repo\Group\GroupInterface;
 use Authority\Service\Form\Register\RegisterForm;
 use Authority\Service\Form\User\UserForm;
 use Authority\Service\Form\ResendActivation\ResendActivationForm;
+use Authority\Service\Form\ForgotPassword\ForgotPasswordForm;
 
 class UserController extends BaseController {
 
@@ -13,6 +14,7 @@ class UserController extends BaseController {
 	protected $registerForm;
 	protected $userForm;
 	protected $resendActivationForm;
+	protected $forgotPasswordForm;
 
 	/**
 	 * Instantiate a new UserController
@@ -22,19 +24,21 @@ class UserController extends BaseController {
 		GroupInterface $group, 
 		RegisterForm $registerForm, 
 		UserForm $userForm,
-		ResendActivationForm $resendActivationForm)
+		ResendActivationForm $resendActivationForm,
+		ForgotPasswordForm $forgotPasswordForm)
 	{
 		$this->user = $user;
 		$this->group = $group;
 		$this->registerForm = $registerForm;
 		$this->userForm = $userForm;
 		$this->resendActivationForm = $resendActivationForm;
+		$this->forgotPasswordForm = $forgotPasswordForm;
 
 		//Check CSRF token on POST
 		$this->beforeFilter('csrf', array('on' => 'post'));
 
 		// Set up Auth Filters
-		 $this->beforeFilter('auth', array('except' => array('create', 'store', 'activate', 'resend')));
+		 $this->beforeFilter('auth', array('except' => array('create', 'store', 'activate', 'resend', 'forgot', 'reset')));
 	}
 
 
@@ -204,6 +208,52 @@ class UserController extends BaseController {
             return Redirect::route('profile')
                 ->withInput()
                 ->withErrors( $this->resendActivationForm->errors() );
+        }
+	}
+
+	/**
+	 * Process Forgot Password request
+	 * @return Response
+	 */
+	public function forgot()
+	{
+		// Form Processing
+        $result = $this->forgotPasswordForm->forgot( Input::all() );
+
+        if( $result['success'] )
+        {
+            // Success!
+            Session::flash('success', $result['message']);
+            return Redirect::to('/');
+        } 
+        else 
+        {
+            Session::flash('error', $result['message']);
+            return Redirect::route('forgotPasswordForm')
+                ->withInput()
+                ->withErrors( $this->forgotPasswordForm->errors() );
+        }
+	}
+
+	/**
+	 * Process a password reset request link
+	 * @param  [type] $id   [description]
+	 * @param  [type] $code [description]
+	 * @return [type]       [description]
+	 */
+	public function reset($id, $code)
+	{
+		$result = $this->user->resetPassword($id, $code);
+
+        if( $result['success'] )
+        {
+            // Success!
+            Session::flash('success', $result['message']);
+            return Redirect::to('/');
+
+        } else {
+            Session::flash('error', $result['message']);
+            return Redirect::to('/');
         }
 	}
 

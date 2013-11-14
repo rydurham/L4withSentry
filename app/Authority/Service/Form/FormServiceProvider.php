@@ -11,6 +11,8 @@ use Authority\Service\Form\User\UserForm;
 use Authority\Service\Form\User\UserFormLaravelValidator;
 use Authority\Service\Form\ResendActivation\ResendActivationForm;
 use Authority\Service\Form\ResendActivation\ResendActivationFormLaravelValidator;
+use Authority\Service\Form\ForgotPassword\ForgotPasswordForm;
+use Authority\Service\Form\ForgotPassword\ForgotPasswordFormLaravelValidator;
 
 class FormServiceProvider extends ServiceProvider {
 
@@ -59,11 +61,20 @@ class FormServiceProvider extends ServiceProvider {
             );
         });
 
-        // Bind the Resedn Activation Form
+        // Bind the Resend Activation Form
         $app->bind('Authority\Service\Form\ResendActivation\ResendActivationForm', function($app)
         {
             return new ResendActivationForm(
                 new ResendActivationFormLaravelValidator( $app['validator'] ),
+                $app->make('Authority\Repo\User\UserInterface')
+            );
+        });
+
+        // Bind the Reset Password Form
+        $app->bind('Authority\Service\Form\ForgotPassword\ForgotPasswordForm', function($app)
+        {
+            return new ForgotPasswordForm(
+                new ForgotPasswordFormLaravelValidator( $app['validator'] ),
                 $app->make('Authority\Repo\User\UserInterface')
             );
         });

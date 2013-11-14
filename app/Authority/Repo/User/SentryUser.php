@@ -237,6 +237,82 @@ class SentryUser extends RepoAbstract implements UserInterface {
 	}
 
 	/**
+	 * Handle a password reset rewuest
+	 * @param  Array $data 
+	 * @return Bool       
+	 */
+	public function forgotPassword($data)
+	{
+		$result = array();
+		try
+        {
+			$user = $this->sentry->getUserProvider()->findByLogin($data['email']);
+			$data['resetCode'] = $user->getResetPasswordCode();
+			$data['userId'] = $user->getId();
+
+			// Email the reset code to the user
+	        Mail::send('emails.auth.reset', $data, function($m) use($data)
+	        {
+	         $m->to($data['email'])->subject('Password Reset Confirmation | Laravel4 With Sentry');
+	        });
+
+	        $result['success'] = true;
+	    	$result['message'] = 'Check your email for instructions.';
+
+        }
+        catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+        {
+        	$result['success'] = false;
+	    	$result['message'] = 'User does not exist.';
+        }
+        return $result;
+	}
+
+
+	public function resetPassword($id, $code)
+	{
+		$result = array();
+		try
+        {
+	        // Find the user
+	        $user = $this->sentry->getUserProvider()->findById($id);
+	        $newPassword = $this->_generatePassword(8,8);
+
+			// Attempt to reset the user password
+			if ($user->attemptResetPassword($code, $newPassword))
+			{
+				// Password reset passed
+				//
+				// Email the reset code to the user
+
+				//Prepare New Password body
+				$data['newPassword'] = $newPassword;
+				$data['email'] = $user->getLogin();
+
+				Mail::send('emails.auth.newpassword', $data, function($m) use($data)
+				{
+				 	$m->to($data['email'])->subject('New Password Information | Laravel4 With Sentry');
+				});
+
+	        	$result['success'] = true;
+		    	$result['message'] = 'Your password has been changed. Check your email for the new password.';
+			}
+			else
+			{
+				// Password reset failed
+				$result['success'] = false;
+				$result['message'] = 'There was a problem. Please contact the system administrator.';
+			}
+        }
+        catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+        {
+        	$result['success'] = false;
+	    	$result['message'] = 'User does not exist.';
+        }
+        return $result;
+	}
+
+	/**
 	 * Return a specific user from the given id
 	 * 
 	 * @param  integer $id
@@ -294,4 +370,40 @@ class SentryUser extends RepoAbstract implements UserInterface {
 
 		return $users;
 	}
+
+	/**
+     * Generate password - helper function
+     * From http://www.phpscribble.com/i4xzZu/Generate-random-passwords-of-given-length-and-strength
+     *
+     */
+    
+    private function _generatePassword($length=9, $strength=4) {
+        $vowels = 'aeiouy';
+        $consonants = 'bcdfghjklmnpqrstvwxz';
+        if ($strength & 1) {
+               $consonants .= 'BCDFGHJKLMNPQRSTVWXZ';
+        }
+        if ($strength & 2) {
+               $vowels .= "AEIOUY";
+        }
+        if ($strength & 4) {
+               $consonants .= '23456789';
+        }
+        if ($strength & 8) {
+               $consonants .= '@#$%';
+        }
+
+        $password = '';
+        $alt = time() % 2;
+        for ($i = 0; $i < $length; $i++) {
+            if ($alt == 1) {
+                $password .= $consonants[(rand() % strlen($consonants))];
+                $alt = 0;
+            } else {
+                $password .= $vowels[(rand() % strlen($vowels))];
+                $alt = 1;
+            }
+        }
+        return $password;
+    }
 }

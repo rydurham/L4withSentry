@@ -13,8 +13,8 @@
 
 
 // Session Routes
-Route::get('login', 'SessionController@create');
-Route::get('logout', 'SessionController@destroy');
+Route::get('login',  array('as' => 'login', 'uses' => 'SessionController@create'));
+Route::get('logout', array('as' => 'logout', 'uses' => 'SessionController@destroy'));
 Route::resource('sessions', 'SessionController', array('only' => array('create', 'store', 'destroy')));
 
 // User Routes
@@ -25,6 +25,12 @@ Route::get('resend', array('as' => 'resendActivationForm', function()
 	return View::make('users.resend');
 }));
 Route::post('resend', 'UserController@resend');
+Route::get('forgot', array('as' => 'forgotPasswordForm', function()
+{
+	return View::make('users.forgot');
+}));
+Route::post('forgot', 'UserController@forgot');
+Route::get('users/{id}/reset/{code}', 'UserController@reset')->where('id', '[0-9]+');
 Route::resource('users', 'UserController');
 
 // Group Routes
