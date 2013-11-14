@@ -7,7 +7,7 @@ Version 2.0 has been completely revamped using strategies suggested in *Laravel:
 
 ### Instructions
 
-1. Clone this repo
+1. Clone the repo
 2. Run ```php composer.phar update```
 3. Set up your datbase configuration in ```app/config/database.php```
 4. Edit ```app/config/mail.php``` to work with your mail setup.
