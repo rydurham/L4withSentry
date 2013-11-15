@@ -13,6 +13,8 @@ use Authority\Service\Form\ResendActivation\ResendActivationForm;
 use Authority\Service\Form\ResendActivation\ResendActivationFormLaravelValidator;
 use Authority\Service\Form\ForgotPassword\ForgotPasswordForm;
 use Authority\Service\Form\ForgotPassword\ForgotPasswordFormLaravelValidator;
+use Authority\Service\Form\ChangePassword\ChangePasswordForm;
+use Authority\Service\Form\ChangePassword\ChangePasswordFormLaravelValidator;
 
 class FormServiceProvider extends ServiceProvider {
 
@@ -70,11 +72,20 @@ class FormServiceProvider extends ServiceProvider {
             );
         });
 
-        // Bind the Reset Password Form
+        // Bind the Forgot Password Form
         $app->bind('Authority\Service\Form\ForgotPassword\ForgotPasswordForm', function($app)
         {
             return new ForgotPasswordForm(
                 new ForgotPasswordFormLaravelValidator( $app['validator'] ),
+                $app->make('Authority\Repo\User\UserInterface')
+            );
+        });
+
+        // Bind the Change Password Form
+        $app->bind('Authority\Service\Form\ChangePassword\ChangePasswordForm', function($app)
+        {
+            return new ChangePasswordForm(
+                new ChangePasswordFormLaravelValidator( $app['validator'] ),
                 $app->make('Authority\Repo\User\UserInterface')
             );
         });

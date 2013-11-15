@@ -313,6 +313,60 @@ class SentryUser extends RepoAbstract implements UserInterface {
 	}
 
 	/**
+	 * Process a change password request. 
+	 * @return Array $data
+	 */
+	public function changePassword($data)
+	{
+		$result = array();
+		try
+		{
+			$user = $this->sentry->getUserProvider()->findById($data['id']);        
+		
+			if ($user->checkHash($data['oldPassword'], $user->getPassword()))
+			{
+				//The oldPassword matches the current password in the DB. Proceed.
+				$user->password = $data['newPassword'];
+
+				if ($user->save())
+				{
+					// User saved
+					$result['success'] = true;
+					$result['message'] = 'Your password has been changed.';
+				}
+				else
+				{
+					// User not saved
+					$result['success'] = false;
+					$result['message'] = 'Your password could not be changed.';
+				}
+			} 
+			else 
+			{
+		        // Password mismatch. Abort.
+		        $result['success'] = false;
+				$result['message'] = 'You did not provide the correct original password.';
+			}                                        
+		}
+		catch (\Cartalyst\Sentry\Users\LoginRequiredException $e)
+		{
+			$result['success'] = false;
+			$result['message'] = 'Login field required.';
+		}
+		catch (\Cartalyst\Sentry\Users\UserExistsException $e)
+		{
+			$result['success'] = false;
+			$result['message'] = 'User already exists.';
+		}
+		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+			$result['success'] = false;
+			$result['message'] = 'User was not found.';
+		}
+		return $result;
+	}
+
+	/**
 	 * Return a specific user from the given id
 	 * 
 	 * @param  integer $id

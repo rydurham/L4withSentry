@@ -68,31 +68,31 @@ Profile</h4>
 <h4>Change Password</h4>
 <div class="well">
     {{ Form::open(array(
-        'action' => array('UserController@update', $user->id), 
+        'action' => array('UserController@change', $user->id), 
         'class' => 'form-inline', 
         'role' => 'form'
         )) }}
         
-        <div class="form-group {{ $errors->has('oldPassword') ? 'has-warning' : '' }}">
+        <div class="form-group {{ $errors->has('oldPassword') ? 'has-error' : '' }}">
         	{{ Form::label('oldPassword', 'Old Password', array('class' => 'sr-only')) }}
 			{{ Form::password('oldPassword', array('class' => 'form-control', 'placeholder' => 'Old Password')) }}
     	</div>
 
-        <div class="form-group {{ $errors->has('newPassword') ? 'has-warning' : '' }}">
+        <div class="form-group {{ $errors->has('newPassword') ? 'has-error' : '' }}">
         	{{ Form::label('newPassword', 'New Password', array('class' => 'sr-only')) }}
             {{ Form::password('newPassword', array('class' => 'form-control', 'placeholder' => 'New Password')) }}
     	</div>
 
-    	<div class="form-group {{ $errors->has('newPassword_confirmation') ? 'has-warning' : '' }}">
+    	<div class="form-group {{ $errors->has('newPassword_confirmation') ? 'has-error' : '' }}">
         	{{ Form::label('newPassword_confirmation', 'Confirm New Password', array('class' => 'sr-only')) }}
             {{ Form::password('newPassword_confirmation', array('class' => 'form-control', 'placeholder' => 'Confirm New Password')) }}
     	</div>
 
         {{ Form::submit('Change Password', array('class' => 'btn btn-primary'))}}
 	        	
-      {{ ($errors->has('oldPassword') ? $errors->first('oldPassword') : '') }}
-      {{ ($errors->has('newPassword') ?  $errors->first('newPassword') : '') }}
-      {{ ($errors->has('newPassword_confirmation') ? $errors->first('newPassword_confirmation') : '') }}
+      {{ ($errors->has('oldPassword') ? '<br />' . $errors->first('oldPassword') : '') }}
+      {{ ($errors->has('newPassword') ?  '<br />' . $errors->first('newPassword') : '') }}
+      {{ ($errors->has('newPassword_confirmation') ? '<br />' . $errors->first('newPassword_confirmation') : '') }}
 
       {{ Form::close() }}
   </div>

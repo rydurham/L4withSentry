@@ -6,6 +6,7 @@ use Authority\Service\Form\Register\RegisterForm;
 use Authority\Service\Form\User\UserForm;
 use Authority\Service\Form\ResendActivation\ResendActivationForm;
 use Authority\Service\Form\ForgotPassword\ForgotPasswordForm;
+use Authority\Service\Form\ChangePassword\ChangePasswordForm;
 
 class UserController extends BaseController {
 
@@ -15,6 +16,7 @@ class UserController extends BaseController {
 	protected $userForm;
 	protected $resendActivationForm;
 	protected $forgotPasswordForm;
+	protected $changePasswordForm;
 
 	/**
 	 * Instantiate a new UserController
@@ -25,7 +27,8 @@ class UserController extends BaseController {
 		RegisterForm $registerForm, 
 		UserForm $userForm,
 		ResendActivationForm $resendActivationForm,
-		ForgotPasswordForm $forgotPasswordForm)
+		ForgotPasswordForm $forgotPasswordForm,
+		ChangePasswordForm $changePasswordForm)
 	{
 		$this->user = $user;
 		$this->group = $group;
@@ -33,6 +36,7 @@ class UserController extends BaseController {
 		$this->userForm = $userForm;
 		$this->resendActivationForm = $resendActivationForm;
 		$this->forgotPasswordForm = $forgotPasswordForm;
+		$this->changePasswordForm = $changePasswordForm;
 
 		//Check CSRF token on POST
 		$this->beforeFilter('csrf', array('on' => 'post'));
@@ -254,6 +258,30 @@ class UserController extends BaseController {
         } else {
             Session::flash('error', $result['message']);
             return Redirect::to('/');
+        }
+	}
+
+
+	public function change($id)
+	{
+		$data = Input::all();
+		$data['id'] = $id;
+
+		// Form Processing
+        $result = $this->changePasswordForm->change( $data );
+
+        if( $result['success'] )
+        {
+            // Success!
+            Session::flash('success', $result['message']);
+            return Redirect::to('/');
+        } 
+        else 
+        {
+            Session::flash('error', $result['message']);
+            return Redirect::action('UserController@edit', array($id))
+                ->withInput()
+                ->withErrors( $this->changePasswordForm->errors() );
         }
 	}
 
