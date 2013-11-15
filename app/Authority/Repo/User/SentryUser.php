@@ -77,8 +77,8 @@ class SentryUser extends RepoAbstract implements UserInterface {
 		    $user = $this->sentry->findUserById($data['id']);
 
 		    // Update the user details
-		    $user->first_name = $data['firstName'];
-		    $user->last_name = $data['lastName'];
+		    $user->first_name = e($data['firstName']);
+		    $user->last_name = e($data['lastName']);
 
 		    // Update group memberships
 		    $allGroups = $this->sentry->getGroupProvider()->findAll();
@@ -209,7 +209,7 @@ class SentryUser extends RepoAbstract implements UserInterface {
                 //send email with link to activate.
                 Mail::send('emails.auth.welcome', $data, function($m) use ($data)
                 {
-                    $m->to($data['email'])->subject('Activate your account');
+                    $m->to(e($data['email']))->subject('Activate your account');
                 });
 
                 //success!
@@ -246,14 +246,14 @@ class SentryUser extends RepoAbstract implements UserInterface {
 		$result = array();
 		try
         {
-			$user = $this->sentry->getUserProvider()->findByLogin($data['email']);
+			$user = $this->sentry->getUserProvider()->findByLogin(e($data['email']));
 			$data['resetCode'] = $user->getResetPasswordCode();
 			$data['userId'] = $user->getId();
 
 			// Email the reset code to the user
 	        Mail::send('emails.auth.reset', $data, function($m) use($data)
 	        {
-	         $m->to($data['email'])->subject('Password Reset Confirmation | Laravel4 With Sentry');
+	         $m->to(e($data['email']))->subject('Password Reset Confirmation | Laravel4 With Sentry');
 	        });
 
 	        $result['success'] = true;
@@ -291,7 +291,7 @@ class SentryUser extends RepoAbstract implements UserInterface {
 
 				Mail::send('emails.auth.newpassword', $data, function($m) use($data)
 				{
-				 	$m->to($data['email'])->subject('New Password Information | Laravel4 With Sentry');
+				 	$m->to(e($data['email']))->subject('New Password Information | Laravel4 With Sentry');
 				});
 
 	        	$result['success'] = true;
@@ -323,10 +323,10 @@ class SentryUser extends RepoAbstract implements UserInterface {
 		{
 			$user = $this->sentry->getUserProvider()->findById($data['id']);        
 		
-			if ($user->checkHash($data['oldPassword'], $user->getPassword()))
+			if ($user->checkHash(e($data['oldPassword']), $user->getPassword()))
 			{
 				//The oldPassword matches the current password in the DB. Proceed.
-				$user->password = $data['newPassword'];
+				$user->password = e($data['newPassword']);
 
 				if ($user->save())
 				{

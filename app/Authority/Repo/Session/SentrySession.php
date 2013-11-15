@@ -34,7 +34,7 @@ class SentrySession extends RepoAbstract implements SessionInterface {
 			    if (!array_key_exists('rememberMe', $data)) $data['rememberMe'] = 0;
 
 			    //Check for suspension or banned status
-				$user = $this->sentry->getUserProvider()->findByLogin($data['email']);
+				$user = $this->sentry->getUserProvider()->findByLogin(e($data['email']));
 				$throttle = $this->throttleProvider->findByUserId($user->id);
 			    $throttle->check();
 

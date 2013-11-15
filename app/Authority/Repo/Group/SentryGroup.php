@@ -30,10 +30,10 @@ class SentryGroup extends RepoAbstract implements GroupInterface {
 		try {
 			    // Create the group
 			    $group = $this->sentry->createGroup(array(
-			        'name'        => $data['name'],
+			        'name'        => e($data['name']),
 			        'permissions' => array(
-			            'admin' => $data['adminPermissions'],
-			            'users' => $data['userPermissions'],
+			            'admin' => e($data['adminPermissions']),
+			            'users' => e($data['userPermissions']),
 			        ),
 			    ));
 
@@ -72,10 +72,10 @@ class SentryGroup extends RepoAbstract implements GroupInterface {
 		    $group = $this->sentry->findGroupById($data['id']);
 
 		    // Update the group details
-		    $group->name = $data['name'];
+		    $group->name = e($data['name']);
 		    $group->permissions = array(
-		        'admin' => $data['adminPermissions'],
-				'users' => $data['userPermissions'],
+		        'admin' => e($data['adminPermissions']),
+				'users' => e($data['userPermissions']),
 		    );
 
 		    // Update the group
