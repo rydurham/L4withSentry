@@ -34,17 +34,10 @@ class SentryUser extends RepoAbstract implements UserInterface {
 			//Attempt to register the user. 
 			$user = $this->sentry->register(array('email' => e($data['email']), 'password' => e($data['password'])));
 
-			//Get the activation code & prep data for email
-			$data['activationCode'] = $user->GetActivationCode();
-			$data['userId'] = $user->getId();
-
-			//send email with link to activate.
-			Mail::send('emails.auth.welcome', $data, function($m) use($data)
-			{
-			    $m->to(e($data['email']))->subject('Welcome to Laravel4 With Sentry');
-			});
-
 			//success!
+			$result['mailData']['activationCode'] = $user->GetActivationCode();
+			$result['mailData']['userId'] = $user->getId();
+			$result['mailData']['email'] = e($data['email']);
 	    	$result['success'] = true;
 	    	$result['message'] = 'Your account has been created. Check your email for the confirmation link.';
 		}
@@ -165,7 +158,7 @@ class SentryUser extends RepoAbstract implements UserInterface {
 		        // User activation passed
 		        $result['success'] = true;
 		        $url = route('login');
-	    		$result['message'] = "Activation complete. <a href='$url'>You may now login</a>";
+	    		$result['message'] = "Activation complete. <a href='$url' class='alert-link'>You may now login</a>";
 		    }
 		    else
 		    {
