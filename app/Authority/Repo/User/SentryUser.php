@@ -35,11 +35,11 @@ class SentryUser extends RepoAbstract implements UserInterface {
 			$user = $this->sentry->register(array('email' => e($data['email']), 'password' => e($data['password'])));
 
 			//success!
-			$result['mailData']['activationCode'] = $user->GetActivationCode();
-			$result['mailData']['userId'] = $user->getId();
-			$result['mailData']['email'] = e($data['email']);
 	    	$result['success'] = true;
 	    	$result['message'] = 'Your account has been created. Check your email for the confirmation link.';
+	    	$result['mailData']['activationCode'] = $user->GetActivationCode();
+			$result['mailData']['userId'] = $user->getId();
+			$result['mailData']['email'] = e($data['email']);
 		}
 		catch (\Cartalyst\Sentry\Users\LoginRequiredException $e)
 		{
@@ -191,23 +191,16 @@ class SentryUser extends RepoAbstract implements UserInterface {
 		$result = array();
 		try {
             //Attempt to find the user. 
-            $user = $this->sentry->getUserProvider()->findByLogin($data['email']);
+            $user = $this->sentry->getUserProvider()->findByLogin(e($data['email']));
 
             if (!$user->isActivated())
             {
-                //Get the activation code & prep data for email
-                $data['activationCode'] = $user->GetActivationCode();
-                $data['userId'] = $user->getId();
-
-                //send email with link to activate.
-                Mail::send('emails.auth.welcome', $data, function($m) use ($data)
-                {
-                    $m->to(e($data['email']))->subject('Activate your account');
-                });
-
                 //success!
             	$result['success'] = true;
 	    		$result['message'] = 'Check your email for the confirmation link.';
+	    		$result['mailData']['activationCode'] = $user->GetActivationCode();
+                $result['mailData']['userId'] = $user->getId();
+                $result['mailData']['email'] = e($data['email']);
             }
             else 
             {
@@ -240,18 +233,12 @@ class SentryUser extends RepoAbstract implements UserInterface {
 		try
         {
 			$user = $this->sentry->getUserProvider()->findByLogin(e($data['email']));
-			$data['resetCode'] = $user->getResetPasswordCode();
-			$data['userId'] = $user->getId();
-
-			// Email the reset code to the user
-	        Mail::send('emails.auth.reset', $data, function($m) use($data)
-	        {
-	         $m->to(e($data['email']))->subject('Password Reset Confirmation | Laravel4 With Sentry');
-	        });
 
 	        $result['success'] = true;
 	    	$result['message'] = 'Check your email for instructions.';
-
+	    	$result['mailData']['resetCode'] = $user->getResetPasswordCode();
+			$result['mailData']['userId'] = $user->getId();
+			$result['mailData']['email'] = e($data['email']);
         }
         catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
         {
@@ -274,22 +261,12 @@ class SentryUser extends RepoAbstract implements UserInterface {
 			// Attempt to reset the user password
 			if ($user->attemptResetPassword($code, $newPassword))
 			{
-				// Password reset passed
-				//
 				// Email the reset code to the user
-
-				//Prepare New Password body
-				$data['newPassword'] = $newPassword;
-				$data['email'] = $user->getLogin();
-
-				Mail::send('emails.auth.newpassword', $data, function($m) use($data)
-				{
-				 	$m->to(e($data['email']))->subject('New Password Information | Laravel4 With Sentry');
-				});
-
 	        	$result['success'] = true;
 		    	$result['message'] = 'Your password has been changed. Check your email for the new password.';
-			}
+		    	$result['mailData']['newPassword'] = $newPassword;
+		    	$result['mailData']['email'] = $user->getLogin();
+ 			}
 			else
 			{
 				// Password reset failed
