@@ -40,6 +40,11 @@ class SessionController extends BaseController {
 
         if( $result['success'] )
         {
+            Event::fire('user.login', array(
+            							'userId' => $result['sessionData']['userId'],
+            							'email' => $result['sessionData']['email']
+            							));
+
             // Success!
             return Redirect::to('/');
 
@@ -60,6 +65,7 @@ class SessionController extends BaseController {
 	public function destroy()
 	{
 		$this->session->destroy();
+		Event::fire('user.logout');
 		return Redirect::to('/');
 	}
 

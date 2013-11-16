@@ -17,8 +17,14 @@ Hello World
 </div>
 
 @if (Sentry::check() )
-	<div class="alert alert-success">
-		 <span class="glyphicon glyphicon-flag"></span> You are currently logged in.
+	<div class="panel panel-success">
+		 <div class="panel-heading">
+			<h3 class="panel-title"><span class="glyphicon glyphicon-pushpin">You are currently logged in.</h3>
+		</div>
+		<div class="panel-body">
+			<p><strong>Session Data:</strong></p>
+			<pre>{{ var_dump(Session::all()) }}</pre>
+		</div>
 	</div>
 @endif 
  
