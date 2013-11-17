@@ -58,13 +58,13 @@ class SentrySession extends RepoAbstract implements SessionInterface {
 			    // by those credentials. Check the error message returned
 			    // for more information.
 			    $result['success'] = false;
-			    $result['message'] = 'Invalid username or password.';
+			    $result['message'] = trans('sessions.invalid');
 			}
 			catch (\Cartalyst\Sentry\Users\UserNotActivatedException $e)
 			{
 			    $result['success'] = false;
 			    $url = route('resendActivationForm');
-			    $result['message'] = "You have not yet activated this account. <a href='$url' class='alert-link'>Resend Activation Email?</a>";
+			    $result['message'] = trans('sessions.notactive', array('url' => $url));
 			}
 
 			// The following is only required if throttle is enabled
@@ -72,12 +72,12 @@ class SentrySession extends RepoAbstract implements SessionInterface {
 			{
 			    $time = $throttle->getSuspensionTime();
 			    $result['success'] = false;
-			    $result['message'] = "Your account has been suspended for $time minutes.";
+			    $result['message'] = trans('sessions.suspended');
 			}
 			catch (\Cartalyst\Sentry\Throttling\UserBannedException $e)
 			{
 			    $result['success'] = false;
-			    $result['message'] = 'You have been banned.';
+			    $result['message'] = trans('sessions.banned');
 			}
 
 			//Login was succesful.  
