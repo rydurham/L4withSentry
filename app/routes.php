@@ -32,6 +32,14 @@ Route::get('forgot', array('as' => 'forgotPasswordForm', function()
 Route::post('forgot', 'UserController@forgot');
 Route::post('users/{id}/change', 'UserController@change');
 Route::get('users/{id}/reset/{code}', 'UserController@reset')->where('id', '[0-9]+');
+Route::get('users/{id}/suspend', array('as' => 'suspendUserForm', function($id)
+{
+	return View::make('users.suspend')->with('id', $id);
+}));
+Route::post('users/{id}/suspend', 'UserController@suspend')->where('id', '[0-9]+');
+Route::get('users/{id}/unsuspend', 'UserController@unsuspend')->where('id', '[0-9]+');
+Route::get('users/{id}/ban', 'UserController@ban')->where('id', '[0-9]+');
+Route::get('users/{id}/unban', 'UserController@unban')->where('id', '[0-9]+');
 Route::resource('users', 'UserController');
 
 // Group Routes

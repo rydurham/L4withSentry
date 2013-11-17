@@ -7,6 +7,7 @@ use Authority\Service\Form\User\UserForm;
 use Authority\Service\Form\ResendActivation\ResendActivationForm;
 use Authority\Service\Form\ForgotPassword\ForgotPasswordForm;
 use Authority\Service\Form\ChangePassword\ChangePasswordForm;
+use Authority\Service\Form\SuspendUser\SuspendUserForm;
 
 class UserController extends BaseController {
 
@@ -17,6 +18,7 @@ class UserController extends BaseController {
 	protected $resendActivationForm;
 	protected $forgotPasswordForm;
 	protected $changePasswordForm;
+	protected $suspendUserForm;
 
 	/**
 	 * Instantiate a new UserController
@@ -28,7 +30,8 @@ class UserController extends BaseController {
 		UserForm $userForm,
 		ResendActivationForm $resendActivationForm,
 		ForgotPasswordForm $forgotPasswordForm,
-		ChangePasswordForm $changePasswordForm)
+		ChangePasswordForm $changePasswordForm,
+		SuspendUserForm $suspendUserForm)
 	{
 		$this->user = $user;
 		$this->group = $group;
@@ -37,6 +40,7 @@ class UserController extends BaseController {
 		$this->resendActivationForm = $resendActivationForm;
 		$this->forgotPasswordForm = $forgotPasswordForm;
 		$this->changePasswordForm = $changePasswordForm;
+		$this->suspendUserForm = $suspendUserForm;
 
 		//Check CSRF token on POST
 		$this->beforeFilter('csrf', array('on' => 'post'));
@@ -284,7 +288,11 @@ class UserController extends BaseController {
         }
 	}
 
-
+	/**
+	 * Process a password change request
+	 * @param  int $id 
+	 * @return redirect     
+	 */
 	public function change($id)
 	{
 		$data = Input::all();
@@ -307,6 +315,89 @@ class UserController extends BaseController {
                 ->withErrors( $this->changePasswordForm->errors() );
         }
 	}
+
+	/**
+	 * Process a suspend user request
+	 * @param  int $id 
+	 * @return Redirect     
+	 */
+	public function suspend($id)
+	{
+		// Form Processing
+        $result = $this->suspendUserForm->suspend( Input::all() );
+
+        if( $result['success'] )
+        {
+            // Success!
+            Session::flash('success', $result['message']);
+            return Redirect::to('users');
+
+        } else {
+            Session::flash('error', $result['message']);
+            return Redirect::action('UserController@suspend', array($id))
+                ->withInput()
+                ->withErrors( $this->suspendUserForm->errors() );
+        }
+	}
+
+	/**
+	 * Unsuspend user
+	 * @param  int $id 
+	 * @return Redirect     
+	 */
+	public function unsuspend($id)
+	{
+		$result = $this->user->unSuspend($id);
+
+        if( $result['success'] )
+        {
+            // Success!
+            Session::flash('success', $result['message']);
+            return Redirect::to('users');
+
+        } else {
+            Session::flash('error', $result['message']);
+            return Redirect::to('users');
+        }
+	}
+
+	/**
+	 * Ban a user
+	 * @param  int $id 
+	 * @return Redirect     
+	 */
+	public function ban($id)
+	{
+		$result = $this->user->ban($id);
+
+        if( $result['success'] )
+        {
+            // Success!
+            Session::flash('success', $result['message']);
+            return Redirect::to('users');
+
+        } else {
+            Session::flash('error', $result['message']);
+            return Redirect::to('users');
+        }
+	}
+
+	public function unban($id)
+	{
+		$result = $this->user->unBan($id);
+
+        if( $result['success'] )
+        {
+            // Success!
+            Session::flash('success', $result['message']);
+            return Redirect::to('users');
+
+        } else {
+            Session::flash('error', $result['message']);
+            return Redirect::to('users');
+        }
+	}
+
 
 }
 

@@ -15,6 +15,8 @@ use Authority\Service\Form\ForgotPassword\ForgotPasswordForm;
 use Authority\Service\Form\ForgotPassword\ForgotPasswordFormLaravelValidator;
 use Authority\Service\Form\ChangePassword\ChangePasswordForm;
 use Authority\Service\Form\ChangePassword\ChangePasswordFormLaravelValidator;
+use Authority\Service\Form\SuspendUser\SuspendUserForm;
+use Authority\Service\Form\SuspendUser\SuspendUserFormLaravelValidator;
 
 class FormServiceProvider extends ServiceProvider {
 
@@ -86,6 +88,15 @@ class FormServiceProvider extends ServiceProvider {
         {
             return new ChangePasswordForm(
                 new ChangePasswordFormLaravelValidator( $app['validator'] ),
+                $app->make('Authority\Repo\User\UserInterface')
+            );
+        });
+
+        // Bind the Suspend User Form
+        $app->bind('Authority\Service\Form\SuspendUser\SuspendUserForm', function($app)
+        {
+            return new SuspendUserForm(
+                new SuspendUserFormLaravelValidator( $app['validator'] ),
                 $app->make('Authority\Repo\User\UserInterface')
             );
         });
