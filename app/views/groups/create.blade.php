@@ -13,7 +13,7 @@ Create Group
 	{{ Form::open(array('action' => 'GroupController@store')) }}
         <h2>Create New Group</h2>
     
-        <div class="form-group">
+        <div class="form-group {{ ($errors->has('name')) ? 'has-error' : '' }}">
             {{ Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'Name')) }}
             {{ ($errors->has('name') ? $errors->first('name') : '') }}
         </div>

@@ -25,7 +25,7 @@ Profile</h4>
         'role' => 'form'
         )) }}
         
-        <div class="form-group {{ ($errors->has('firstName')) ? 'has-warning' : '' }}" for="firstName">
+        <div class="form-group {{ ($errors->has('firstName')) ? 'has-error' : '' }}" for="firstName">
             {{ Form::label('edit_firstName', 'First Name', array('class' => 'col-sm-2 control-label')) }}
             <div class="col-sm-10">
               {{ Form::text('firstName', $user->first_name, array('class' => 'form-control', 'placeholder' => 'First Name', 'id' => 'edit_firstName'))}}
@@ -34,7 +34,7 @@ Profile</h4>
     	</div>
 
 
-        <div class="form-group {{ ($errors->has('lastName')) ? 'has-warning' : '' }}" for="lastName">
+        <div class="form-group {{ ($errors->has('lastName')) ? 'has-error' : '' }}" for="lastName">
             {{ Form::label('edit_lastName', 'Last Name', array('class' => 'col-sm-2 control-label')) }}
             <div class="col-sm-10">
               {{ Form::text('lastName', $user->last_name, array('class' => 'form-control', 'placeholder' => 'Last Name', 'id' => 'edit_lastName'))}}

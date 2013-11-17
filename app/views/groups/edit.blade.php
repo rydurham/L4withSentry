@@ -13,7 +13,7 @@ Edit Group
 	{{ Form::open(array('action' =>  array('GroupController@update', $group->id), 'method' => 'put')) }}
         <h2>Edit Group</h2>
     
-        <div class="form-group">
+        <div class="form-group {{ ($errors->has('name')) ? 'has-error' : '' }}">
             {{ Form::text('name', $group->name, array('class' => 'form-control', 'placeholder' => 'Name')) }}
             {{ ($errors->has('name') ? $errors->first('name') : '') }}
         </div>

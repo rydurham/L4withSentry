@@ -13,20 +13,20 @@ Log In
             {{ Form::token(); }}
             <h2 class="form-signin-heading">Sign In</h2>
 
-            <div class="form-group">
-                <input name="email" type="text" class="form-control" placeholder="Email" value="{{ Request::old('email') }}" autofocus>
+            <div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
+                {{ Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'Email', 'autofocus')) }}
                 {{ ($errors->has('email') ? $errors->first('email') : '') }}
             </div>
 
-            <div class="form-group">
-                <input name="password" type="password" class="form-control" placeholder="Password">
+            <div class="form-group {{ ($errors->has('password')) ? 'has-error' : '' }}">
+                {{ Form::password('password', array('class' => 'form-control', 'placeholder' => 'Password'))}}
                 {{ ($errors->has('password') ?  $errors->first('password') : '') }}
             </div>
             
             <label class="checkbox">
-                <input type="checkbox" value="rememberMe"> Remember me
+                {{ Form::checkbox('rememberMe', 'rememberMe') }} Remember me
             </label>
-            <button class="btn btn-primary" type="submit">Sign in</button>
+            {{ Form::submit('Sign In', array('class' => 'btn btn-primary'))}}
             <a class="btn btn-link" href="{{ route('forgotPasswordForm') }}">Forgot Password</a>
         {{ Form::close() }}
     </div>
