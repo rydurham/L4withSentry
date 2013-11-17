@@ -20,7 +20,7 @@ return array(
 
 	'namereq' 		=> "You must provide a group name.",
 
-	'exists' 		=> "That group already exists.",
+	'groupexists' 	=> "That group already exists.",
 
 	'notfound' 		=> "Group not found.",
 
