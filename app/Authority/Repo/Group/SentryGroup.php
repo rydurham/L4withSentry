@@ -38,17 +38,17 @@ class SentryGroup extends RepoAbstract implements GroupInterface {
 			    ));
 
 			   	$result['success'] = true;
-	    		$result['message'] = 'Group Created.'; 
+	    		$result['message'] = trans('groups.created'); 
 		}
 		catch (\Cartalyst\Sentry\Users\LoginRequiredException $e)
 		{
 		    $result['success'] = false;
-	    	$result['message'] = 'Login field required.';
+	    	$result['message'] = trans('groups.loginreq');
 		}
 		catch (\Cartalyst\Sentry\Users\UserExistsException $e)
 		{
 		    $result['success'] = false;
-	    	$result['message'] = 'User already exists.';
+	    	$result['message'] = trans('groups.userexists');;
 		}
 
 		return $result;
@@ -83,29 +83,29 @@ class SentryGroup extends RepoAbstract implements GroupInterface {
 		    {
 		        // Group information was updated
 		        $result['success'] = true;
-				$result['message'] = 'Group has been updated.';
+				$result['message'] = trans('groups.updated');;
 		    }
 		    else
 		    {
 		        // Group information was not updated
 		        $result['success'] = false;
-				$result['message'] = 'There was a problem updating the group.';
+				$result['message'] = trans('groups.updateproblem');;
 		    }
 		}
 		catch (\Cartalyst\Sentry\Groups\NameRequiredException $e)
 		{
 			$result['success'] = false;
-			$result['message'] = 'You must provide a group name.';
+			$result['message'] = trans('groups.namereq');;
 		}
 		catch (\Cartalyst\Sentry\Groups\GroupExistsException $e)
 		{
 			$result['success'] = false;
-			$result['message'] = 'That group already exists.';
+			$result['message'] = trans('groups.groupexists');;
 		}
 		catch (\Cartalyst\Sentry\Groups\GroupNotFoundException $e)
 		{
 			$result['success'] = false;
-			$result['message'] = 'Group not found.';
+			$result['message'] = trans('groups.notfound');
 		}
 
 		return $result;
