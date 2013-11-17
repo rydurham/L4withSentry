@@ -101,12 +101,12 @@ class SentryUser extends RepoAbstract implements UserInterface {
 	    		$result['message'] = 'Unable to update profile';
 		    }
 		}
-		catch (Cartalyst\Sentry\Users\UserExistsException $e)
+		catch (\Cartalyst\Sentry\Users\UserExistsException $e)
 		{
 		    $result['success'] = false;
 	    	$result['message'] = 'User already exists.';
 		}
-		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
 		    $result['success'] = false;
 	    	$result['message'] = 'User not found';
@@ -240,7 +240,7 @@ class SentryUser extends RepoAbstract implements UserInterface {
 			$result['mailData']['userId'] = $user->getId();
 			$result['mailData']['email'] = e($data['email']);
         }
-        catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+        catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
         {
         	$result['success'] = false;
 	    	$result['message'] = 'User does not exist.';
@@ -248,7 +248,12 @@ class SentryUser extends RepoAbstract implements UserInterface {
         return $result;
 	}
 
-
+	/**
+	 * Process the password reset request
+	 * @param  int $id   
+	 * @param  string $code 
+	 * @return Array
+	 */
 	public function resetPassword($id, $code)
 	{
 		$result = array();
@@ -274,7 +279,7 @@ class SentryUser extends RepoAbstract implements UserInterface {
 				$result['message'] = 'There was a problem. Please contact the system administrator.';
 			}
         }
-        catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+        catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
         {
         	$result['success'] = false;
 	    	$result['message'] = 'User does not exist.';
@@ -331,6 +336,118 @@ class SentryUser extends RepoAbstract implements UserInterface {
 		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
 			$result['success'] = false;
+			$result['message'] = 'User was not found.';
+		}
+		return $result;
+	}
+
+	/**
+	 * Suspend a user
+	 * @param  int $id      
+	 * @param  int $minutes 
+	 * @return Array          
+	 */
+	public function suspend($id, $minutes)
+	{
+		$result = array();
+		try
+		{
+		    // Find the user using the user id
+		    $throttle = $this->sentry->findThrottlerByUserId($id);
+
+		    //Set suspension time
+            $throttle->setSuspensionTime($minutes);
+
+		    // Suspend the user
+		    $throttle->suspend();
+
+		    $result['success'] = true;
+			$result['message'] = "User has been suspended for $minutes minutes.";
+		}
+		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+		    $result['success'] = false;
+			$result['message'] = 'User was not found.';
+		}
+		return $result;
+	}
+
+	/**
+	 * Remove a users' suspension.
+	 * @param  [type] $id [description]
+	 * @return [type]     [description]
+	 */
+	public function unSuspend($id)
+	{
+		$result = array();
+		try
+		{
+		    // Find the user using the user id
+		    $throttle = $this->sentry->findThrottlerByUserId($id);
+
+		    // Unsuspend the user
+		    $throttle->unsuspend();
+
+		    $result['success'] = true;
+			$result['message'] = "Suspension removed.";
+		}
+		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+		    $result['success'] = false;
+			$result['message'] = 'User was not found.';
+		}
+		return $result;
+	}
+
+	/**
+	 * Ban a user
+	 * @param  int $id 
+	 * @return Array     
+	 */
+	public function ban($id)
+	{
+		$result = array();
+		try
+		{
+		    // Find the user using the user id
+		    $throttle = $this->sentry->findThrottlerByUserId($id);
+
+		    // Ban the user
+		    $throttle->ban();
+
+		    $result['success'] = true;
+			$result['message'] = "User has been banned.";
+		}
+		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+		    $result['success'] = false;
+			$result['message'] = 'User was not found.';
+		}
+		return $result;
+	}
+
+	/**
+	 * Remove a users' ban
+	 * @param  int $id 
+	 * @return Array     
+	 */
+	public function unBan($id)
+	{
+		$result = array();
+		try
+		{
+		    // Find the user using the user id
+		    $throttle = $this->sentry->findThrottlerByUserId($id);
+
+		    // Unban the user
+		    $throttle->unBan();
+
+		    $result['success'] = true;
+			$result['message'] = 'User has been unbanned.';
+		}
+		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+		    $result['success'] = false;
 			$result['message'] = 'User was not found.';
 		}
 		return $result;
@@ -400,7 +517,6 @@ class SentryUser extends RepoAbstract implements UserInterface {
      * From http://www.phpscribble.com/i4xzZu/Generate-random-passwords-of-given-length-and-strength
      *
      */
-    
     private function _generatePassword($length=9, $strength=4) {
         $vowels = 'aeiouy';
         $consonants = 'bcdfghjklmnpqrstvwxz';
