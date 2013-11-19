@@ -66,3 +66,13 @@ App::error(function(Exception $exception, $code)
 */
 
 require __DIR__.'/../filters.php';
+
+// Require the Observables file.
+require __DIR__.'/../observables.php';
+
+/*
+|--------------------------------------------------------------------------
+| Prep Sentry for dependency Injection
+|--------------------------------------------------------------------------
+*/
+$app['Cartalyst\Sentry\Sentry'] = $app['sentry'];

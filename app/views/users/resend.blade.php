@@ -3,28 +3,26 @@
 {{-- Web site Title --}}
 @section('title')
 @parent
-Reset Password
+Resend Activation
 @stop
 
 {{-- Content --}}
 @section('content')
-<h4>Resend Activation</h4>
-<div class="well">
-	<form class="form-horizontal" action="{{ URL::to('users/resend') }}" method="post">   
-    	{{ Form::token() }}
-    	
-		<div class="control-group {{ ($errors->has('email') ? 'error' : '') }}" for="email">
-            <label class="control-label" for="email">E-mail</label>
-            <div class="controls">
-                <input name="email" id="email" value="{{ Request::old('email') }}" type="text" class="input-xlarge" placeholder="E-mail">
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        {{ Form::open(array('action' => 'UserController@resend', 'method' => 'post')) }}
+        	
+            <h2>Resend Activation Email</h2>
+    		
+            <div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
+                {{ Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'E-mail', 'autofocus')) }}
                 {{ ($errors->has('email') ? $errors->first('email') : '') }}
             </div>
-        </div>
 
-    	<div class="form-actions">
-    		<button class="btn btn-primary" type="submit">Resend Activation</button>
-    	</div>
-  </form>
+            {{ Form::submt('Resend', array('class' => 'btn btn-primary')) }}
+
+        {{ Form::close() }}
+    </div>
 </div>
 
 @stop

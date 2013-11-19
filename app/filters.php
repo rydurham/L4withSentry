@@ -35,23 +35,42 @@ App::after(function($request, $response)
 
 Route::filter('auth', function()
 {
-	if (!Sentry::check()) return Redirect::to('users/login');
+	if (!Sentry::check()) return Redirect::route('login');
 });
 
-Route::filter('admin_auth', function()
+Route::filter('inGroup', function($route, $request, $value)
 {
-	if (!Sentry::check())
-	{
-		// if not logged in, redirect to login
-		return Redirect::to('users/login');
-	}
+	if (!Sentry::check()) return Redirect::route('login');
 
-	if (!Sentry::getUser()->hasAccess('admin'))
+	// we need to determine if a non admin user 
+	// is trying to access their own account.
+    $userId = $route->getParameter('users');
+
+	try
 	{
-		// has no access
-		return Response::make('Access Forbidden', '403');
+		$user = Sentry::getUser();
+		 
+		$group = Sentry::findGroupByName($value);
+		 
+		if ($userId != Session::get('userId') && (! $user->inGroup($group))  )
+		{
+			Session::flash('error', trans('users.noaccess'));
+			return Redirect::route('home');
+		}
+	}
+	catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+	{
+		Session::flash('error', trans('users.notfound'));
+		return Redirect::route('login');
+	}
+	 
+	catch (Cartalyst\Sentry\Groups\GroupNotFoundException $e)
+	{
+		Session::flash('error', trans('groups.notfound'));
+		return Redirect::route('login');
 	}
 });
+// thanks to http://laravelsnippets.com/snippets/sentry-route-filters
 
 /*
 |--------------------------------------------------------------------------

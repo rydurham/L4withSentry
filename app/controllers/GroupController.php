@@ -1,14 +1,26 @@
 <?php
 
+use Authority\Repo\Group\GroupInterface;
+use Authority\Service\Form\Group\GroupForm;
+
 class GroupController extends BaseController {
+
+	/**
+	 * Member Vars
+	 */
+	protected $group;
+	protected $groupForm;
 
 	/**
 	 * Constructor
 	 */
-	public function __construct() 
+	public function __construct(GroupInterface $group, GroupForm $groupForm) 
 	{
-		$this->beforeFilter('admin_auth');
+		$this->group = $group;
+		$this->groupForm = $groupForm;
 
+		// Establish Filters
+		$this->beforeFilter('inGroup:Admins');
 	}
 
 	/**
@@ -18,38 +30,8 @@ class GroupController extends BaseController {
 	 */
 	public function index()
 	{
-		// Index - show the user's group details.
-		try
-		{
-		    // Find the current user
-		    if ( ! Sentry::check())
-			{
-			    // User is not logged in, or is not activated
-			    Session::flash('error', 'You must be logged in to perform that action.');
-				return Redirect::to('/');
-			}
-			else
-			{
-			    // User is logged in
-			    $user = Sentry::getUser();
-
-			    // Get the user groups
-			    $data['myGroups'] = $user->getGroups();
-
-			    //Get all the available groups.
-			    $data['allGroups'] = Sentry::getGroupProvider()->findAll();
-				
-				
-				return View::make('groups.index', $data);
-			}
-		    
-		}
-		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
-		{
-		    Session::flash('error', 'User was not found.');
-			return Redirect::to('groups/');
-		}
-		
+		$groups = $this->group->all();
+		return View::make('groups.index')->with('groups', $groups);
 	}
 
 	/**
@@ -63,8 +45,6 @@ class GroupController extends BaseController {
 		return View::make('groups.create');
 	}
 
-
-
 	/**
 	 * Store a newly created resource in storage.
 	 *
@@ -72,61 +52,21 @@ class GroupController extends BaseController {
 	 */
 	public function store()
 	{
-		//Store the new group in the db. 
-		//Start with Data Validation
-		// Gather Sanitized Input
-		$input = array(
-			'newGroup' => Input::get('newGroup')
-			);
+		// Form Processing
+        $result = $this->groupForm->save( Input::all() );
 
-		// Set Validation Rules
-		$rules = array (
-			'newGroup' => 'required|min:4'
-			);
+        if( $result['success'] )
+        {
+            // Success!
+            Session::flash('success', $result['message']);
+            return Redirect::to('/groups');
 
-		//Run input validation
-		$v = Validator::make($input, $rules);
-
-		if ($v->fails())
-		{
-			// Validation has failed
-			return Redirect::to('groups/create')->withErrors($v)->withInput();
-		}
-		else 
-		{
-			try
-			{
-			    // Create the group
-			    $group = Sentry::getGroupProvider()->create(array(
-
-					'name'        => $input['newGroup'],
-				        'permissions' => array(
-				            'admin' => Input::get('adminPermissions', 0),
-				            'users' => Input::get('userPermissions', 0),
-				        ),
-				    ));
-
-				
-				if ($group) {
-					Session::flash('success', 'New Group Created');
-				    return Redirect::to('groups');
-				} else {
-					Session::flash('error', 'New Group was not created');
-				    return Redirect::to('groups');
-				}
-		
-			}
-			catch (Cartalyst\Sentry\Groups\NameRequiredException $e)
-			{
-			    Session::flash('error', 'Name field is required');
-			    return Redirect::to('groups/create')->withErrors($v)->withInput();
-			}
-			catch (Cartalyst\Sentry\Groups\GroupExistsException $e)
-			{
-			    Session::flash('error', 'Group already exists');
-			    return Redirect::to('groups/create')->withErrors($v)->withInput();
-			}
-		}
+        } else {
+            Session::flash('error', $result['message']);
+            return Redirect::action('GroupController@create')
+                ->withInput()
+                ->withErrors( $this->groupForm->errors() );
+        }
 	}
 
 	/**
@@ -137,22 +77,9 @@ class GroupController extends BaseController {
 	public function show($id)
 	{
 		//Show a group and its permissions. 
-		try
-		{
-		    // Find the group using the group id
-		    $data['group'] = Sentry::getGroupProvider()->findById($id);
+		$group = $this->group->byId($id);
 
-		    // Get the group permissions
-		    $data['groupPermissions'] = $data['group']->getPermissions();
-		}
-		catch (Cartalyst\Sentry\Groups\GroupNotFoundException $e)
-		{
-		    Session::flash('error', 'Group does not exist.');
-			return Redirect::to('groups');
-		}
-
-
-		return View::make('groups.show', $data);
+		return View::make('groups.show')->with('group', $group);
 	}
 
 	/**
@@ -162,20 +89,8 @@ class GroupController extends BaseController {
 	 */
 	public function edit($id)
 	{
-		//Pull the selected group
-		try
-		{
-		    // Find the group using the group id
-		    $data['group'] = Sentry::getGroupProvider()->findById($id);
-
-		}
-		catch (Cartalyst\Sentry\Groups\GroupNotFoundException $e)
-		{
-		    Session::flash('error', 'Group does not exist.');
-			return Redirect::to('groups');
-		}
-
-		return View::make('groups.edit', $data);
+		$group = $this->group->byId($id);
+		return View::make('groups.edit')->with('group', $group);
 	}
 
 	/**
@@ -185,67 +100,21 @@ class GroupController extends BaseController {
 	 */
 	public function update($id)
 	{
-		// Update the Group.
-		// Start with Data Validation
-		// Gather Sanitized Input
-		
-		$input = array(
-			'name' => Input::get('name')
-			);
+		// Form Processing
+        $result = $this->groupForm->update( Input::all() );
 
-		// Set Validation Rules
-		$rules = array (
-			'name' => 'required|min:4'
-			);
+        if( $result['success'] )
+        {
+            // Success!
+            Session::flash('success', $result['message']);
+            return Redirect::to('/groups');
 
-		//Run input validation
-		$v = Validator::make($input, $rules);
-
-		if ($v->fails())
-		{
-			// Validation has failed
-			return Redirect::to('groups/'. $id . '/edit')->withErrors($v)->withInput();
-		}
-		else 
-		{
-
-			try
-			{
-			    // Find the group using the group id
-			    $group = Sentry::getGroupProvider()->findById($id);
-
-			    // Update the group details
-			    $group->name = $input['name'];
-			    $group->permissions = array(
-			       'admin' => Input::get('adminPermissions', 0),
-				   'users' => Input::get('userPermissions', 0),
-			    );
-
-			    // Update the group
-			    if ($group->save())
-			    {
-			        // Group information was updated
-			        Session::flash('success', 'Group has been updated.');
-					return Redirect::to('groups');
-			    }
-			    else
-			    {
-			        // Group information was not updated
-			        Session::flash('error', 'There was a problem updating the group.');
-					return Redirect::to('groups/'. $id . '/edit')->withErrors($v)->withInput();
-			    }
-			}
-			catch (Cartalyst\Sentry\Groups\GroupExistsException $e)
-			{
-			    Session::flash('error', 'Group already exists.');
-				return Redirect::to('groups/'. $id . '/edit')->withErrors($v)->withInput();
-			}
-			catch (Cartalyst\Sentry\Groups\GroupNotFoundException $e)
-			{
-			    Session::flash('error', 'Group was not found.');
-				return Redirect::to('groups/'. $id . '/edit')->withErrors($v)->withInput();
-			}
-		}
+        } else {
+            Session::flash('error', $result['message']);
+            return Redirect::action('GroupController@create')
+                ->withInput()
+                ->withErrors( $this->groupForm->errors() );
+        }
 	}
 
 	/**
@@ -255,31 +124,16 @@ class GroupController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		
-		try
+		if ($this->group->destroy($id))
 		{
-		    // Find the group using the group id
-		    $group = Sentry::getGroupProvider()->findById($id);
-
-		    // Delete the group
-		    if ($group->delete())
-		    {
-		        // Group was successfully deleted
-		        Session::flash('success', 'Group has been deleted.');
-				return Redirect::to('groups/');
-		    }
-		    else
-		    {
-		        // There was a problem deleting the group
-		        Session::flash('error', 'There was a problem deleting that group.');
-				return Redirect::to('groups/');
-		    }
-		}
-		catch (Cartalyst\Sentry\Groups\GroupNotFoundException $e)
-		{
-		    Session::flash('error', 'Group was not found.');
-			return Redirect::to('groups/');
-		}
+			Session::flash('success', 'Group Deleted');
+            return Redirect::to('/groups');
+        }
+        else 
+        {
+        	Session::flash('error', 'Unable to Delete Group');
+            return Redirect::to('/groups');
+        }
 	}
 
 }
