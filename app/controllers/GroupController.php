@@ -20,7 +20,7 @@ class GroupController extends BaseController {
 		$this->groupForm = $groupForm;
 
 		// Establish Filters
-		$this->beforeFilter('admin_auth');
+		$this->beforeFilter('inGroup:Admins');
 	}
 
 	/**

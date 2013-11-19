@@ -16,6 +16,8 @@ return array(
 
 	'notfound'		=>	"User not found",
 
+	'noaccess'		=>	"You are not allowed to do that.",
+
 	'updated'		=>	"Profile updated",
 
 	'notupdated'	=>	"Unable to update profile",

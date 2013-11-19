@@ -45,10 +45,10 @@ Route::resource('users', 'UserController');
 // Group Routes
 Route::resource('groups', 'GroupController');
 
-Route::get('/', function()
+Route::get('/', array('as' => 'home', function()
 {
 	return View::make('home');
-});
+}));
 
 
 // App::missing(function($exception)
