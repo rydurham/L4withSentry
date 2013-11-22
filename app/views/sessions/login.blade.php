@@ -10,7 +10,7 @@ Log In
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
         {{ Form::open(array('action' => 'SessionController@store')) }}
-            {{ Form::token(); }}
+
             <h2 class="form-signin-heading">Sign In</h2>
 
             <div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
