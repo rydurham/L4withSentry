@@ -31,9 +31,15 @@ __Users__
 * [Implementing Laravel](https://leanpub.com/implementinglaravel) by Chris Fidao
 * [Laracasts](http://laracasts.com)
 
+### Tests
+1. Make sure you've run `composer update`.
+2. cd to the L4withSentry project root directory.
+3. Execute `phpunit` to run tests or `phpunit --coverage-text` to see text based code coverage summary.
+4. If you're interested in more dynamic code coverage, check out the [instructions](COVERAGE.md).
+
 ### Notes
 
-* There are currently no tests here, beyond the tests provided with Sentry 2 and Laravel 4.  I am not yet hip enough to TDD to add these in a meaningful way.
+* Tests are currently very limited.  
 
 =======
 The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
