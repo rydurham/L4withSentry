@@ -7,3 +7,6 @@ composer.lock
 /app/config/defaultMailConfig.php
 /app/config/local/*
 .DS_Store
+/build/logs/*
+l4withsentry.sublime-workspace
+l4withsentry.sublime-project

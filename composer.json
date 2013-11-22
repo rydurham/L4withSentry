@@ -1,7 +1,9 @@
 {
 	"require": {
 		"laravel/framework": "4.0.*@dev",
-		"cartalyst/sentry": "2.0.*"
+		"cartalyst/sentry": "2.0.*",
+		"mockery/mockery": "dev-master@dev",
+		"phpunit/phpunit": "3.7.*"
 	},
 	"require-dev": {
 		"way/generators": "1.0.*@dev"

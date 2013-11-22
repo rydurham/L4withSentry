@@ -10,6 +10,9 @@
          stopOnFailure="false"
          syntaxCheck="false"
 >
+    <logging>
+        <log type="coverage-clover" target="./build/logs/clover.xml" />
+    </logging>
     <testsuites>
         <testsuite name="Application Test Suite">
             <directory>./app/tests/</directory>
