@@ -150,7 +150,7 @@ class UserController extends BaseController {
         {
             // Success!
             Session::flash('success', $result['message']);
-            return Redirect::to('users');
+            return Redirect::action('UserController@show', array($id));
 
         } else {
             Session::flash('error', $result['message']);
