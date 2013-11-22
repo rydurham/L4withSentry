@@ -10,9 +10,17 @@
          stopOnFailure="false"
          syntaxCheck="false"
 >
+    <logging>
+        <log type="coverage-clover" target="./build/logs/clover.xml" />
+    </logging>
     <testsuites>
         <testsuite name="Application Test Suite">
             <directory>./app/tests/</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <blacklist>
+            <directory>./vendor/*</directory>
+        </blacklist>
+    </filter>
 </phpunit>
