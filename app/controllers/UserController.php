@@ -46,8 +46,8 @@ class UserController extends BaseController {
 		$this->beforeFilter('csrf', array('on' => 'post'));
 
 		// Set up Auth Filters
-		$this->beforeFilter('auth', array('only' => array('show', 'update', 'change')));
-		$this->beforeFilter('inGroup:Admins', array('only' => array('index', 'destroy', 'suspend', 'unsuspend', 'ban', 'unban', 'edit')));
+		$this->beforeFilter('auth', array('only' => array('change')));
+		$this->beforeFilter('inGroup:Admins', array('only' => array('show', 'index', 'destroy', 'suspend', 'unsuspend', 'ban', 'unban', 'edit', 'update')));
 		//array('except' => array('create', 'store', 'activate', 'resend', 'forgot', 'reset')));
 	}
 
