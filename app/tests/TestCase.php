@@ -30,6 +30,9 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         {
             $this->setUpDb();
         }
+        // To test auth, we must re-enable filters on the routes
+        // By default, filters are disabled in testing
+        Route::enableFilters();
     }
 
     /**
@@ -39,6 +42,8 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
     public function teardown()
     {
         Mockery::close();
+        Sentry::logout();
+        Session::flush();
     }
 
     /**
@@ -58,6 +63,29 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
     public function teardownDb()
     {
         Artisan::call('migrate:reset');
+    }
+
+    /**
+    * Impersonate an admin
+    *
+    */
+    public function beAdmin() {
+        $admin = Sentry::findUserByLogin('admin@admin.com');
+        Sentry::setUser($admin);
+        Session::put('userId',1);
+        Session::put('email','admin@admin.com');
+
+    }
+
+    /**
+    * Impersonate a user
+    *
+    */
+    public function beUser() {
+        $user = Sentry::findUserByLogin('user@user.com');
+        Sentry::setUser($user);
+        Session::put('userId',2);
+        Session::put('email','user@user.com');
     }
 
 }
