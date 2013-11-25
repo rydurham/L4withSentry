@@ -1,0 +1,4 @@
+tools:
+    external_code_coverage: true
+    php_pdepend: true
+    sensiolabs_security_checker: true
