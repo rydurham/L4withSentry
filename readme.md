@@ -6,6 +6,8 @@ Version 2.0 has been completely revamped using strategies suggested in *Laravel:
 
 ### Instructions
 
+Before you begin, make sure you have both ```git``` and ```composer``` installed on your system. 
+
 1. Clone the repo
 2. Run ```php composer.phar update```
 3. Set up your datbase configuration in ```app/config/database.php```
