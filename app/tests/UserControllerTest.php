@@ -121,4 +121,52 @@ class UserControllerTest extends TestCase {
         $this->call('get', URL::action('UserController@show', array('1')));
         $this->assertResponseOk();
     }
+
+    public function testUserControllerDestroyInvalidIdAsGuest()
+    {
+        $this->beGuest();
+        $this->call('delete', URL::action('UserController@destroy', array('-1')));
+        $this->assertRedirectedToRoute('login');
+    }
+
+    public function testUserControllerDestroyInvalidIdAsUser()
+    {
+        $this->beUser();
+        $this->call('delete', URL::action('UserController@destroy', array('-1')));
+        $this->assertRedirectedToRoute('home');
+        $this->assertSessionHas('error','You are not allowed to do that.');
+    }
+
+    public function testUserControllerDestroyInvalidIdAsAdmin()
+    {
+        $this->beAdmin();
+        $this->call('delete', URL::action('UserController@destroy', array('-1')));
+        $this->assertRedirectedToAction('UserController@index');
+        $this->assertSessionHas('error','Unable to Delete User');
+    }
+
+    public function testUserControllerDestroyValidIdAsGuest()
+    {
+        $this->beGuest();
+        $this->call('delete', URL::action('UserController@destroy', array('2')));
+        $this->assertRedirectedToRoute('login');
+    }
+
+    public function testUserControllerDestroyValidIdAsUser()
+    {
+        $this->beUser();
+        $this->call('delete', URL::action('UserController@destroy', array('1')));
+        $this->assertRedirectedToRoute('home');
+        $this->assertSessionHas('error','You are not allowed to do that.');
+    }
+
+    public function testUserControllerDestroyValidIdAsAdmin()
+    {
+        $this->beAdmin();
+        $this->call('delete', URL::action('UserController@destroy', array('2')));
+        $this->assertRedirectedToAction('UserController@index');
+        $this->assertSessionHas('success','User Deleted');
+    }
+
+
 }
