@@ -7,8 +7,6 @@ class UserControllerTest extends TestCase {
         // Call the parent setup method
         parent::setUp();
 
-        // Let mockery know what we're going to mock
-        //$this->mock = Mockery::mock('User');
     }
 
     public function tearDown()
@@ -20,7 +18,7 @@ class UserControllerTest extends TestCase {
     * Test the two basic user types
     *
     */
-    /* public function testBasicUserTypes() 
+    public function testBasicUserTypes() 
     {
         $this->assertTrue(Sentry::getUser() == NULL, 'User should not be logged in initially.');
         
@@ -37,12 +35,19 @@ class UserControllerTest extends TestCase {
         $this->assertTrue(Sentry::check(),'Admin not logged in.');
 
         Sentry::logout();
-    } */
+    }
+
+    public function testUserControllerIndexAsGuest()
+    {
+        $this->beGuest();
+        $this->call('GET', URL::action('UserController@index'));
+        $this->assertRedirectedToRoute('login');
+    }
 
     public function testUserControllerIndexAsUser()
     {
         $this->beUser();
-        $response = $this->call('GET', URL::action('UserController@index'));
+        $this->call('GET', URL::action('UserController@index'));
         $this->assertRedirectedToRoute('home');
     }
 
@@ -51,11 +56,69 @@ class UserControllerTest extends TestCase {
         $this->beAdmin();
         $this->call('GET', URL::action('UserController@index'));
         $this->assertResponseOk();
-    }    
-
-    public function testUserControllerCreate()
-    {
-        $this->call('get', URL::action('UserController@create'));
     }
 
+    public function testUserControllerCreateAsGuest()
+    {
+        $this->beGuest();
+        $this->call('get', URL::action('UserController@create'));
+        $this->assertResponseOk();
+    }
+
+    public function testUserControllerCreateAsUser()
+    {
+        $this->beUser();
+        $this->call('get', URL::action('UserController@create'));
+        $this->assertResponseOk();
+    }
+
+    public function testUserControllerCreateAsAdmin()
+    {
+        $this->beAdmin();
+        $this->call('get', URL::action('UserController@create'));
+        $this->assertResponseOk();
+    }
+
+    public function testUserControllerShowUserAsGuest()
+    {
+        $this->beGuest();
+        $this->call('get', URL::action('UserController@show', array('2')));
+        $this->assertRedirectedToRoute('login');
+    }
+
+    public function testUserControllerShowUserAsUser()
+    {
+        $this->beUser();
+        $this->call('get', URL::action('UserController@show', array('2')));
+        $this->assertResponseOk();
+    }
+
+    public function testUserControllerShowUserAsAdmin()
+    {
+        $this->beAdmin();
+        $this->call('get', URL::action('UserController@show', array('2')));
+        $this->assertResponseOk();
+    }
+
+    public function testUserControllerShowAdminAsGuest()
+    {
+        $this->beGuest();
+        $this->call('get', URL::action('UserController@show', array('1')));
+        $this->assertRedirectedToRoute('login');
+    }
+
+    public function testUserControllerShowAdminAsUser()
+    {
+        $this->beUser();
+        $this->call('get', URL::action('UserController@show', array('1')));
+        $this->assertRedirectedToRoute('home');
+        $this->assertSessionHas('error','You are not allowed to do that.');
+    }
+
+    public function testUserControllerShowAdminAsAdmin()
+    {
+        $this->beAdmin();
+        $this->call('get', URL::action('UserController@show', array('1')));
+        $this->assertResponseOk();
+    }
 }

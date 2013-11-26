@@ -66,26 +66,38 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
     }
 
     /**
-    * Impersonate an admin
+    * Impersonate a guest
     *
     */
-    public function beAdmin() {
-        $admin = Sentry::findUserByLogin('admin@admin.com');
-        Sentry::setUser($admin);
-        Session::put('userId',1);
-        Session::put('email','admin@admin.com');
-
+    public function beGuest() 
+    {
+        Sentry::logout();
+        Session::flush();
     }
 
     /**
     * Impersonate a user
     *
     */
-    public function beUser() {
+    public function beUser() 
+    {
         $user = Sentry::findUserByLogin('user@user.com');
         Sentry::setUser($user);
         Session::put('userId',2);
         Session::put('email','user@user.com');
+    }
+
+    /**
+    * Impersonate an admin
+    *
+    */
+    public function beAdmin() 
+    {
+        $admin = Sentry::findUserByLogin('admin@admin.com');
+        Sentry::setUser($admin);
+        Session::put('userId',1);
+        Session::put('email','admin@admin.com');
+
     }
 
 }
