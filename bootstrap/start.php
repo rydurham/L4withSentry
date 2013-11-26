@@ -25,8 +25,8 @@ $app = new Illuminate\Foundation\Application;
 */
 
 $env = $app->detectEnvironment(function () {
-    return isset($_SERVER['LARAVEL_ENV'])
-        ? $_SERVER['LARAVEL_ENV']
+    return getenv("LARAVEL_ENV") !== null
+        ? getenv("LARAVEL_ENV")
         : 'prod'; // or whatever fallback you prefer
 });
 
