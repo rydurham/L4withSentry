@@ -116,7 +116,9 @@ class UserController extends BaseController {
 
         if($user == null || !is_numeric($id))
         {
+            // @codeCoverageIgnoreStart
             return \App::abort(404);
+            // @codeCoverageIgnoreEnd
         }
 
         return View::make('users.show')->with('user', $user);

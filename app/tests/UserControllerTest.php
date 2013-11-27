@@ -120,7 +120,7 @@ class UserControllerTest extends TestCase {
         $this->beAdmin();
         $is404 = false;
         try {
-            $this->call('get', URL::action('UserController@show', array('2')));
+            $this->call('get', URL::action('UserController@show', array('3')));
         } catch(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e) {
             $is404 = true;
         }
