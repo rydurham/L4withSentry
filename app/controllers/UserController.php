@@ -113,6 +113,12 @@ class UserController extends BaseController {
 	public function show($id)
 	{
         $user = $this->user->byId($id);
+
+        if($user == null || !is_numeric($id))
+        {
+            return \App::abort(404);
+        }
+
         return View::make('users.show')->with('user', $user);
 	}
 
