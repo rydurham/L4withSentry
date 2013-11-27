@@ -118,13 +118,8 @@ class UserControllerTest extends TestCase {
     public function testUserControllerShowInvalidUserAsAdmin()
     {
         $this->beAdmin();
-        $is404 = false;
-        try {
-            $this->call('get', URL::action('UserController@show', array('3')));
-        } catch(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e) {
-            $is404 = true;
-        }
-        $this->assertTrue($is404, 'Admins viewing invalid users should get a 404 error.');
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->call('get', URL::action('UserController@show', array('3')));
     }
 
     public function testUserControllerShowAdminAsGuest()
@@ -236,13 +231,8 @@ class UserControllerTest extends TestCase {
     public function testUserControllerEditInvalidIdAsAdmin()
     {
         $this->beAdmin();
-        $is404 = false;
-        try {
-            $this->call('get', URL::action('UserController@edit', array('3')));
-        } catch(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e) {
-            $is404 = true;
-        }
-        $this->assertTrue($is404, 'Admins editing invalid users should get a 404 error.');
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->call('get', URL::action('UserController@edit', array('3')));
     }
 
 }
