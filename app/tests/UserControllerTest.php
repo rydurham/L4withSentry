@@ -218,4 +218,31 @@ class UserControllerTest extends TestCase {
         $this->assertCount(1, $crawler->filter('h4:contains("user@user.com")'));
     }
 
+    public function testUserControllerEditInvalidIdAsGuest()
+    {
+        $this->beGuest();
+        $this->call('get', URL::action('UserController@edit', array('3')));
+        $this->assertRedirectedToRoute('login');
+    }
+
+    public function testUserControllerEditInvalidIdAsUser()
+    {
+        $this->beUser();
+        $this->call('get', URL::action('UserController@edit', array('3')));
+        $this->assertRedirectedToRoute('home');
+        $this->assertSessionHas('error','You are not allowed to do that.');
+    }
+
+    public function testUserControllerEditInvalidIdAsAdmin()
+    {
+        $this->beAdmin();
+        $is404 = false;
+        try {
+            $this->call('get', URL::action('UserController@edit', array('3')));
+        } catch(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e) {
+            $is404 = true;
+        }
+        $this->assertTrue($is404, 'Admins editing invalid users should get a 404 error.');
+    }
+
 }

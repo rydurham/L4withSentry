@@ -133,6 +133,14 @@ class UserController extends BaseController {
 	public function edit($id)
 	{
         $user = $this->user->byId($id);
+
+        if($user == null || !is_numeric($id))
+        {
+            // @codeCoverageIgnoreStart
+            return \App::abort(404);
+            // @codeCoverageIgnoreEnd
+        }
+        
         $currentGroups = $user->getGroups()->toArray();
         $userGroups = array();
         foreach ($currentGroups as $group) {
