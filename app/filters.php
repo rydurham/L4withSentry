@@ -105,7 +105,7 @@ Route::filter('csrf', function()
  //            var_dump($_POST);
  //            die();
 
-	if (Session::token() != Input::get('_token'))
+	if (Session::token() != Input::get('_token') && (Input::get('IgnoreCSRFTokenError') !== true && App::environment() === 'testing'))
 	{
 		throw new Illuminate\Session\TokenMismatchException;
 	}
