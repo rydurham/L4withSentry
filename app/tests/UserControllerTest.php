@@ -37,6 +37,10 @@ class UserControllerTest extends TestCase {
         Sentry::logout();
     }
 
+    /**
+     * INDEX
+     *
+     */
     public function testUserControllerIndexAsGuest()
     {
         $this->beGuest();
@@ -58,6 +62,10 @@ class UserControllerTest extends TestCase {
         $this->assertResponseOk();
     }
 
+    /**
+     * CREATE
+     *
+     */
     public function testUserControllerCreateAsGuest()
     {
         $this->beGuest();
@@ -79,6 +87,10 @@ class UserControllerTest extends TestCase {
         $this->assertResponseOk();
     }
 
+    /**
+     * SHOW
+     *
+     */
     public function testUserControllerShowValidUserAsGuest()
     {
         $this->beGuest();
@@ -144,6 +156,10 @@ class UserControllerTest extends TestCase {
         $this->assertResponseOk();
     }
 
+    /**
+     * DESTROY
+     *
+     */
     public function testUserControllerDestroyInvalidIdAsGuest()
     {
         $this->beGuest();
@@ -190,6 +206,10 @@ class UserControllerTest extends TestCase {
         $this->assertSessionHas('success','User Deleted');
     }
 
+    /**
+     * EDIT
+     *
+     */
     public function testUserControllerEditValidIdAsGuest()
     {
         $this->beGuest();
@@ -233,6 +253,19 @@ class UserControllerTest extends TestCase {
         $this->beAdmin();
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
         $this->call('get', URL::action('UserController@edit', array('3')));
+        $this->setExpectedException(null);
+        $this->call('get', URL::action('UserController@edit', array('3')));
+    }
+    
+    /**
+     * STORE
+     *
+     */
+    public function testUserControllerStoreBadCSRFToken()
+    {
+        $this->beAdmin();
+        $this->setExpectedException('Illuminate\Session\TokenMismatchException');
+        $this->call('post', URL::action('UserController@store'));
     }
 
 }
