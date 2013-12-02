@@ -79,25 +79,47 @@ class UserControllerTest extends TestCase {
         $this->assertResponseOk();
     }
 
-    public function testUserControllerShowUserAsGuest()
+    public function testUserControllerShowValidUserAsGuest()
     {
         $this->beGuest();
         $this->call('get', URL::action('UserController@show', array('2')));
         $this->assertRedirectedToRoute('login');
     }
 
-    public function testUserControllerShowUserAsUser()
+    public function testUserControllerShowValidUserAsUser()
     {
         $this->beUser();
         $this->call('get', URL::action('UserController@show', array('2')));
         $this->assertResponseOk();
     }
 
-    public function testUserControllerShowUserAsAdmin()
+    public function testUserControllerShowValidUserAsAdmin()
     {
         $this->beAdmin();
         $this->call('get', URL::action('UserController@show', array('2')));
         $this->assertResponseOk();
+    }
+
+    public function testUserControllerShowInvalidUserAsGuest()
+    {
+        $this->beGuest();
+        $this->call('get', URL::action('UserController@show', array('3')));
+        $this->assertRedirectedToRoute('login');
+    }
+
+    public function testUserControllerShowInvalidUserAsUser()
+    {
+        $this->beUser();
+        $this->call('get', URL::action('UserController@show', array('3')));
+        $this->assertRedirectedToRoute('home');
+        $this->assertSessionHas('error','You are not allowed to do that.');
+    }
+
+    public function testUserControllerShowInvalidUserAsAdmin()
+    {
+        $this->beAdmin();
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->call('get', URL::action('UserController@show', array('3')));
     }
 
     public function testUserControllerShowAdminAsGuest()
@@ -121,4 +143,96 @@ class UserControllerTest extends TestCase {
         $this->call('get', URL::action('UserController@show', array('1')));
         $this->assertResponseOk();
     }
+
+    public function testUserControllerDestroyInvalidIdAsGuest()
+    {
+        $this->beGuest();
+        $this->call('delete', URL::action('UserController@destroy', array('-1')));
+        $this->assertRedirectedToRoute('login');
+    }
+
+    public function testUserControllerDestroyInvalidIdAsUser()
+    {
+        $this->beUser();
+        $this->call('delete', URL::action('UserController@destroy', array('-1')));
+        $this->assertRedirectedToRoute('home');
+        $this->assertSessionHas('error','You are not allowed to do that.');
+    }
+
+    public function testUserControllerDestroyInvalidIdAsAdmin()
+    {
+        $this->beAdmin();
+        $this->call('delete', URL::action('UserController@destroy', array('-1')));
+        $this->assertRedirectedToAction('UserController@index');
+        $this->assertSessionHas('error','Unable to Delete User');
+    }
+
+    public function testUserControllerDestroyValidIdAsGuest()
+    {
+        $this->beGuest();
+        $this->call('delete', URL::action('UserController@destroy', array('2')));
+        $this->assertRedirectedToRoute('login');
+    }
+
+    public function testUserControllerDestroyValidIdAsUser()
+    {
+        $this->beUser();
+        $this->call('delete', URL::action('UserController@destroy', array('1')));
+        $this->assertRedirectedToRoute('home');
+        $this->assertSessionHas('error','You are not allowed to do that.');
+    }
+
+    public function testUserControllerDestroyValidIdAsAdmin()
+    {
+        $this->beAdmin();
+        $this->call('delete', URL::action('UserController@destroy', array('2')));
+        $this->assertRedirectedToAction('UserController@index');
+        $this->assertSessionHas('success','User Deleted');
+    }
+
+    public function testUserControllerEditValidIdAsGuest()
+    {
+        $this->beGuest();
+        $this->call('get', URL::action('UserController@edit', array('2')));
+        $this->assertRedirectedToRoute('login');
+    }
+
+    public function testUserControllerEditValidIdAsUser()
+    {
+        $this->beUser();
+        $this->call('get', URL::action('UserController@edit', array('1')));
+        $this->assertRedirectedToRoute('home');
+        $this->assertSessionHas('error','You are not allowed to do that.');
+    }
+
+    public function testUserControllerEditValidIdAsAdmin()
+    {
+        $this->beAdmin();
+        $crawler = $this->client->request('get', URL::action('UserController@edit', array('2')));
+        $this->assertResponseOk();
+        $this->assertCount(1, $crawler->filter('h4:contains("user@user.com")'));
+    }
+
+    public function testUserControllerEditInvalidIdAsGuest()
+    {
+        $this->beGuest();
+        $this->call('get', URL::action('UserController@edit', array('3')));
+        $this->assertRedirectedToRoute('login');
+    }
+
+    public function testUserControllerEditInvalidIdAsUser()
+    {
+        $this->beUser();
+        $this->call('get', URL::action('UserController@edit', array('3')));
+        $this->assertRedirectedToRoute('home');
+        $this->assertSessionHas('error','You are not allowed to do that.');
+    }
+
+    public function testUserControllerEditInvalidIdAsAdmin()
+    {
+        $this->beAdmin();
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->call('get', URL::action('UserController@edit', array('3')));
+    }
+
 }

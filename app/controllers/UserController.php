@@ -113,6 +113,14 @@ class UserController extends BaseController {
 	public function show($id)
 	{
         $user = $this->user->byId($id);
+
+        if($user == null || !is_numeric($id))
+        {
+            // @codeCoverageIgnoreStart
+            return \App::abort(404);
+            // @codeCoverageIgnoreEnd
+        }
+
         return View::make('users.show')->with('user', $user);
 	}
 
@@ -125,6 +133,14 @@ class UserController extends BaseController {
 	public function edit($id)
 	{
         $user = $this->user->byId($id);
+
+        if($user == null || !is_numeric($id))
+        {
+            // @codeCoverageIgnoreStart
+            return \App::abort(404);
+            // @codeCoverageIgnoreEnd
+        }
+
         $currentGroups = $user->getGroups()->toArray();
         $userGroups = array();
         foreach ($currentGroups as $group) {
@@ -143,6 +159,13 @@ class UserController extends BaseController {
 	 */
 	public function update($id)
 	{
+        if(!is_numeric($id))
+        {
+            // @codeCoverageIgnoreStart
+            return \App::abort(404);
+            // @codeCoverageIgnoreEnd
+        }
+
 		// Form Processing
         $result = $this->userForm->update( Input::all() );
 
@@ -169,6 +192,13 @@ class UserController extends BaseController {
 	 */
 	public function destroy($id)
 	{
+        if(!is_numeric($id))
+        {
+            // @codeCoverageIgnoreStart
+            return \App::abort(404);
+            // @codeCoverageIgnoreEnd
+        }
+
 		if ($this->user->destroy($id))
 		{
 			Session::flash('success', 'User Deleted');
@@ -189,6 +219,12 @@ class UserController extends BaseController {
 	 */
 	public function activate($id, $code)
 	{
+        if(!is_numeric($id))
+        {
+            // @codeCoverageIgnoreStart
+            return \App::abort(404);
+            // @codeCoverageIgnoreEnd
+        }
 
 		$result = $this->user->activate($id, $code);
 
@@ -272,6 +308,13 @@ class UserController extends BaseController {
 	 */
 	public function reset($id, $code)
 	{
+        if(!is_numeric($id))
+        {
+            // @codeCoverageIgnoreStart
+            return \App::abort(404);
+            // @codeCoverageIgnoreEnd
+        }
+
 		$result = $this->user->resetPassword($id, $code);
 
         if( $result['success'] )
@@ -298,6 +341,13 @@ class UserController extends BaseController {
 	 */
 	public function change($id)
 	{
+        if(!is_numeric($id))
+        {
+            // @codeCoverageIgnoreStart
+            return \App::abort(404);
+            // @codeCoverageIgnoreEnd
+        }
+
 		$data = Input::all();
 		$data['id'] = $id;
 
@@ -326,6 +376,13 @@ class UserController extends BaseController {
 	 */
 	public function suspend($id)
 	{
+        if(!is_numeric($id))
+        {
+            // @codeCoverageIgnoreStart
+            return \App::abort(404);
+            // @codeCoverageIgnoreEnd
+        }
+
 		// Form Processing
         $result = $this->suspendUserForm->suspend( Input::all() );
 
@@ -350,6 +407,13 @@ class UserController extends BaseController {
 	 */
 	public function unsuspend($id)
 	{
+        if(!is_numeric($id))
+        {
+            // @codeCoverageIgnoreStart
+            return \App::abort(404);
+            // @codeCoverageIgnoreEnd
+        }
+
 		$result = $this->user->unSuspend($id);
 
         if( $result['success'] )
@@ -371,6 +435,13 @@ class UserController extends BaseController {
 	 */
 	public function ban($id)
 	{
+        if(!is_numeric($id))
+        {
+            // @codeCoverageIgnoreStart
+            return \App::abort(404);
+            // @codeCoverageIgnoreEnd
+        }
+
 		$result = $this->user->ban($id);
 
         if( $result['success'] )
@@ -387,6 +458,13 @@ class UserController extends BaseController {
 
 	public function unban($id)
 	{
+        if(!is_numeric($id))
+        {
+            // @codeCoverageIgnoreStart
+            return \App::abort(404);
+            // @codeCoverageIgnoreEnd
+        }
+        
 		$result = $this->user->unBan($id);
 
         if( $result['success'] )
