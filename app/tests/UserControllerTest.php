@@ -268,4 +268,12 @@ class UserControllerTest extends TestCase {
         $this->call('post', URL::action('UserController@store'));
     }
 
+    public function testUserControllerStoreInvalidBlankInputAsAdmin()
+    {
+        $this->beAdmin();
+        $this->call('post', URL::action('UserController@store'), array('IgnoreCSRFTokenError' => true));
+        $this->assertRedirectedToAction('UserController@create');
+        $this->assertSessionHasErrors();
+    }
+
 }
