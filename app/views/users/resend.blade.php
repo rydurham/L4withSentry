@@ -19,7 +19,7 @@ Resend Activation
                 {{ ($errors->has('email') ? $errors->first('email') : '') }}
             </div>
 
-            {{ Form::submt('Resend', array('class' => 'btn btn-primary')) }}
+            {{ Form::submit('Resend', array('class' => 'btn btn-primary')) }}
 
         {{ Form::close() }}
     </div>
