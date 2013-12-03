@@ -37,6 +37,10 @@ class UserControllerTest extends TestCase {
         Sentry::logout();
     }
 
+    /**
+     * INDEX
+     *
+     */
     public function testUserControllerIndexAsGuest()
     {
         $this->beGuest();
@@ -58,6 +62,10 @@ class UserControllerTest extends TestCase {
         $this->assertResponseOk();
     }
 
+    /**
+     * CREATE
+     *
+     */
     public function testUserControllerCreateAsGuest()
     {
         $this->beGuest();
@@ -79,6 +87,10 @@ class UserControllerTest extends TestCase {
         $this->assertResponseOk();
     }
 
+    /**
+     * SHOW
+     *
+     */
     public function testUserControllerShowValidUserAsGuest()
     {
         $this->beGuest();
@@ -144,6 +156,10 @@ class UserControllerTest extends TestCase {
         $this->assertResponseOk();
     }
 
+    /**
+     * DESTROY
+     *
+     */
     public function testUserControllerDestroyInvalidIdAsGuest()
     {
         $this->beGuest();
@@ -190,6 +206,10 @@ class UserControllerTest extends TestCase {
         $this->assertSessionHas('success','User Deleted');
     }
 
+    /**
+     * EDIT
+     *
+     */
     public function testUserControllerEditValidIdAsGuest()
     {
         $this->beGuest();
@@ -233,6 +253,55 @@ class UserControllerTest extends TestCase {
         $this->beAdmin();
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
         $this->call('get', URL::action('UserController@edit', array('3')));
+    }
+    
+    /**
+     * STORE
+     *
+     */
+    public function testUserControllerStoreBadCSRFTokenAsGuest()
+    {
+        $this->setExpectedException('Illuminate\Session\TokenMismatchException');
+        $this->beGuest();
+        $this->call('post', URL::action('UserController@store'));
+    }
+
+    public function testUserControllerStoreBadCSRFTokenAsUser()
+    {
+        $this->setExpectedException('Illuminate\Session\TokenMismatchException');
+        $this->beUser();
+        $this->call('post', URL::action('UserController@store'));
+    }
+
+    public function testUserControllerStoreBadCSRFTokenAsAdmin()
+    {
+        $this->setExpectedException('Illuminate\Session\TokenMismatchException');
+        $this->beAdmin();
+        $this->call('post', URL::action('UserController@store'));
+    }
+
+    public function testUserControllerStoreInvalidBlankInputAsGuest()
+    {
+        $this->beGuest();
+        $this->call('post', URL::action('UserController@store'), array('IgnoreCSRFTokenError' => true));
+        $this->assertRedirectedToAction('UserController@create');
+        $this->assertSessionHasErrors();
+    }
+
+    public function testUserControllerStoreInvalidBlankInputAsUser()
+    {
+        $this->beUser();
+        $this->call('post', URL::action('UserController@store'), array('IgnoreCSRFTokenError' => true));
+        $this->assertRedirectedToAction('UserController@create');
+        $this->assertSessionHasErrors();
+    }
+
+    public function testUserControllerStoreInvalidBlankInputAsAdmin()
+    {
+        $this->beAdmin();
+        $this->call('post', URL::action('UserController@store'), array('IgnoreCSRFTokenError' => true));
+        $this->assertRedirectedToAction('UserController@create');
+        $this->assertSessionHasErrors();
     }
 
 }

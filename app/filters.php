@@ -105,8 +105,28 @@ Route::filter('csrf', function()
  //            var_dump($_POST);
  //            die();
 
-	if (Session::token() != Input::get('_token'))
+	// TODO: Rewrite this tree of conditionals
+	if (Session::token() !== Input::get('_token') || Session::token()===null || Input::get('_token')===null)
 	{
-		throw new Illuminate\Session\TokenMismatchException;
+		// Session token and form tokens do not match or one is empty
+		if(App::environment() === 'testing')
+		{
+			// We only want to allow CSRF override if we're running tests
+			if(Input::get('IgnoreCSRFTokenError')===true) 
+			{
+				// Allow CSRF override in testing environment
+				return;
+			} else {
+				// Handle CSRF normally
+				throw new Illuminate\Session\TokenMismatchException;
+			}	
+		} else {
+			// @codeCoverageIgnoreStart
+			
+			// Handle CSRF normally
+			throw new Illuminate\Session\TokenMismatchException;
+			
+			// @codeCoverageIgnoreEnd
+		}
 	}
 });
