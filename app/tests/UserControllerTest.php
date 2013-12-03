@@ -253,19 +253,47 @@ class UserControllerTest extends TestCase {
         $this->beAdmin();
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
         $this->call('get', URL::action('UserController@edit', array('3')));
-        $this->setExpectedException(null);
-        $this->call('get', URL::action('UserController@edit', array('3')));
     }
     
     /**
      * STORE
      *
      */
-    public function testUserControllerStoreBadCSRFToken()
+    public function testUserControllerStoreBadCSRFTokenAsGuest()
     {
-        $this->beAdmin();
         $this->setExpectedException('Illuminate\Session\TokenMismatchException');
+        $this->beGuest();
         $this->call('post', URL::action('UserController@store'));
+    }
+
+    public function testUserControllerStoreBadCSRFTokenAsUser()
+    {
+        $this->setExpectedException('Illuminate\Session\TokenMismatchException');
+        $this->beUser();
+        $this->call('post', URL::action('UserController@store'));
+    }
+
+    public function testUserControllerStoreBadCSRFTokenAsAdmin()
+    {
+        $this->setExpectedException('Illuminate\Session\TokenMismatchException');
+        $this->beAdmin();
+        $this->call('post', URL::action('UserController@store'));
+    }
+
+    public function testUserControllerStoreInvalidBlankInputAsGuest()
+    {
+        $this->beGuest();
+        $this->call('post', URL::action('UserController@store'), array('IgnoreCSRFTokenError' => true));
+        $this->assertRedirectedToAction('UserController@create');
+        $this->assertSessionHasErrors();
+    }
+
+    public function testUserControllerStoreInvalidBlankInputAsUser()
+    {
+        $this->beUser();
+        $this->call('post', URL::action('UserController@store'), array('IgnoreCSRFTokenError' => true));
+        $this->assertRedirectedToAction('UserController@create');
+        $this->assertSessionHasErrors();
     }
 
     public function testUserControllerStoreInvalidBlankInputAsAdmin()
