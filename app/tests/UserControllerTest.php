@@ -304,4 +304,25 @@ class UserControllerTest extends TestCase {
         $this->assertSessionHasErrors();
     }
 
+    public function testUserControllerStoreValidAsGuest()
+    {
+        $this->beGuest();
+        Input::replace($input = array(
+            'IgnoreCSRFTokenError' => true,
+            'email' => 'test@test.com',
+            'password' => 'testtest',
+            'password_confirmation' => 'testtest'
+        ));
+
+        $userSignupEventFired = false;
+        Event::listen('user.signup', function() use (&$userSignupEventFired) {
+            $userSignupEventFired = true;
+        });
+
+        $this->call('post', URL::action('UserController@store'), $input);
+
+        $this->assertTrue($userSignupEventFired, 'The user.signup event never fired during UserController@store');
+        $this->assertRedirectedToRoute('home');
+    }
+
 }

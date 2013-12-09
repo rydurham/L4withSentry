@@ -87,14 +87,14 @@ class UserController extends BaseController {
         if( $result['success'] )
         {
             Event::fire('user.signup', array(
-            								'email' => $result['mailData']['email'], 
-            								'userId' => $result['mailData']['userId'], 
-            								'activationCode' => $result['mailData']['activationCode']
-            								));
+            	'email' => $result['mailData']['email'], 
+            	'userId' => $result['mailData']['userId'], 
+                'activationCode' => $result['mailData']['activationCode']
+            ));
 
             // Success!
             Session::flash('success', $result['message']);
-            return Redirect::to('/');
+            return Redirect::route('home');
 
         } else {
             Session::flash('error', $result['message']);
@@ -232,11 +232,11 @@ class UserController extends BaseController {
         {
             // Success!
             Session::flash('success', $result['message']);
-            return Redirect::to('/');
+            return Redirect::route('home');
 
         } else {
             Session::flash('error', $result['message']);
-            return Redirect::to('/');
+            return Redirect::route('home');
         }
 	}
 
@@ -252,14 +252,14 @@ class UserController extends BaseController {
         if( $result['success'] )
         {
             Event::fire('user.resend', array(
-            								'email' => $result['mailData']['email'], 
-            								'userId' => $result['mailData']['userId'], 
-            								'activationCode' => $result['mailData']['activationCode']
-            								));
+				'email' => $result['mailData']['email'], 
+				'userId' => $result['mailData']['userId'], 
+				'activationCode' => $result['mailData']['activationCode']
+			));
 
             // Success!
             Session::flash('success', $result['message']);
-            return Redirect::to('/');
+            return Redirect::route('home');
         } 
         else 
         {
@@ -282,14 +282,14 @@ class UserController extends BaseController {
         if( $result['success'] )
         {
             Event::fire('user.forgot', array(
-    									'email' => $result['mailData']['email'],
-    									'userId' => $result['mailData']['userId'],
-    									'resetCode' => $result['mailData']['resetCode']
-    									));
+				'email' => $result['mailData']['email'],
+				'userId' => $result['mailData']['userId'],
+				'resetCode' => $result['mailData']['resetCode']
+			));
 
             // Success!
             Session::flash('success', $result['message']);
-            return Redirect::to('/');
+            return Redirect::route('home');
         } 
         else 
         {
@@ -320,17 +320,17 @@ class UserController extends BaseController {
         if( $result['success'] )
         {
             Event::fire('user.newpassword', array(
-            									'email' => $result['mailData']['email'],
-            									'newPassword' => $result['mailData']['newPassword']
-            									));
+				'email' => $result['mailData']['email'],
+				'newPassword' => $result['mailData']['newPassword']
+			));
 
             // Success!
             Session::flash('success', $result['message']);
-            return Redirect::to('/');
+            return Redirect::route('home');
 
         } else {
             Session::flash('error', $result['message']);
-            return Redirect::to('/');
+            return Redirect::route('home');
         }
 	}
 
@@ -358,7 +358,7 @@ class UserController extends BaseController {
         {
             // Success!
             Session::flash('success', $result['message']);
-            return Redirect::to('/');
+            return Redirect::route('home');
         } 
         else 
         {
