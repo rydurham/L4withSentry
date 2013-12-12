@@ -44,7 +44,7 @@ Route::filter('inGroup', function($route, $request, $value)
 
 	// we need to determine if a non admin user 
 	// is trying to access their own account.
-    $userId = $route->getParameter('users');
+    $userId = Route::input('users');
 
 	try
 	{
