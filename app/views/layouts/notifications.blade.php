@@ -3,7 +3,7 @@
   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
   <strong>Success:</strong> {{ $message }}
 </div>
-{{ Session::forgeT('success') }}
+{{ Session::forget('success') }}
 @endif
 
 @if ($message = Session::get('error'))
@@ -11,7 +11,7 @@
   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
   <strong>Error:</strong> {{ $message }}
 </div>
-{{ Session::forgeT('error') }}
+{{ Session::forget('error') }}
 @endif
 
 @if ($message = Session::get('warning'))
@@ -19,7 +19,7 @@
   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
   <strong>Warning:</strong> {{ $message }}
 </div>
-{{ Session::forgeT('warning') }}
+{{ Session::forget('warning') }}
 @endif
 
 @if ($message = Session::get('info'))
@@ -27,5 +27,5 @@
   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
   <strong>FYI:</strong> {{ $message }}
 </div>
-{{ Session::forgeT('info') }}
+{{ Session::forget('info') }}
 @endif
