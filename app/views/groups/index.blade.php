@@ -24,7 +24,7 @@ Groups
 					<td><a href="groups/{{ $group->id }}">{{ $group->name }}</a></td>
 					<td>{{ (isset($group['permissions']['admin'])) ? '<i class="icon-ok"></i> Admin' : ''}} {{ (isset($group['permissions']['users'])) ? '<i class="icon-ok"></i> Users' : ''}}</td>
 					<td>
-						<button class="btn btn-default" type="button" onClick="location.href='{{ URL::to('groups') }}/{{ $group->id }}/edit/'">Edit</button>
+						<button class="btn btn-default" onClick="location.href='{{ action('GroupController@edit', array($group->id)) }}'">Edit</button>
 					 	<button class="btn btn-default action_confirm {{ ($group->id == 2) ? 'disabled' : '' }}" type="button" data-method="delete" href="{{ URL::to('groups') }}/{{ $group->id }}">Delete</button>
 					 </td>
 				</tr>	
