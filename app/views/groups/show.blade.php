@@ -11,7 +11,7 @@ View Group
 <h4>{{ $group['name'] }} Group</h4>
 <div class="well clearfix">
 	<div class="col-md-10">
-	    <strong>Permsissions:</strong>
+	    <strong>Permissions:</strong>
 	    <ul>
 	    	@foreach ($group->getPermissions() as $key => $value)
 	    		<li>{{ ucfirst($key) }}</li>
