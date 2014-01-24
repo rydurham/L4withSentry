@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class UserControllerTest
+ */
 class UserControllerTest extends TestCase {
 
     public function setUp() {
@@ -22,10 +25,10 @@ class UserControllerTest extends TestCase {
     {
         $this->assertTrue(Sentry::getUser() == NULL, 'User should not be logged in initially.');
         
-        $admin = Sentry::findUserByLogin('admin@admin.com');
+        $admin = Sentry::findUserByLogin($this->adminEmail);
         $this->assertTrue($admin != NULL, 'Admin account not found.');
 
-        $user = Sentry::findUserByLogin('user@user.com');
+        $user = Sentry::findUserByLogin($this->userEmail);
         $this->assertTrue($user != NULL, 'User account not found.');
 
         Sentry::setUser($user);
