@@ -1,7 +1,7 @@
 {
 	"require": {
 		"laravel/framework": "4.1.*",
-		"cartalyst/sentry": "2.0.*",
+		"cartalyst/sentry": "2.1.*",
 		"mockery/mockery": "dev-master@dev",
 		"phpunit/phpunit": "3.7.*"
 	},
