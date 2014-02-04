@@ -1,6 +1,6 @@
 ## Laravel 4 with Sentry 2 - Version 2.0
 
-This is a demo of [Sentry 2](https://github.com/cartalyst/sentry) integrated with [Laravel 4](https://github.com/laravel/laravel/tree/develop) and [Bootstrap 3.0](http://getbootstrap.com).  This repo is intended to be for reference only - if you want to use this code in your own app, I suggest using [Sentinel](https://github.com/rydurham/Sentinel), a laravel pacakge based on this repo.  
+This is a demo of [Sentry 2](https://github.com/cartalyst/sentry) integrated with [Laravel 4](https://github.com/laravel/laravel/tree/develop) and [Bootstrap 3.0](http://getbootstrap.com).  This repo is intended to be for reference only - if you want to use this code in your own app I suggest using [Sentinel](https://github.com/rydurham/Sentinel) - a laravel pacakge based on this repo.  
 
 ### Instructions
 
