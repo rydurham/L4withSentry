@@ -9,3 +9,6 @@ composer.lock
 .DS_Store
 l4withsentry.sublime-workspace
 l4withsentry.sublime-project
+Vagrantfile
+bootstrap.sh
+.vagrant
