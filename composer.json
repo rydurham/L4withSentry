@@ -6,7 +6,7 @@
 		"phpunit/phpunit": "3.7.*"
 	},
 	"require-dev": {
-		"way/generators": "1.0.*@dev"
+		"way/generators": "2.*"
 	},
 	"autoload": {
 		"classmap": [
