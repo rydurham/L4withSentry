@@ -1,12 +1,12 @@
 {
 	"require": {
 		"laravel/framework": "4.1.*",
-		"cartalyst/sentry": "2.1.*",
-		"mockery/mockery": "dev-master@dev",
-		"phpunit/phpunit": "3.7.*"
+		"cartalyst/sentry": "~2.1"
 	},
 	"require-dev": {
-		"way/generators": "2.*"
+		"way/generators": "~2.6",
+		"mockery/mockery": "~0.9",
+		"phpunit/phpunit": "~4.0"
 	},
 	"autoload": {
 		"classmap": [
@@ -23,6 +23,5 @@
 	},
 	"scripts": {
 		"post-update-cmd": "php artisan optimize"
-	},
-	"minimum-stability": "dev"
+	}
 }
