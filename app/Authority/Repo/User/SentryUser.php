@@ -152,14 +152,11 @@ class SentryUser extends RepoAbstract implements UserInterface {
 	public function activate($id, $code)
 	{
 		$result = array();
-		
-		
 		try
 		{
 		    // Find the user using the user id
 		    $user = $this->sentry->findUserById($id);
 		    
-
 		    // Attempt to activate the user
 		    if ($user->attemptActivation($code))
 		    {
@@ -207,12 +204,12 @@ class SentryUser extends RepoAbstract implements UserInterface {
         	 $user = $this->sentry->getUserProvider()->findByLogin(e($data['email']));
 
 	          
-	                //success!
-            		$result['success'] = true;
-	    		$result['message'] = trans('users.emailconfirm');
-	    		$result['mailData']['activationCode'] = $user->GetActivationCode();
-                	$result['mailData']['userId'] = $user->getId();
-                	$result['mailData']['email'] = e($data['email']);
+                //success!
+    		$result['success'] = true;
+    		$result['message'] = trans('users.emailconfirm');
+    		$result['mailData']['activationCode'] = $user->GetActivationCode();
+        	$result['mailData']['userId'] = $user->getId();
+        	$result['mailData']['email'] = e($data['email']);
 	          
 	           
 
