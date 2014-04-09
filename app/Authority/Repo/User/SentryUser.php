@@ -152,10 +152,13 @@ class SentryUser extends RepoAbstract implements UserInterface {
 	public function activate($id, $code)
 	{
 		$result = array();
+		
+		
 		try
 		{
 		    // Find the user using the user id
 		    $user = $this->sentry->findUserById($id);
+		    
 
 		    // Attempt to activate the user
 		    if ($user->attemptActivation($code))
@@ -172,15 +175,20 @@ class SentryUser extends RepoAbstract implements UserInterface {
 	    		$result['message'] = trans('users.notactivated');
 		    }
 		}
+		catch (\Cartalyst\Sentry\Users\UserAlreadyActivatedException $e)
+		{
+		    $result['success'] = false;
+	    	    $result['message'] = trans('users.alreadyactive');
+		}
 		catch (\Cartalyst\Sentry\Users\UserExistsException $e)
 		{
 		    $result['success'] = false;
-	    	$result['message'] = trans('users.exists');
+	    	    $result['message'] = trans('users.exists');
 		}
 		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
 		    $result['success'] = false;
-	    	$result['message'] = trans('users.notfound');
+	    	    $result['message'] = trans('users.notfound');
 		}
 		return $result;
 	}
@@ -192,33 +200,34 @@ class SentryUser extends RepoAbstract implements UserInterface {
 	 */
 	public function resend($data)
 	{
-		$result = array();
-		try {
-            //Attempt to find the user. 
-            $user = $this->sentry->getUserProvider()->findByLogin(e($data['email']));
+	 $result = array();
+		
+	 try {
+        	 //Attempt to find the user. 
+        	 $user = $this->sentry->getUserProvider()->findByLogin(e($data['email']));
 
-            if (!$user->isActivated())
-            {
-                //success!
-            	$result['success'] = true;
+	          
+	                //success!
+            		$result['success'] = true;
 	    		$result['message'] = trans('users.emailconfirm');
 	    		$result['mailData']['activationCode'] = $user->GetActivationCode();
-                $result['mailData']['userId'] = $user->getId();
-                $result['mailData']['email'] = e($data['email']);
-            }
-            else 
-            {
-                $result['success'] = false;
-	    		$result['message'] = trans('users.alreadyactive');
-            }
+                	$result['mailData']['userId'] = $user->getId();
+                	$result['mailData']['email'] = e($data['email']);
+	          
+	           
 
 	    }
+	    catch (\Cartalyst\Sentry\Users\UserAlreadyActivatedException $e)
+		{
+		    $result['success'] = false;
+	    	    $result['message'] = trans('users.alreadyactive');
+		}
 	    catch (\Cartalyst\Sentry\Users\UserExistsException $e)
 		{
 		    $result['success'] = false;
 	    	$result['message'] = trans('users.exists');
 		}
-		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
+	    catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
 		    $result['success'] = false;
 	    	$result['message'] = trans('users.notfound');
