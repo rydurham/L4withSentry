@@ -23,5 +23,6 @@
 	},
 	"scripts": {
 		"post-update-cmd": "php artisan optimize"
-	}
+	},
+	"minimum-stability": "stable"
 }
