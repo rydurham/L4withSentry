@@ -3,7 +3,7 @@
 {{-- Web site Title --}}
 @section('title')
 @parent
-Register
+{{trans('pages.register')}}
 @stop
 
 {{-- Content --}}
@@ -12,10 +12,10 @@ Register
     <div class="col-md-4 col-md-offset-4">
         {{ Form::open(array('action' => 'UserController@store')) }}
 
-            <h2>Register New Account</h2>
+            <h2>{{trans('pages.register_new')}}</h2>
 
             <div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
-                {{ Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'E-mail')) }}
+                {{ Form::text('email', null, array('class' => 'form-control', 'placeholder' => trans('users.email'))) }}
                 {{ ($errors->has('email') ? $errors->first('email') : '') }}
             </div>
 

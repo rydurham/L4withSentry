@@ -3,20 +3,20 @@
 {{-- Web site Title --}}
 @section('title')
 @parent
-Groups
+{{trans('groups.groups')}}
 @stop
 
 {{-- Content --}}
 @section('content')
-<h4>Available Groups</h4>
+<h4>{{trans('pages.listwith')}} {{trans('groups.groups')}}</h4>
 <div class="row">
   <div class="col-md-10 col-md-offset-1">
 	<div class="table-responsive">
 		<table class="table table-striped table-hover">
 			<thead>
-				<th>Name</th>
-				<th>Permissions</th>
-				<th>Options</th>
+				<th>{{trans('groups.name')}}</th>
+				<th>{{trans('groups.permisions')}}</th>
+				<th>{{trans('pages.options')}}</th>
 			</thead>
 			<tbody>
 			@foreach ($groups as $group)
@@ -24,15 +24,15 @@ Groups
 					<td><a href="groups/{{ $group->id }}">{{ $group->name }}</a></td>
 					<td>{{ (isset($group['permissions']['admin'])) ? '<i class="icon-ok"></i> Admin' : ''}} {{ (isset($group['permissions']['users'])) ? '<i class="icon-ok"></i> Users' : ''}}</td>
 					<td>
-						<button class="btn btn-default" onClick="location.href='{{ action('GroupController@edit', array($group->id)) }}'">Edit</button>
-					 	<button class="btn btn-default action_confirm {{ ($group->id == 2) ? 'disabled' : '' }}" type="button" data-method="delete" href="{{ URL::to('groups') }}/{{ $group->id }}">Delete</button>
+						<button class="btn btn-default" onClick="location.href='{{ action('GroupController@edit', array($group->id)) }}'">{{trans('pages.actionedit')}}</button>
+					 	<button class="btn btn-default action_confirm {{ ($group->id == 2) ? 'disabled' : '' }}" type="button" data-method="delete" href="{{ URL::to('groups') }}/{{ $group->id }}">{{trans('pages.actiondelete')}}</button>
 					 </td>
 				</tr>	
 			@endforeach
 			</tbody>
 		</table> 
 	</div>
-	 <button class="btn btn-primary" onClick="location.href='{{ URL::to('groups/create') }}'">New Group</button>
+	 <button class="btn btn-primary" onClick="location.href='{{ URL::to('groups/create') }}'">{{trans('groups.create')}}</button>
    </div>
 </div>
 <!--  
