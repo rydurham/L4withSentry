@@ -4,11 +4,10 @@
 		<meta charset="utf-8">
 	</head>
 	<body>
-		<h2>New Password</h2>
+		<h2>{{trans('users.newpassword_lbl')}}</h2>
 
-		<p>Here is your new password:</p>
 		<p><blockquote>{{{ $newPassword }}}</blockquote></p>
-		<p>Thank you, <br />
+		<p>{{trans('pages.thankyou')}}, <br />
 			~The Admin Team</p>
 	</body>
 </html>

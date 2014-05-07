@@ -3,32 +3,32 @@
 {{-- Web site Title --}}
 @section('title')
 @parent
-Home
+{{trans('pages.profile')}}
 @stop
 
 {{-- Content --}}
 @section('content')
-	<h4>Account Profile</h4>
+	<h4>{{trans('pages.profile')}}</h4>
 	
   	<div class="well clearfix">
 	    <div class="col-md-8">
 		    @if ($user->first_name)
-		    	<p><strong>First Name:</strong> {{ $user->first_name }} </p>
+		    	<p><strong>{{trans('users.fname')}}:</strong> {{ $user->first_name }} </p>
 			@endif
 			@if ($user->last_name)
-		    	<p><strong>Last Name:</strong> {{ $user->last_name }} </p>
+		    	<p><strong>{{trans('users.lname')}}:</strong> {{ $user->last_name }} </p>
 			@endif
-		    <p><strong>Email:</strong> {{ $user->email }}</p>
+		    <p><strong>{{trans('users.email')}}</strong> {{ $user->email }}</p>
 		    
 		</div>
 		<div class="col-md-4">
-			<p><em>Account created: {{ $user->created_at }}</em></p>
-			<p><em>Last Updated: {{ $user->updated_at }}</em></p>
-			<button class="btn btn-primary" onClick="location.href='{{ action('UserController@edit', array($user->id)) }}'">Edit Profile</button>
+			<p><em>{{trans('pages.profile')}} {{trans('pages.created')}}: {{ $user->created_at }}</em></p>
+			<p><em>{{trans('pages.modified')}}: {{ $user->updated_at }}</em></p>
+			<button class="btn btn-primary" onClick="location.href='{{ action('UserController@edit', array($user->id)) }}'">{{trans('pages.actionedit')}}</button>
 		</div>
 	</div>
 
-	<h4>Group Memberships:</h4>
+	<h4>{{trans('users.group_membership')}}:</h4>
 	<?php $userGroups = $user->getGroups(); ?>
 	<div class="well">
 	    <ul>
@@ -37,7 +37,7 @@ Home
 					<li>{{ $group['name'] }}</li>
 				@endforeach
 			@else 
-				<li>No Group Memberships.</li>
+				<li>{{trans('groups.notfound')}}</li>
 			@endif
 	    </ul>
 	</div>
