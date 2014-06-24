@@ -33,6 +33,7 @@ __Users__
 
 ### Tests
 [![Build Status](https://travis-ci.org/rydurham/L4withSentry.svg?branch=master)](https://travis-ci.org/rydurham/L4withSentry)
+
 1. Make sure you've run `composer update`.
 2. cd to the L4withSentry project root directory.
 3. Execute `phpunit` to run tests or `phpunit --coverage-text` to see text based code coverage summary.
