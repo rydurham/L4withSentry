@@ -32,13 +32,12 @@ __Users__
 * [Laracasts](http://laracasts.com)
 
 ### Tests
+[![Build Status](https://travis-ci.org/rydurham/L4withSentry.svg?branch=master)](https://travis-ci.org/rydurham/L4withSentry)
 1. Make sure you've run `composer update`.
 2. cd to the L4withSentry project root directory.
 3. Execute `phpunit` to run tests or `phpunit --coverage-text` to see text based code coverage summary.
-4. If you're interested in more dynamic code coverage, check out the [instructions](COVERAGE.md).
 
 ### Notes
-
 * Tests are currently very limited.  
 
 ### History
