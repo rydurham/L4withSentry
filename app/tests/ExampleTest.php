@@ -13,7 +13,7 @@ class ExampleTest extends TestCase {
 
 		$this->assertTrue($this->client->getResponse()->isOk());
 		$text=trans('pages.helloworld');
-		$this->assertCount(1, $crawler->filter("h1:contains($text)"));
+		$this->assertEquals($crawler->filter("h1")->text(), $text);
 	}
 
 }
