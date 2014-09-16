@@ -15,7 +15,7 @@
 		<table class="table table-striped table-hover">
 			<thead>
 				<th>{{trans('groups.name')}}</th>
-				<th>{{trans('groups.permisions')}}</th>
+				<th>{{trans('groups.permissions')}}</th>
 				<th>{{trans('pages.options')}}</th>
 			</thead>
 			<tbody>
