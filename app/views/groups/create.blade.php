@@ -18,7 +18,7 @@
             {{ ($errors->has('name') ? $errors->first('name') : '') }}
         </div>
 
-        {{ Form::label(trans('groups.permisions')) }}
+        {{ Form::label(trans('groups.permissions')) }}
         <div class="form-group">
             <label class="checkbox-inline">
                 {{ Form::checkbox('adminPermissions', 1) }} Admin
