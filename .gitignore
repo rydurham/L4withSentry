@@ -12,3 +12,4 @@ l4withsentry.sublime-project
 Vagrantfile
 bootstrap.sh
 .vagrant
+.idea
